@@ -9,6 +9,7 @@ export async function exportFullBackup() {
   const inventory = await loadJSON(STORAGE_KEYS.INVENTORY, []);
   const sales = await loadJSON(STORAGE_KEYS.SALES, []);
   const expenses = await loadJSON(STORAGE_KEYS.EXPENSES, []);
+  const appSettings = await loadJSON(STORAGE_KEYS.APP_SETTINGS, {});
 
   const payload = {
     version: 1,
@@ -16,6 +17,7 @@ export async function exportFullBackup() {
     inventory,
     sales,
     expenses,
+    appSettings,
   };
 
   const stamp = new Date().toISOString().replace(/[:.]/g, "-").slice(0, 19);
@@ -51,4 +53,7 @@ export async function restoreFullBackup() {
   await saveJSON(STORAGE_KEYS.INVENTORY, data.inventory);
   await saveJSON(STORAGE_KEYS.SALES, data.sales);
   await saveJSON(STORAGE_KEYS.EXPENSES, data.expenses);
+  if (data.appSettings) {
+    await saveJSON(STORAGE_KEYS.APP_SETTINGS, data.appSettings);
+  }
 }
