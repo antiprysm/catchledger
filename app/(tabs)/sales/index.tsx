@@ -14,6 +14,8 @@ export default function SalesLogScreen() {
   const [sales, setSales] = useState<Sale[]>([]);
   const [inspectionMode, setInspectionMode] = useState(false);
   const [dateFormat, setDateFormat] = useState<"MM/DD/YYYY" | "DD/MM/YYYY">("MM/DD/YYYY");
+  const [lowCount, setLowCount] = useState(0);
+  const [expiringCount, setExpiringCount] = useState(0);
 
   const loadAll = useCallback(() => {
     let mounted = true;

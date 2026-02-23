@@ -48,3 +48,7 @@ export async function runNotificationChecks() {
     await saveJSON(LAST_NOTICE_KEY, today);
   }
 }
+
+export async function initNotifications() {
+  return runNotificationChecks();
+}

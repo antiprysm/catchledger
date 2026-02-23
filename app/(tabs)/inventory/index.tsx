@@ -7,7 +7,8 @@ import { ThemeContext } from "@/theme/ThemeProvider";
 import { isExpired } from "@/constants/freshness";
 import { STORAGE_KEYS } from "@/constants/storageKeys";
 import { InventoryItem } from "@/types/inventory";
-import { loadAppSettings, type AppSettings, weightUnitLabel } from "@/utils/appSettings";
+import type { AppSettings } from "@/types/settings";
+import { loadAppSettings, weightUnitLabel } from "@/utils/appSettings";
 import { loadJSON, saveJSON } from "@/utils/storage";
 
 export default function InventoryScreen() {

@@ -15,17 +15,17 @@ import {
   View,
 } from "react-native";
 
-import { ThemeContext } from "@/theme/ThemeProvider";
-
 import {
   DEFAULT_BEST_BEFORE_HOURS,
   QualityStatus,
   computeExpiresAt,
 } from "@/constants/freshness";
 import { STORAGE_KEYS } from "@/constants/storageKeys";
+import { ThemeContext } from "@/theme/ThemeProvider";
 import { InventoryItem, UnitType } from "@/types/inventory";
-import { generateBatchId } from "@/utils/batchId";
 import { applyDateFormat, loadAppSettings } from "@/utils/appSettings";
+import { generateBatchId } from "@/utils/batchId";
+import { initNotifications } from "@/utils/notifications";
 import { loadJSON, saveJSON } from "@/utils/storage";
 
 function uid() {
