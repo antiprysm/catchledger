@@ -26,7 +26,6 @@ import { STORAGE_KEYS } from "@/constants/storageKeys";
 import { InventoryItem, UnitType } from "@/types/inventory";
 import { generateBatchId } from "@/utils/batchId";
 import { applyDateFormat, loadAppSettings } from "@/utils/appSettings";
-import { initNotifications } from "@/utils/notifications";
 import { loadJSON, saveJSON } from "@/utils/storage";
 
 function uid() {

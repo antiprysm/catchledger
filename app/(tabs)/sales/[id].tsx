@@ -16,7 +16,6 @@ import {
 import { STORAGE_KEYS } from "@/constants/storageKeys";
 import { BuyerType, PaymentMethod, Sale } from "@/types/sales";
 import { formatDateTime, loadAppSettings } from "@/utils/appSettings";
-import { initNotifications } from "@/utils/notifications";
 import { loadJSON, saveJSON } from "@/utils/storage";
 
 import { ThemeContext } from "@/theme/ThemeProvider";

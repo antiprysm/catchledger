@@ -25,17 +25,10 @@ export type AppSettings = {
   autoSync: boolean;
   lastSyncedAt?: string;
 
-  deliveryRemindersEnabled: boolean;
-  deliveryReminderTime: string;
-
-  paymentRemindersEnabled: boolean;
-  paymentReminderHour: number;
-
-  lowInventoryAlertsEnabled: boolean;
-  lowInventoryDefaultThreshold: number;
-
-  expiringProductAlertsEnabled: boolean;
-  expiringSoonDays: number;
+  deliveryReminders: boolean;
+  paymentReminders: boolean;
+  lowInventoryAlerts: boolean;
+  expiringProductAlerts: boolean;
 
   defaultBuyerType: BuyerType;
   defaultPaymentMethod: PaymentMethod;
@@ -69,17 +62,10 @@ export const DEFAULT_APP_SETTINGS: AppSettings = {
   autoSync: true,
   lastSyncedAt: "",
 
-  deliveryRemindersEnabled: true,
-  deliveryReminderTime: "18:00",
-
-  paymentRemindersEnabled: true,
-  paymentReminderHour: 9,
-
-  lowInventoryAlertsEnabled: true,
-  lowInventoryDefaultThreshold: 10,
-
-  expiringProductAlertsEnabled: true,
-  expiringSoonDays: 2,
+  deliveryReminders: true,
+  paymentReminders: true,
+  lowInventoryAlerts: true,
+  expiringProductAlerts: true,
 
   defaultBuyerType: "Wholesale",
   defaultPaymentMethod: "Cash",

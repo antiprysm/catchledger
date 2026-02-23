@@ -32,8 +32,6 @@ export type Sale = {
   requireSignature?: boolean;
   requirePhoto?: boolean;
   invoiceNumber?: string;
-  dueDate?: string;
-  isPaid?: boolean;
   saleLocationType?: "TRUCK" | "HOME" | "DOCK" | "OTHER",
   saleLocationNote?: string,
   buyerLicenseId?: string,

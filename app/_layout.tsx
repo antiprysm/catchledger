@@ -1,6 +1,6 @@
 import { ThemeProvider as AppThemeProvider, ThemeContext } from "@/theme/ThemeProvider";
 import { loadAppSettings } from "@/utils/appSettings";
-import { initNotifications } from "@/utils/notifications";
+import { runNotificationChecks } from "@/utils/notifications";
 import { getPasscode, unlockWithBiometric } from "@/utils/security";
 import { DarkTheme, DefaultTheme, ThemeProvider as NavThemeProvider } from "@react-navigation/native";
 import { Stack } from "expo-router";
@@ -26,7 +26,7 @@ function NavThemeWrapper() {
       settingsRef.current = settings;
       if (settings.passcodeLockEnabled) setLocked(true);
     });
-    initNotifications().catch(() => undefined);
+    runNotificationChecks();
 
     const sub = AppState.addEventListener("change", async (state) => {
       const settings = settingsRef.current ?? (await loadAppSettings());
@@ -39,7 +39,7 @@ function NavThemeWrapper() {
       }
 
       if (state === "active") {
-        initNotifications().catch(() => undefined);
+        runNotificationChecks();
         const bg = backgroundAt.current;
         if (!bg) {
           setLocked(true);

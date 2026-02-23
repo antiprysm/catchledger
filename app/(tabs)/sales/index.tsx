@@ -6,8 +6,6 @@ import { Alert, FlatList, Pressable, StyleSheet, Text, View } from "react-native
 import { STORAGE_KEYS } from "@/constants/storageKeys";
 import { Sale } from "@/types/sales";
 import { formatDateTime, loadAppSettings } from "@/utils/appSettings";
-import { computeExpiringLots, computeLowInventoryItems } from "@/utils/notifications";
-import type { InventoryItem } from "@/types/inventory";
 import { loadJSON, saveJSON } from "@/utils/storage";
 
 export default function SalesLogScreen() {
@@ -16,8 +14,6 @@ export default function SalesLogScreen() {
   const [sales, setSales] = useState<Sale[]>([]);
   const [inspectionMode, setInspectionMode] = useState(false);
   const [dateFormat, setDateFormat] = useState<"MM/DD/YYYY" | "DD/MM/YYYY">("MM/DD/YYYY");
-  const [lowCount, setLowCount] = useState(0);
-  const [expiringCount, setExpiringCount] = useState(0);
 
   const loadAll = useCallback(() => {
     let mounted = true;
@@ -25,15 +21,12 @@ export default function SalesLogScreen() {
     Promise.all([
       loadJSON<Sale[]>(STORAGE_KEYS.SALES, []),
       loadJSON<boolean>(STORAGE_KEYS.INSPECTION_MODE, false),
-      loadJSON<InventoryItem[]>(STORAGE_KEYS.INVENTORY, []),
       loadAppSettings(),
-    ]).then(([data, mode, inventory, settings]) => {
+    ]).then(([data, mode, settings]) => {
       if (!mounted) return;
       setSales(data);
       setInspectionMode(!!mode);
       setDateFormat(settings.dateFormat);
-      setLowCount(computeLowInventoryItems(inventory, settings).length);
-      setExpiringCount(computeExpiringLots(inventory, settings).length);
     });
 
     return () => {
