@@ -8,6 +8,7 @@ import { Expense } from "@/types/expenses";
 import { InventoryItem } from "@/types/inventory";
 import { LicenseProfile } from "@/types/license";
 import { Sale } from "@/types/sales";
+import { loadAppSettings, toLicenseProfileFallback } from "@/utils/appSettings";
 import { loadJSON, saveJSON } from "@/utils/storage";
 
 function startOfDay(d: Date) {
@@ -39,17 +40,18 @@ export default function ComplianceToday() {
   );
 
   const load = useCallback(async () => {
-    const [s, e, inv, p, modeVal] = await Promise.all([
+    const [s, e, inv, p, settings, modeVal] = await Promise.all([
       loadJSON<Sale[]>(STORAGE_KEYS.SALES, []),
       loadJSON<Expense[]>(STORAGE_KEYS.EXPENSES, []),
       loadJSON<InventoryItem[]>(STORAGE_KEYS.INVENTORY, []),
       loadJSON<LicenseProfile | null>(STORAGE_KEYS.LICENSE_PROFILE, null),
+      loadAppSettings(),
       loadJSON<boolean>(INSPECTION_MODE_KEY, false),
     ]);
     setSales(s);
     setExpenses(e);
     setInventory(inv);
-    setProfile(p);
+    setProfile(p ?? toLicenseProfileFallback(settings.companyProfile));
     setInspectionMode(!!modeVal);
   }, []);
 

@@ -3,12 +3,14 @@ import { File, Paths } from "expo-file-system";
 import * as Sharing from "expo-sharing";
 
 import { STORAGE_KEYS } from "@/constants/storageKeys";
+import { APP_SETTINGS_STORAGE_KEY } from "@/utils/appSettings";
 import { loadJSON, saveJSON } from "@/utils/storage";
 
 export async function exportFullBackup() {
   const inventory = await loadJSON(STORAGE_KEYS.INVENTORY, []);
   const sales = await loadJSON(STORAGE_KEYS.SALES, []);
   const expenses = await loadJSON(STORAGE_KEYS.EXPENSES, []);
+  const appSettings = await loadJSON(APP_SETTINGS_STORAGE_KEY, {});
 
   const payload = {
     version: 1,
@@ -16,6 +18,7 @@ export async function exportFullBackup() {
     inventory,
     sales,
     expenses,
+    appSettings,
   };
 
   const stamp = new Date().toISOString().replace(/[:.]/g, "-").slice(0, 19);
@@ -51,4 +54,7 @@ export async function restoreFullBackup() {
   await saveJSON(STORAGE_KEYS.INVENTORY, data.inventory);
   await saveJSON(STORAGE_KEYS.SALES, data.sales);
   await saveJSON(STORAGE_KEYS.EXPENSES, data.expenses);
+  if (data.appSettings) {
+    await saveJSON(APP_SETTINGS_STORAGE_KEY, data.appSettings);
+  }
 }

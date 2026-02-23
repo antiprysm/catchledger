@@ -5,18 +5,19 @@ import { Alert, FlatList, Pressable, StyleSheet, Text, View } from "react-native
 
 import { STORAGE_KEYS } from "@/constants/storageKeys";
 import { Sale } from "@/types/sales";
+import { formatDateTime, loadAppSettings } from "@/utils/appSettings";
+import { computeExpiringLots, computeLowInventoryItems } from "@/utils/notifications";
+import type { InventoryItem } from "@/types/inventory";
 import { loadJSON, saveJSON } from "@/utils/storage";
-
-function formatDate(iso: string) {
-  const d = new Date(iso);
-  return Number.isNaN(d.getTime()) ? iso : d.toLocaleString();
-}
 
 export default function SalesLogScreen() {
   const { colors } = useContext(ThemeContext);
 
   const [sales, setSales] = useState<Sale[]>([]);
   const [inspectionMode, setInspectionMode] = useState(false);
+  const [dateFormat, setDateFormat] = useState<"MM/DD/YYYY" | "DD/MM/YYYY">("MM/DD/YYYY");
+  const [lowCount, setLowCount] = useState(0);
+  const [expiringCount, setExpiringCount] = useState(0);
 
   const loadAll = useCallback(() => {
     let mounted = true;
@@ -24,10 +25,15 @@ export default function SalesLogScreen() {
     Promise.all([
       loadJSON<Sale[]>(STORAGE_KEYS.SALES, []),
       loadJSON<boolean>(STORAGE_KEYS.INSPECTION_MODE, false),
-    ]).then(([data, mode]) => {
+      loadJSON<InventoryItem[]>(STORAGE_KEYS.INVENTORY, []),
+      loadAppSettings(),
+    ]).then(([data, mode, inventory, settings]) => {
       if (!mounted) return;
       setSales(data);
       setInspectionMode(!!mode);
+      setDateFormat(settings.dateFormat);
+      setLowCount(computeLowInventoryItems(inventory, settings).length);
+      setExpiringCount(computeExpiringLots(inventory, settings).length);
     });
 
     return () => {
@@ -83,6 +89,13 @@ export default function SalesLogScreen() {
         Last 30 days: ${total30.toFixed(2)}
       </Text>
 
+      {(lowCount > 0 || expiringCount > 0) ? (
+        <View style={[styles.noticeCard, { borderColor: colors.cardBorder, backgroundColor: colors.cardBg }]}>
+          {lowCount > 0 ? <Text style={[styles.noticeText, { color: colors.text }]}>Low inventory items: {lowCount}</Text> : null}
+          {expiringCount > 0 ? <Text style={[styles.noticeText, { color: colors.text }]}>Expiring lots soon: {expiringCount}</Text> : null}
+        </View>
+      ) : null}
+
       <FlatList
         data={sales}
         keyExtractor={(s) => s.id}
@@ -111,7 +124,7 @@ export default function SalesLogScreen() {
               </Text>
 
               <Text style={[styles.meta, { color: colors.muted }]}>
-                {formatDate(item.occurredAt)}
+                {formatDateTime(item.occurredAt, dateFormat)}
               </Text>
 
               {item.buyerName ? (
@@ -119,6 +132,7 @@ export default function SalesLogScreen() {
                   {item.buyerName}
                 </Text>
               ) : null}
+              {item.invoiceNumber ? <Text style={[styles.meta2, { color: colors.muted }]}>Invoice: {item.invoiceNumber}</Text> : null}
             </View>
 
             <View style={{ alignItems: "flex-end" }}>
@@ -185,4 +199,6 @@ const styles = StyleSheet.create({
   meta: { fontWeight: "700", marginTop: 2 },
   meta2: { fontWeight: "700", marginTop: 2 },
   buyerType: { fontWeight: "800", marginTop: 2 },
+  noticeCard: { borderWidth: 1, borderRadius: 12, padding: 10, gap: 4 },
+  noticeText: { fontWeight: "800" },
 });

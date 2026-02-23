@@ -25,6 +25,8 @@ import {
 import { STORAGE_KEYS } from "@/constants/storageKeys";
 import { InventoryItem, UnitType } from "@/types/inventory";
 import { generateBatchId } from "@/utils/batchId";
+import { applyDateFormat, loadAppSettings } from "@/utils/appSettings";
+import { initNotifications } from "@/utils/notifications";
 import { loadJSON, saveJSON } from "@/utils/storage";
 
 function uid() {
@@ -45,6 +47,14 @@ export default function AddInventoryScreen() {
 
   const [caughtAt, setCaughtAt] = useState<Date | null>(new Date());
   const [showPicker, setShowPicker] = useState(false);
+  const [dateFormat, setDateFormat] = useState<"MM/DD/YYYY" | "DD/MM/YYYY">("MM/DD/YYYY");
+
+  useEffect(() => {
+    loadAppSettings().then((s) => {
+      setDateFormat(s.dateFormat);
+      if (s.weightUnit === "kg") setUnit("kg");
+    });
+  }, []);
 
   const bestBeforeHours = DEFAULT_BEST_BEFORE_HOURS[quality];
 
@@ -126,6 +136,7 @@ export default function AddInventoryScreen() {
     const existing = await loadJSON<InventoryItem[]>(STORAGE_KEYS.INVENTORY, []);
     await saveJSON(STORAGE_KEYS.INVENTORY, [item, ...existing]);
 
+    await initNotifications().catch(() => undefined);
     router.back();
   }
 
@@ -173,7 +184,7 @@ export default function AddInventoryScreen() {
 
           <Text style={[styles.label, { color: colors.text }]}>Unit</Text>
           <View style={styles.row}>
-            {(["lb", "fish", "dozen"] as UnitType[]).map((u) => {
+            {(["lb", "kg", "fish", "dozen"] as UnitType[]).map((u) => {
               const on = unit === u;
               return (
                 <Pressable
@@ -258,7 +269,7 @@ export default function AddInventoryScreen() {
             ]}
           >
             <Text style={{ color: colors.text }}>
-              {caughtAt ? caughtAt.toLocaleString() : "Not set"}
+              {caughtAt ? `${applyDateFormat(caughtAt, dateFormat)} ${caughtAt.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}` : "Not set"}
             </Text>
             <Text style={{ color: colors.muted }}>Best before: {bestBeforeHours}h</Text>
           </Pressable>
