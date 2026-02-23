@@ -1,5 +1,5 @@
 
-export type UnitType = "lb" | "fish" | "dozen";
+export type UnitType = "lb" | "kg" | "fish" | "dozen";
 
 export type InventoryItem = {
   id: string;
