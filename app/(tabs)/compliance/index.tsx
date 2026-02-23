@@ -68,6 +68,13 @@ export default function ComplianceHome() {
         </Pressable>
       </Link>
 
+
+      <Link href="/(tabs)/compliance/inspection" asChild>
+        <Pressable style={styles.btn}>
+          <Text style={styles.btnText}>Inspection Controls</Text>
+        </Pressable>
+      </Link>
+
       {inspectionMode ? (
         <Pressable style={[styles.btn, styles.btnDanger]} onPress={exitInspectionMode}>
           <Text style={styles.btnText}>Exit Inspection Mode</Text>
