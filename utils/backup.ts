@@ -10,7 +10,7 @@ export async function exportFullBackup() {
   const inventory = await loadJSON(STORAGE_KEYS.INVENTORY, []);
   const sales = await loadJSON(STORAGE_KEYS.SALES, []);
   const expenses = await loadJSON(STORAGE_KEYS.EXPENSES, []);
-  const appSettings = await loadJSON(APP_SETTINGS_STORAGE_KEY, {});
+  const appSettings = await loadJSON(STORAGE_KEYS.APP_SETTINGS, {});
 
   const payload = {
     version: 1,
@@ -55,6 +55,6 @@ export async function restoreFullBackup() {
   await saveJSON(STORAGE_KEYS.SALES, data.sales);
   await saveJSON(STORAGE_KEYS.EXPENSES, data.expenses);
   if (data.appSettings) {
-    await saveJSON(APP_SETTINGS_STORAGE_KEY, data.appSettings);
+    await saveJSON(STORAGE_KEYS.APP_SETTINGS, data.appSettings);
   }
 }

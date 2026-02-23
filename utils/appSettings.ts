@@ -50,5 +50,3 @@ export function toLicenseProfileFallback(profile: AppSettings["companyProfile"])
     updatedAt: new Date().toISOString(),
   };
 }
-
-export type { AppSettings } from "@/types/settings";

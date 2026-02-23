@@ -16,17 +16,10 @@ import {
 import { STORAGE_KEYS } from "@/constants/storageKeys";
 import { BuyerType, PaymentMethod, Sale } from "@/types/sales";
 import { formatDateTime, loadAppSettings } from "@/utils/appSettings";
-import { initNotifications } from "@/utils/notifications";
 import { loadJSON, saveJSON } from "@/utils/storage";
 
 import { ThemeContext } from "@/theme/ThemeProvider";
 
-
-
-function fmtWhen(iso: string) {
-  const d = new Date(iso);
-  return Number.isNaN(d.getTime()) ? iso : d.toLocaleString();
-}
 
 const BUYER_TYPES: BuyerType[] = ["RESTAURANT", "CHEF", "MARKET", "PERSON", "OTHER"];
 const PAYMENT_METHODS: PaymentMethod[] = ["CASH", "CARD", "BANK_TRANSFER", "CHECK", "PAYPAL", "CASHAPP", "VENMO", "OTHER"];
