@@ -1,11 +1,44 @@
 import { STORAGE_KEYS } from "@/constants/storageKeys";
 import type { InventoryItem } from "@/types/inventory";
 import type { Sale } from "@/types/sales";
+import type { AppSettings } from "@/types/settings";
 import { loadAppSettings } from "@/utils/appSettings";
 import { loadJSON, saveJSON } from "@/utils/storage";
 import { Alert } from "react-native";
 
 const LAST_NOTICE_KEY = "catchledger_last_notice_day";
+const LOW_INVENTORY_THRESHOLD = 5;
+const EXPIRING_WINDOW_MS = 1000 * 60 * 60 * 24;
+
+function toTimestamp(iso?: string) {
+  if (!iso) return Number.NaN;
+  return new Date(iso).getTime();
+}
+
+export function computeLowInventoryItems(
+  inventory: InventoryItem[],
+  settings: Pick<AppSettings, "lowInventoryAlerts">
+) {
+  if (!settings.lowInventoryAlerts) return [];
+  return inventory.filter((item) => {
+    if (typeof item.quantity !== "number") return false;
+    return item.quantity <= LOW_INVENTORY_THRESHOLD;
+  });
+}
+
+export function computeExpiringLots(
+  inventory: InventoryItem[],
+  settings: Pick<AppSettings, "expiringProductAlerts">,
+  now = Date.now()
+) {
+  if (!settings.expiringProductAlerts) return [];
+  return inventory.filter((item) => {
+    const expiresAtMs = toTimestamp(item.expiresAt);
+    if (Number.isNaN(expiresAtMs)) return false;
+    const msUntilExpiry = expiresAtMs - now;
+    return msUntilExpiry > 0 && msUntilExpiry <= EXPIRING_WINDOW_MS;
+  });
+}
 
 export async function runNotificationChecks() {
   const settings = await loadAppSettings();
@@ -30,16 +63,12 @@ export async function runNotificationChecks() {
   }
 
   if (settings.lowInventoryAlerts) {
-    const low = inventory.filter((i) => typeof i.quantity === "number" && i.quantity <= 5).length;
+    const low = computeLowInventoryItems(inventory, settings).length;
     if (low > 0) alerts.push(`${low} inventory item(s) are low (≤ 5).`);
   }
 
   if (settings.expiringProductAlerts) {
-    const soon = inventory.filter((i: any) => {
-      if (!i.expiresAt) return false;
-      const ms = new Date(i.expiresAt).getTime() - Date.now();
-      return ms > 0 && ms <= 1000 * 60 * 60 * 24;
-    }).length;
+    const soon = computeExpiringLots(inventory, settings).length;
     if (soon > 0) alerts.push(`${soon} product lot(s) expire within 24 hours.`);
   }
 
