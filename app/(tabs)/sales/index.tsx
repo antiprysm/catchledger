@@ -82,6 +82,13 @@ export default function SalesLogScreen() {
         Last 30 days: ${total30.toFixed(2)}
       </Text>
 
+      {(lowCount > 0 || expiringCount > 0) ? (
+        <View style={[styles.noticeCard, { borderColor: colors.cardBorder, backgroundColor: colors.cardBg }]}>
+          {lowCount > 0 ? <Text style={[styles.noticeText, { color: colors.text }]}>Low inventory items: {lowCount}</Text> : null}
+          {expiringCount > 0 ? <Text style={[styles.noticeText, { color: colors.text }]}>Expiring lots soon: {expiringCount}</Text> : null}
+        </View>
+      ) : null}
+
       <FlatList
         data={sales}
         keyExtractor={(s) => s.id}
@@ -185,4 +192,6 @@ const styles = StyleSheet.create({
   meta: { fontWeight: "700", marginTop: 2 },
   meta2: { fontWeight: "700", marginTop: 2 },
   buyerType: { fontWeight: "800", marginTop: 2 },
+  noticeCard: { borderWidth: 1, borderRadius: 12, padding: 10, gap: 4 },
+  noticeText: { fontWeight: "800" },
 });

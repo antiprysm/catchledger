@@ -100,6 +100,7 @@ export default function SaleDetailScreen() {
           const sales = await loadJSON<Sale[]>(STORAGE_KEYS.SALES, []);
           const filtered = sales.filter((s) => s.id !== id);
           await saveJSON(STORAGE_KEYS.SALES, filtered);
+          await initNotifications().catch(() => undefined);
           router.back();
         },
       },
@@ -140,6 +141,7 @@ export default function SaleDetailScreen() {
 
       const replaced = sales.map((s) => (s.id === sale.id ? updated : s));
       await saveJSON(STORAGE_KEYS.SALES, replaced);
+      await initNotifications().catch(() => undefined);
       setSale(updated);
 
       Alert.alert("Saved", "Sale updated.");

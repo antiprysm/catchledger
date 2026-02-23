@@ -20,6 +20,7 @@ import { applyDateFormat, loadAppSettings, weightUnitLabel } from "@/utils/appSe
 import { DEFAULT_APP_SETTINGS, type AppSettings } from "@/types/settings";
 import { InventoryItem } from "@/types/inventory";
 import { BuyerType, PaymentMethod, Sale, SaleLine } from "@/types/sales";
+import { initNotifications } from "@/utils/notifications";
 import { loadJSON, saveJSON } from "@/utils/storage";
 
 function uid() {
@@ -232,6 +233,7 @@ export default function NewSaleScreen() {
     await saveJSON(STORAGE_KEYS.SALES, [sale, ...existingSales]);
 
     resetForm();
+    await initNotifications().catch(() => undefined);
     router.replace("/(tabs)/sales");
   }
 

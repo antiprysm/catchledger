@@ -135,6 +135,7 @@ export default function AddInventoryScreen() {
     const existing = await loadJSON<InventoryItem[]>(STORAGE_KEYS.INVENTORY, []);
     await saveJSON(STORAGE_KEYS.INVENTORY, [item, ...existing]);
 
+    await initNotifications().catch(() => undefined);
     router.back();
   }
 
