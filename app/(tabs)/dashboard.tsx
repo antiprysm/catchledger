@@ -328,4 +328,6 @@ const styles = StyleSheet.create({
   rankNum: { width: 24, fontWeight: "800" },
   rankName: { flex: 1, fontWeight: "700" },
   rankVal: { width: 100, textAlign: "right", fontWeight: "800" },
+  alertCard: { borderWidth: 1, borderRadius: 12, padding: 10, marginTop: 8, gap: 4 },
+  alertText: { fontWeight: "800" },
 });

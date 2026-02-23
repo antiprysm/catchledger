@@ -84,7 +84,7 @@ export default function AddInventoryScreen() {
     const qtyText = quantity.trim();
     const qty = qtyText === "" ? undefined : Number(qtyText);
 
-    if (qtyText !== "" && (!Number.isFinite(qty) || qty <= 0)) {
+    if (qtyText !== "" && (!Number.isFinite(qty) || (qty ?? 0) <= 0)) {
       Alert.alert("Invalid quantity", "Quantity must be greater than 0 (or leave it blank).");
       return;
     }
@@ -142,7 +142,7 @@ export default function AddInventoryScreen() {
   const inputStyle = [
     styles.input,
     { borderColor: colors.cardBorder, backgroundColor: colors.cardBg, color: colors.text },
-  ] as const;
+  ];
 
   return (
     <KeyboardAvoidingView

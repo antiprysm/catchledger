@@ -105,7 +105,7 @@ function buildSalesCSV(sales: Sale[], settings: AppSettings) {
 }
 
 /** EXPENSES CSV: one row per expense */
-function buildExpensesCSV(expenses: Expense[]) {
+function buildExpensesCSV(expenses: Expense[], settings: AppSettings) {
   const headers = ["expense_id", "occurred_at_iso", "category", "amount", "note"];
 
   const rows: string[] = [];
@@ -130,7 +130,7 @@ function buildExpensesCSV(expenses: Expense[]) {
 }
 
 /** PROFIT SUMMARY CSV: monthly rollups */
-function buildProfitSummaryCSV(sales: Sale[], expenses: Expense[]) {
+function buildProfitSummaryCSV(sales: Sale[], expenses: Expense[], settings: AppSettings) {
   type Rollup = {
     month: string;
     revenue: number;
@@ -190,7 +190,7 @@ function buildProfitSummaryCSV(sales: Sale[], expenses: Expense[]) {
   return rows.join("\n");
 }
 
-function buildProfitByCategoryCSV(sales: Sale[], expenses: Expense[]) {
+function buildProfitByCategoryCSV(sales: Sale[], expenses: Expense[], settings: AppSettings) {
   const monthKey = (iso: string) => {
     const d = new Date(iso);
     if (Number.isNaN(d.getTime())) return "Unknown";
@@ -267,7 +267,7 @@ function buildAllTimeCategoryCSV(expenses: Expense[]) {
   return rows.join("\n");
 }
 
-function buildQuarterlySummaryCSV(sales: Sale[], expenses: Expense[]) {
+function buildQuarterlySummaryCSV(sales: Sale[], expenses: Expense[], settings: AppSettings) {
   const keyFor = (iso: string) => {
     const d = new Date(iso);
     if (Number.isNaN(d.getTime())) return "Unknown";
@@ -368,7 +368,7 @@ export default function ReportsScreen() {
         Alert.alert("No expenses", "There are no expenses to export yet.");
         return;
       }
-      const csv = buildExpensesCSV(expenses);
+      const csv = buildExpensesCSV(expenses, settings);
       const filename = `catchledger_expenses_${stampForName()}.csv`;
       await shareTextFile(filename, "text/csv", csv, "Export Expenses CSV");
     } catch (e: any) {
@@ -382,12 +382,12 @@ export default function ReportsScreen() {
     if (busy) return;
     setBusy("profit");
     try {
-      const { sales, expenses } = await loadAll();
+      const { sales, expenses, settings } = await loadAll();
       if (!sales.length && !expenses.length) {
         Alert.alert("Nothing to export", "No sales or expenses found yet.");
         return;
       }
-      const csv = buildProfitSummaryCSV(sales, expenses);
+      const csv = buildProfitSummaryCSV(sales, expenses, settings);
       const filename = `catchledger_profit_summary_${stampForName()}.csv`;
       await shareTextFile(filename, "text/csv", csv, "Export Profit Summary CSV");
     } catch (e: any) {
@@ -401,7 +401,7 @@ export default function ReportsScreen() {
     if (busy) return;
     setBusy("bycat");
     try {
-      const { sales, expenses } = await loadAll();
+      const { sales, expenses, settings } = await loadAll();
       if (!sales.length && !expenses.length) {
         Alert.alert("Nothing to export", "No sales or expenses found yet.");
         return;
@@ -411,7 +411,7 @@ export default function ReportsScreen() {
         return;
       }
 
-      const csv = buildProfitByCategoryCSV(sales, expenses);
+      const csv = buildProfitByCategoryCSV(sales, expenses, settings);
       const filename = `catchledger_profit_by_category_${stampForName()}.csv`;
       await shareTextFile(filename, "text/csv", csv, "Export Profit by Category CSV");
     } catch (e: any) {
@@ -445,13 +445,13 @@ export default function ReportsScreen() {
     if (busy) return;
     setBusy("quarter");
     try {
-      const { sales, expenses } = await loadAll();
+      const { sales, expenses, settings } = await loadAll();
       if (!sales.length && !expenses.length) {
         Alert.alert("Nothing to export", "No sales or expenses found yet.");
         return;
       }
 
-      const csv = buildQuarterlySummaryCSV(sales, expenses);
+      const csv = buildQuarterlySummaryCSV(sales, expenses, settings);
       const filename = `catchledger_quarterly_summary_${stampForName()}.csv`;
       await shareTextFile(filename, "text/csv", csv, "Export Quarterly Summary CSV");
     } catch (e: any) {

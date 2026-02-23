@@ -184,7 +184,7 @@ export default function NewSaleScreen() {
 
     if (oversold) {
       const inv = invById.get(oversold.itemId);
-      const available = inv?.quantity ?? 0;
+      const available = Number(inv?.quantity ?? 0);
       Alert.alert(
         "Not enough inventory",
         `${oversold.speciesName}: trying to sell ${oversold.quantity}, available ${available}.`
@@ -240,7 +240,7 @@ export default function NewSaleScreen() {
   const inputStyle = [
     styles.input,
     { borderColor: colors.cardBorder, backgroundColor: colors.cardBg, color: colors.text },
-  ] as const;
+  ];
 
   return (
     <KeyboardAvoidingView
@@ -447,7 +447,7 @@ export default function NewSaleScreen() {
             }
             renderItem={({ item }) => {
               const tracked = isTrackedQuantity(item.quantity);
-              const available = tracked ? item.quantity : null;
+              const available = tracked ? Number(item.quantity ?? 0) : 0;
               const outOfStock = tracked ? available <= 0 : false;
 
               return (
