@@ -6,6 +6,8 @@ import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
 import { ThemeContext } from "@/theme/ThemeProvider";
 
 import { STORAGE_KEYS } from "@/constants/storageKeys";
+import { loadAppSettings } from "@/utils/appSettings";
+import type { AppSettings } from "@/types/settings";
 import { Expense } from "@/types/expenses";
 import { Sale } from "@/types/sales";
 import { loadJSON } from "@/utils/storage";
@@ -52,12 +54,15 @@ async function shareTextFile(
 }
 
 /** SALES CSV: line-level */
-function buildSalesCSV(sales: Sale[]) {
+function buildSalesCSV(sales: Sale[], settings: AppSettings) {
   const headers = [
     "sale_id",
     "occurred_at_iso",
     "payment_method",
     "payment_note",
+    "require_signature",
+    "require_photo",
+    "invoice_number",
     "sale_total",
     "line_item_id",
     "species_name",
@@ -68,6 +73,10 @@ function buildSalesCSV(sales: Sale[]) {
   ];
 
   const rows: string[] = [];
+  rows.push(["META", "business_name", settings.companyProfile.businessName ?? ""].map(csvEscape).join(","));
+  rows.push(["META", "license_number", settings.companyProfile.licenseNumber ?? ""].map(csvEscape).join(","));
+  rows.push(["META", "email", settings.companyProfile.email ?? ""].map(csvEscape).join(","));
+  rows.push("");
   rows.push(headers.map(csvEscape).join(","));
 
   for (const s of sales) {
@@ -77,6 +86,9 @@ function buildSalesCSV(sales: Sale[]) {
         formatISODate(s.occurredAt),
         s.paymentMethod,
         s.paymentNote ?? "",
+        s.requireSignature ? "yes" : "no",
+        s.requirePhoto ? "yes" : "no",
+        s.invoiceNumber ?? "",
         Number(s.total).toFixed(2),
         line.itemId,
         line.speciesName,
@@ -93,10 +105,14 @@ function buildSalesCSV(sales: Sale[]) {
 }
 
 /** EXPENSES CSV: one row per expense */
-function buildExpensesCSV(expenses: Expense[]) {
+function buildExpensesCSV(expenses: Expense[], settings: AppSettings) {
   const headers = ["expense_id", "occurred_at_iso", "category", "amount", "note"];
 
   const rows: string[] = [];
+  rows.push(["META", "business_name", settings.companyProfile.businessName ?? ""].map(csvEscape).join(","));
+  rows.push(["META", "license_number", settings.companyProfile.licenseNumber ?? ""].map(csvEscape).join(","));
+  rows.push(["META", "email", settings.companyProfile.email ?? ""].map(csvEscape).join(","));
+  rows.push("");
   rows.push(headers.map(csvEscape).join(","));
 
   for (const e of expenses) {
@@ -114,7 +130,7 @@ function buildExpensesCSV(expenses: Expense[]) {
 }
 
 /** PROFIT SUMMARY CSV: monthly rollups */
-function buildProfitSummaryCSV(sales: Sale[], expenses: Expense[]) {
+function buildProfitSummaryCSV(sales: Sale[], expenses: Expense[], settings: AppSettings) {
   type Rollup = {
     month: string;
     revenue: number;
@@ -157,6 +173,10 @@ function buildProfitSummaryCSV(sales: Sale[], expenses: Expense[]) {
 
   const headers = ["month", "revenue", "expenses", "net", "sales_count", "expenses_count"];
   const rows: string[] = [];
+  rows.push(["META", "business_name", settings.companyProfile.businessName ?? ""].map(csvEscape).join(","));
+  rows.push(["META", "license_number", settings.companyProfile.licenseNumber ?? ""].map(csvEscape).join(","));
+  rows.push(["META", "email", settings.companyProfile.email ?? ""].map(csvEscape).join(","));
+  rows.push("");
   rows.push(headers.map(csvEscape).join(","));
 
   for (const r of rollups) {
@@ -170,7 +190,7 @@ function buildProfitSummaryCSV(sales: Sale[], expenses: Expense[]) {
   return rows.join("\n");
 }
 
-function buildProfitByCategoryCSV(sales: Sale[], expenses: Expense[]) {
+function buildProfitByCategoryCSV(sales: Sale[], expenses: Expense[], settings: AppSettings) {
   const monthKey = (iso: string) => {
     const d = new Date(iso);
     if (Number.isNaN(d.getTime())) return "Unknown";
@@ -201,6 +221,10 @@ function buildProfitByCategoryCSV(sales: Sale[], expenses: Expense[]) {
   const headers = ["month", "revenue", ...categories.map((c) => `exp_${c.toLowerCase()}`), "total_expenses", "net"];
 
   const rows: string[] = [];
+  rows.push(["META", "business_name", settings.companyProfile.businessName ?? ""].map(csvEscape).join(","));
+  rows.push(["META", "license_number", settings.companyProfile.licenseNumber ?? ""].map(csvEscape).join(","));
+  rows.push(["META", "email", settings.companyProfile.email ?? ""].map(csvEscape).join(","));
+  rows.push("");
   rows.push(headers.map(csvEscape).join(","));
 
   for (const month of months) {
@@ -243,7 +267,7 @@ function buildAllTimeCategoryCSV(expenses: Expense[]) {
   return rows.join("\n");
 }
 
-function buildQuarterlySummaryCSV(sales: Sale[], expenses: Expense[]) {
+function buildQuarterlySummaryCSV(sales: Sale[], expenses: Expense[], settings: AppSettings) {
   const keyFor = (iso: string) => {
     const d = new Date(iso);
     if (Number.isNaN(d.getTime())) return "Unknown";
@@ -285,6 +309,10 @@ function buildQuarterlySummaryCSV(sales: Sale[], expenses: Expense[]) {
 
   const headers = ["quarter", "revenue", "expenses", "net", "sales_count", "expenses_count"];
   const rows: string[] = [];
+  rows.push(["META", "business_name", settings.companyProfile.businessName ?? ""].map(csvEscape).join(","));
+  rows.push(["META", "license_number", settings.companyProfile.licenseNumber ?? ""].map(csvEscape).join(","));
+  rows.push(["META", "email", settings.companyProfile.email ?? ""].map(csvEscape).join(","));
+  rows.push("");
   rows.push(headers.map(csvEscape).join(","));
 
   for (const r of rollups) {
@@ -304,23 +332,24 @@ export default function ReportsScreen() {
   const [busy, setBusy] = useState<null | "sales" | "expenses" | "profit" | "bycat" | "allcat" | "quarter">(null);
 
   const loadAll = useCallback(async () => {
-    const [sales, expenses] = await Promise.all([
+    const [sales, expenses, settings] = await Promise.all([
       loadJSON<Sale[]>(STORAGE_KEYS.SALES, []),
       loadJSON<Expense[]>(STORAGE_KEYS.EXPENSES, []),
+      loadAppSettings(),
     ]);
-    return { sales, expenses };
+    return { sales, expenses, settings };
   }, []);
 
   const exportSales = useCallback(async () => {
     if (busy) return;
     setBusy("sales");
     try {
-      const { sales } = await loadAll();
+      const { sales, settings } = await loadAll();
       if (!sales.length) {
         Alert.alert("No sales", "There are no sales to export yet.");
         return;
       }
-      const csv = buildSalesCSV(sales);
+      const csv = buildSalesCSV(sales, settings);
       const filename = `catchledger_sales_${stampForName()}.csv`;
       await shareTextFile(filename, "text/csv", csv, "Export Sales CSV");
     } catch (e: any) {
@@ -339,7 +368,7 @@ export default function ReportsScreen() {
         Alert.alert("No expenses", "There are no expenses to export yet.");
         return;
       }
-      const csv = buildExpensesCSV(expenses);
+      const csv = buildExpensesCSV(expenses, settings);
       const filename = `catchledger_expenses_${stampForName()}.csv`;
       await shareTextFile(filename, "text/csv", csv, "Export Expenses CSV");
     } catch (e: any) {
@@ -353,12 +382,12 @@ export default function ReportsScreen() {
     if (busy) return;
     setBusy("profit");
     try {
-      const { sales, expenses } = await loadAll();
+      const { sales, expenses, settings } = await loadAll();
       if (!sales.length && !expenses.length) {
         Alert.alert("Nothing to export", "No sales or expenses found yet.");
         return;
       }
-      const csv = buildProfitSummaryCSV(sales, expenses);
+      const csv = buildProfitSummaryCSV(sales, expenses, settings);
       const filename = `catchledger_profit_summary_${stampForName()}.csv`;
       await shareTextFile(filename, "text/csv", csv, "Export Profit Summary CSV");
     } catch (e: any) {
@@ -372,7 +401,7 @@ export default function ReportsScreen() {
     if (busy) return;
     setBusy("bycat");
     try {
-      const { sales, expenses } = await loadAll();
+      const { sales, expenses, settings } = await loadAll();
       if (!sales.length && !expenses.length) {
         Alert.alert("Nothing to export", "No sales or expenses found yet.");
         return;
@@ -382,7 +411,7 @@ export default function ReportsScreen() {
         return;
       }
 
-      const csv = buildProfitByCategoryCSV(sales, expenses);
+      const csv = buildProfitByCategoryCSV(sales, expenses, settings);
       const filename = `catchledger_profit_by_category_${stampForName()}.csv`;
       await shareTextFile(filename, "text/csv", csv, "Export Profit by Category CSV");
     } catch (e: any) {
@@ -416,13 +445,13 @@ export default function ReportsScreen() {
     if (busy) return;
     setBusy("quarter");
     try {
-      const { sales, expenses } = await loadAll();
+      const { sales, expenses, settings } = await loadAll();
       if (!sales.length && !expenses.length) {
         Alert.alert("Nothing to export", "No sales or expenses found yet.");
         return;
       }
 
-      const csv = buildQuarterlySummaryCSV(sales, expenses);
+      const csv = buildQuarterlySummaryCSV(sales, expenses, settings);
       const filename = `catchledger_quarterly_summary_${stampForName()}.csv`;
       await shareTextFile(filename, "text/csv", csv, "Export Quarterly Summary CSV");
     } catch (e: any) {

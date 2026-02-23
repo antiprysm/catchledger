@@ -15,9 +15,13 @@ import {
 
 import { STORAGE_KEYS } from "@/constants/storageKeys";
 import { BuyerType, PaymentMethod, Sale } from "@/types/sales";
+import { formatDateTime, loadAppSettings } from "@/utils/appSettings";
+import { initNotifications } from "@/utils/notifications";
 import { loadJSON, saveJSON } from "@/utils/storage";
 
 import { ThemeContext } from "@/theme/ThemeProvider";
+
+
 
 function fmtWhen(iso: string) {
   const d = new Date(iso);
@@ -25,7 +29,7 @@ function fmtWhen(iso: string) {
 }
 
 const BUYER_TYPES: BuyerType[] = ["RESTAURANT", "CHEF", "MARKET", "PERSON", "OTHER"];
-const PAYMENT_METHODS: PaymentMethod[] = ["CASH", "PAYPAL", "CASHAPP", "VENMO", "OTHER"];
+const PAYMENT_METHODS: PaymentMethod[] = ["CASH", "CARD", "BANK_TRANSFER", "CHECK", "PAYPAL", "CASHAPP", "VENMO", "OTHER"];
 const SALE_LOCATION_TYPES: NonNullable<Sale["saleLocationType"]>[] = ["TRUCK", "HOME", "DOCK", "OTHER"];
 
 export default function SaleDetailScreen() {
@@ -36,6 +40,7 @@ export default function SaleDetailScreen() {
   const [sale, setSale] = useState<Sale | null>(null);
   const [inspectionMode, setInspectionMode] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [dateFormat, setDateFormat] = useState<"MM/DD/YYYY" | "DD/MM/YYYY">("MM/DD/YYYY");
 
   // editable fields
   const [buyerName, setBuyerName] = useState("");
@@ -78,6 +83,7 @@ export default function SaleDetailScreen() {
     useCallback(() => {
       loadInspectionMode();
       loadSale();
+      loadAppSettings().then((s) => setDateFormat(s.dateFormat));
     }, [loadInspectionMode, loadSale])
   );
 
@@ -101,6 +107,7 @@ export default function SaleDetailScreen() {
           const sales = await loadJSON<Sale[]>(STORAGE_KEYS.SALES, []);
           const filtered = sales.filter((s) => s.id !== id);
           await saveJSON(STORAGE_KEYS.SALES, filtered);
+          await initNotifications().catch(() => undefined);
           router.back();
         },
       },
@@ -141,6 +148,7 @@ export default function SaleDetailScreen() {
 
       const replaced = sales.map((s) => (s.id === sale.id ? updated : s));
       await saveJSON(STORAGE_KEYS.SALES, replaced);
+      await initNotifications().catch(() => undefined);
       setSale(updated);
 
       Alert.alert("Saved", "Sale updated.");
@@ -283,7 +291,7 @@ export default function SaleDetailScreen() {
 
             <Text style={[styles.h2, { color: colors.text }]}>Sale</Text>
             <Text style={[styles.muted, { color: colors.muted }]}>
-              Occurred: {fmtWhen(sale.occurredAt)}
+              Occurred: {formatDateTime(sale.occurredAt, dateFormat)}
             </Text>
 
             {inspectionMode ? (

@@ -55,7 +55,7 @@ export default function EditInventoryScreen() {
       setUnit(found.unit);
       setPricePerUnit(String(found.pricePerUnit));
       setQuantity(found.quantity ? String(found.quantity) : "");
-      setQuality(found.quality);
+      setQuality(found.quality ?? "FRESH");
       setCaughtAt(found.caughtAt ? new Date(found.caughtAt) : null);
       setCatchLocation(found.catchLocation ?? "");
       setCatchMethod(found.catchMethod ?? "");
@@ -76,7 +76,7 @@ export default function EditInventoryScreen() {
     const qtyText = quantity.trim();
     const qty = qtyText === "" ? undefined : Number(qtyText);
 
-    if (qtyText !== "" && (!Number.isFinite(qty) || qty <= 0)) {
+    if (qtyText !== "" && (!Number.isFinite(qty) || (qty ?? 0) <= 0)) {
       Alert.alert("Invalid quantity", "Quantity must be greater than 0 (or leave it blank).");
       return;
     }

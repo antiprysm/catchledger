@@ -16,8 +16,11 @@ import {
 } from "react-native";
 
 import { STORAGE_KEYS } from "@/constants/storageKeys";
+import { applyDateFormat, loadAppSettings, weightUnitLabel } from "@/utils/appSettings";
+import { DEFAULT_APP_SETTINGS, type AppSettings } from "@/types/settings";
 import { InventoryItem } from "@/types/inventory";
 import { BuyerType, PaymentMethod, Sale, SaleLine } from "@/types/sales";
+import { initNotifications } from "@/utils/notifications";
 import { loadJSON, saveJSON } from "@/utils/storage";
 
 function uid() {
@@ -34,7 +37,7 @@ function isTrackedQuantity(q: unknown): q is number {
 }
 
 const BUYER_TYPES: BuyerType[] = ["RESTAURANT", "CHEF", "MARKET", "PERSON", "OTHER"];
-const PAYMENT_METHODS: PaymentMethod[] = ["CASH", "PAYPAL", "CASHAPP", "VENMO", "OTHER"];
+const PAYMENT_METHODS: PaymentMethod[] = ["CASH", "CARD", "BANK_TRANSFER", "CHECK", "PAYPAL", "CASHAPP", "VENMO", "OTHER"];
 const SALE_LOCATION_TYPES: NonNullable<Sale["saleLocationType"]>[] = ["TRUCK", "HOME", "DOCK", "OTHER"];
 
 export default function NewSaleScreen() {
@@ -56,18 +59,20 @@ export default function NewSaleScreen() {
   const [saleLocationType, setSaleLocationType] =
     useState<NonNullable<Sale["saleLocationType"]>>("TRUCK");
   const [saleLocationNote, setSaleLocationNote] = useState("");
+  const [settings, setSettings] = useState<AppSettings>(DEFAULT_APP_SETTINGS);
 
-  const resetForm = useCallback(() => {
+  const resetForm = useCallback((appSettings?: AppSettings) => {
+    const active = appSettings ?? settings;
     setLines([]);
-    setPaymentMethod("CASH");
+    setPaymentMethod(active.defaultPaymentMethod === "Cash" ? "CASH" : active.defaultPaymentMethod === "Card" ? "CARD" : active.defaultPaymentMethod === "Check" ? "CHECK" : "BANK_TRANSFER");
     setPaymentNote("");
     setBuyerName("");
-    setBuyerType("RESTAURANT");
+    setBuyerType(active.defaultBuyerType === "Restaurant" ? "RESTAURANT" : active.defaultBuyerType === "Retail" ? "MARKET" : "OTHER");
     setBuyerContact("");
     setBuyerLicenseId("");
     setSaleLocationType("TRUCK");
     setSaleLocationNote("");
-  }, []);
+  }, [settings]);
 
   const loadAll = useCallback(() => {
     let mounted = true;
@@ -75,11 +80,13 @@ export default function NewSaleScreen() {
     Promise.all([
       loadJSON<InventoryItem[]>(STORAGE_KEYS.INVENTORY, []),
       loadJSON<boolean>(STORAGE_KEYS.INSPECTION_MODE, false),
-    ]).then(([inv, mode]) => {
+      loadAppSettings(),
+    ]).then(([inv, mode, appSettings]) => {
       if (!mounted) return;
 
       setInventory(inv);
       setInspectionMode(!!mode);
+      setSettings(appSettings);
 
       if (mode) {
         Alert.alert(
@@ -88,7 +95,7 @@ export default function NewSaleScreen() {
         );
         router.replace("/(tabs)/sales");
       } else {
-        resetForm();
+        resetForm(appSettings);
       }
     });
 
@@ -177,7 +184,7 @@ export default function NewSaleScreen() {
 
     if (oversold) {
       const inv = invById.get(oversold.itemId);
-      const available = inv?.quantity ?? 0;
+      const available = Number(inv?.quantity ?? 0);
       Alert.alert(
         "Not enough inventory",
         `${oversold.speciesName}: trying to sell ${oversold.quantity}, available ${available}.`
@@ -217,19 +224,23 @@ export default function NewSaleScreen() {
 
       createdAt: nowISO,
       updatedAt: nowISO,
+      requireSignature: settings.requireSignature,
+      requirePhoto: settings.requirePhoto,
+      invoiceNumber: settings.autoGenerateInvoice ? `INV-${Date.now()}` : undefined,
     };
 
     const existingSales = await loadJSON<Sale[]>(STORAGE_KEYS.SALES, []);
     await saveJSON(STORAGE_KEYS.SALES, [sale, ...existingSales]);
 
     resetForm();
+    await initNotifications().catch(() => undefined);
     router.replace("/(tabs)/sales");
   }
 
   const inputStyle = [
     styles.input,
     { borderColor: colors.cardBorder, backgroundColor: colors.cardBg, color: colors.text },
-  ] as const;
+  ];
 
   return (
     <KeyboardAvoidingView
@@ -245,6 +256,7 @@ export default function NewSaleScreen() {
         {/* Tap-to-dismiss wrapper */}
         <Pressable onPress={Keyboard.dismiss} style={{ gap: 10 }}>
           <Text style={[styles.title, { color: colors.text }]}>New Sale</Text>
+          <Text style={[styles.mutedText, { color: colors.muted }]}>Date format: {settings.dateFormat} • {applyDateFormat(new Date(), settings.dateFormat)}</Text>
 
           <FlatList
             data={inventory}
@@ -276,7 +288,7 @@ export default function NewSaleScreen() {
                         <View style={{ flex: 1 }}>
                           <Text style={[styles.bold, { color: colors.text }]}>{line.speciesName}</Text>
                           <Text style={{ color: colors.muted }}>
-                            ${line.unitPrice}/{line.unit}
+                            ${line.unitPrice}/{weightUnitLabel(line.unit, settings.weightUnit)}
                           </Text>
                         </View>
 
@@ -435,7 +447,7 @@ export default function NewSaleScreen() {
             }
             renderItem={({ item }) => {
               const tracked = isTrackedQuantity(item.quantity);
-              const available = tracked ? item.quantity : null;
+              const available = tracked ? Number(item.quantity ?? 0) : 0;
               const outOfStock = tracked ? available <= 0 : false;
 
               return (
@@ -455,7 +467,7 @@ export default function NewSaleScreen() {
                       {item.speciesName}
                     </Text>
                     <Text style={{ color: outOfStock ? colors.muted : colors.text }}>
-                      ${item.pricePerUnit}/{item.unit}
+                      ${item.pricePerUnit}/{weightUnitLabel(item.unit, settings.weightUnit)}
                     </Text>
                     <Text style={[styles.availability, { color: colors.muted }]}>
                       Available: {tracked ? String(available) : "—"}

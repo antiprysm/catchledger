@@ -6,6 +6,9 @@ import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import { STORAGE_KEYS } from "@/constants/storageKeys";
 import { Expense } from "@/types/expenses";
 import { Sale } from "@/types/sales";
+import { loadAppSettings } from "@/utils/appSettings";
+import { computeExpiringLots, computeLowInventoryItems } from "@/utils/notifications";
+import type { InventoryItem } from "@/types/inventory";
 import { loadJSON } from "@/utils/storage";
 
 function startOfDay(d: Date) {
@@ -28,15 +31,21 @@ export default function DashboardScreen() {
   const [sales, setSales] = useState<Sale[]>([]);
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
+  const [lowCount, setLowCount] = useState(0);
+  const [expiringCount, setExpiringCount] = useState(0);
 
   const loadAll = useCallback(async () => {
-    const [s, e] = await Promise.all([
+    const [s, e, inventory, settings] = await Promise.all([
       loadJSON<Sale[]>(STORAGE_KEYS.SALES, []),
       loadJSON<Expense[]>(STORAGE_KEYS.EXPENSES, []),
+      loadJSON<InventoryItem[]>(STORAGE_KEYS.INVENTORY, []),
+      loadAppSettings(),
     ]);
     setSales(s);
     setExpenses(e);
     setLastUpdated(new Date());
+    setLowCount(computeLowInventoryItems(inventory, settings).length);
+    setExpiringCount(computeExpiringLots(inventory, settings).length);
   }, []);
 
   useFocusEffect(
@@ -148,6 +157,13 @@ export default function DashboardScreen() {
               ) : null}
             </View>
           </View>
+
+          {(lowCount > 0 || expiringCount > 0) ? (
+            <View style={[styles.alertCard, { borderColor: colors.cardBorder, backgroundColor: colors.cardBg }]}>
+              {lowCount > 0 ? <Text style={[styles.alertText, { color: colors.text }]}>Low inventory items: {lowCount}</Text> : null}
+              {expiringCount > 0 ? <Text style={[styles.alertText, { color: colors.text }]}>Expiring lots soon: {expiringCount}</Text> : null}
+            </View>
+          ) : null}
 
           <Text style={[styles.sectionTitle, { color: colors.text }]}>Totals</Text>
 
@@ -312,4 +328,6 @@ const styles = StyleSheet.create({
   rankNum: { width: 24, fontWeight: "800" },
   rankName: { flex: 1, fontWeight: "700" },
   rankVal: { width: 100, textAlign: "right", fontWeight: "800" },
+  alertCard: { borderWidth: 1, borderRadius: 12, padding: 10, marginTop: 8, gap: 4 },
+  alertText: { fontWeight: "800" },
 });

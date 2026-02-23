@@ -16,7 +16,7 @@ export type SaleLine = {
 export type Sale = {
   id: string;
   occurredAt: string; // ISO
-  paymentMethod: "CASH" | "VENMO" | "CASHAPP" | "PAYPAL" | "OTHER";
+  paymentMethod: "CASH" | "CARD" | "BANK_TRANSFER" | "CHECK" | "VENMO" | "CASHAPP" | "PAYPAL" | "OTHER";
   paymentNote?: string;
 
   // ✅ NEW — buyer identity (compliance)
@@ -29,6 +29,11 @@ export type Sale = {
 
   createdAt: string;
   updatedAt: string;
+  requireSignature?: boolean;
+  requirePhoto?: boolean;
+  invoiceNumber?: string;
+  dueDate?: string;
+  isPaid?: boolean;
   saleLocationType?: "TRUCK" | "HOME" | "DOCK" | "OTHER",
   saleLocationNote?: string,
   buyerLicenseId?: string,
@@ -36,6 +41,9 @@ export type Sale = {
 
 export type PaymentMethod =
   | "CASH"
+  | "CARD"
+  | "BANK_TRANSFER"
+  | "CHECK"
   | "PAYPAL"
   | "CASHAPP"
   | "VENMO"

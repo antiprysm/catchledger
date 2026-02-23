@@ -9,6 +9,7 @@ import { STORAGE_KEYS } from "@/constants/storageKeys";
 import { InventoryItem } from "@/types/inventory";
 import { LicenseProfile } from "@/types/license";
 import { Sale } from "@/types/sales";
+import { loadAppSettings, toLicenseProfileFallback } from "@/utils/appSettings";
 import { loadJSON, saveJSON } from "@/utils/storage";
 
 import { File, Paths } from "expo-file-system";
@@ -222,14 +223,15 @@ export default function ComplianceRange() {
   }, [inventory, range]);
 
   const load = useCallback(async () => {
-    const [s, inv, p] = await Promise.all([
+    const [s, inv, p, settings] = await Promise.all([
       loadJSON<Sale[]>(STORAGE_KEYS.SALES, []),
       loadJSON<InventoryItem[]>(STORAGE_KEYS.INVENTORY, []),
       loadJSON<LicenseProfile | null>(STORAGE_KEYS.LICENSE_PROFILE, null),
+      loadAppSettings(),
     ]);
     setSales(s);
     setInventory(inv);
-    setProfile(p);
+    setProfile(p ?? toLicenseProfileFallback(settings.companyProfile));
   }, []);
 
   useFocusEffect(useCallback(() => { load(); }, [load]));
