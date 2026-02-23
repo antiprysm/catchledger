@@ -6,10 +6,10 @@ import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
 import { ThemeContext } from "@/theme/ThemeProvider";
 
 import { STORAGE_KEYS } from "@/constants/storageKeys";
-import { loadAppSettings } from "@/utils/appSettings";
-import type { AppSettings } from "@/types/settings";
 import { Expense } from "@/types/expenses";
 import { Sale } from "@/types/sales";
+import type { AppSettings } from "@/types/settings";
+import { loadAppSettings } from "@/utils/appSettings";
 import { loadJSON } from "@/utils/storage";
 
 function csvEscape(value: unknown) {
@@ -363,7 +363,7 @@ export default function ReportsScreen() {
     if (busy) return;
     setBusy("expenses");
     try {
-      const { expenses } = await loadAll();
+      const { expenses, settings } = await loadAll();
       if (!expenses.length) {
         Alert.alert("No expenses", "There are no expenses to export yet.");
         return;
