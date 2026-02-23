@@ -7,6 +7,7 @@ import { ThemeContext } from "@/theme/ThemeProvider";
 import { isExpired } from "@/constants/freshness";
 import { STORAGE_KEYS } from "@/constants/storageKeys";
 import { InventoryItem } from "@/types/inventory";
+import { loadAppSettings, type AppSettings, weightUnitLabel } from "@/utils/appSettings";
 import { loadJSON, saveJSON } from "@/utils/storage";
 
 export default function InventoryScreen() {
@@ -14,14 +15,17 @@ export default function InventoryScreen() {
 
   const [items, setItems] = useState<InventoryItem[]>([]);
   const [inspectionMode, setInspectionMode] = useState(false);
+  const [weightUnit, setWeightUnit] = useState<AppSettings["weightUnit"]>("lb");
 
   const loadAll = useCallback(async () => {
-    const [data, mode] = await Promise.all([
+    const [data, mode, settings] = await Promise.all([
       loadJSON<InventoryItem[]>(STORAGE_KEYS.INVENTORY, []),
       loadJSON<boolean>(STORAGE_KEYS.INSPECTION_MODE, false),
+      loadAppSettings(),
     ]);
     setItems(data);
     setInspectionMode(!!mode);
+    setWeightUnit(settings.weightUnit);
   }, []);
 
   useFocusEffect(
@@ -102,7 +106,7 @@ export default function InventoryScreen() {
                 </Text>
 
                 <Text style={{ color: colors.text }}>
-                  ${item.pricePerUnit}/{item.unit}{" "}
+                  ${item.pricePerUnit}/{weightUnitLabel(item.unit, weightUnit)}{" "}
                   <Text style={{ color: colors.muted }}>
                     {item.quantity != null ? `• Qty ${item.quantity}` : ""}
                   </Text>

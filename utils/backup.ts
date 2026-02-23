@@ -3,6 +3,7 @@ import { File, Paths } from "expo-file-system";
 import * as Sharing from "expo-sharing";
 
 import { STORAGE_KEYS } from "@/constants/storageKeys";
+import { APP_SETTINGS_STORAGE_KEY } from "@/utils/appSettings";
 import { loadJSON, saveJSON } from "@/utils/storage";
 
 export async function exportFullBackup() {

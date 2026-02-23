@@ -5,18 +5,15 @@ import { Alert, FlatList, Pressable, StyleSheet, Text, View } from "react-native
 
 import { STORAGE_KEYS } from "@/constants/storageKeys";
 import { Sale } from "@/types/sales";
+import { formatDateTime, loadAppSettings } from "@/utils/appSettings";
 import { loadJSON, saveJSON } from "@/utils/storage";
-
-function formatDate(iso: string) {
-  const d = new Date(iso);
-  return Number.isNaN(d.getTime()) ? iso : d.toLocaleString();
-}
 
 export default function SalesLogScreen() {
   const { colors } = useContext(ThemeContext);
 
   const [sales, setSales] = useState<Sale[]>([]);
   const [inspectionMode, setInspectionMode] = useState(false);
+  const [dateFormat, setDateFormat] = useState<"MM/DD/YYYY" | "DD/MM/YYYY">("MM/DD/YYYY");
 
   const loadAll = useCallback(() => {
     let mounted = true;
@@ -24,10 +21,12 @@ export default function SalesLogScreen() {
     Promise.all([
       loadJSON<Sale[]>(STORAGE_KEYS.SALES, []),
       loadJSON<boolean>(STORAGE_KEYS.INSPECTION_MODE, false),
-    ]).then(([data, mode]) => {
+      loadAppSettings(),
+    ]).then(([data, mode, settings]) => {
       if (!mounted) return;
       setSales(data);
       setInspectionMode(!!mode);
+      setDateFormat(settings.dateFormat);
     });
 
     return () => {
@@ -111,7 +110,7 @@ export default function SalesLogScreen() {
               </Text>
 
               <Text style={[styles.meta, { color: colors.muted }]}>
-                {formatDate(item.occurredAt)}
+                {formatDateTime(item.occurredAt, dateFormat)}
               </Text>
 
               {item.buyerName ? (
@@ -119,6 +118,7 @@ export default function SalesLogScreen() {
                   {item.buyerName}
                 </Text>
               ) : null}
+              {item.invoiceNumber ? <Text style={[styles.meta2, { color: colors.muted }]}>Invoice: {item.invoiceNumber}</Text> : null}
             </View>
 
             <View style={{ alignItems: "flex-end" }}>
