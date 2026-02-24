@@ -2,6 +2,7 @@ import { ThemeContext } from "@/theme/ThemeProvider";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { router } from "expo-router";
 import { useContext, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   Alert,
   Keyboard,
@@ -37,6 +38,7 @@ const CATS: ExpenseCategory[] = [
 
 export default function AddExpenseScreen() {
   const { colors } = useContext(ThemeContext);
+  const { t } = useTranslation();
 
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState<ExpenseCategory>("FUEL");
@@ -48,7 +50,7 @@ export default function AddExpenseScreen() {
   async function onSave() {
     const amt = Number(amount);
     if (!Number.isFinite(amt) || amt <= 0) {
-      Alert.alert("Invalid amount", "Enter a positive expense amount.");
+      Alert.alert(t("expenses.invalidAmountTitle"), t("expenses.invalidAmountMessage"));
       return;
     }
 
@@ -80,14 +82,14 @@ export default function AddExpenseScreen() {
         keyboardDismissMode="on-drag"
       >
         <Pressable onPress={Keyboard.dismiss} style={{ gap: 10 }}>
-          <Text style={[styles.title, { color: colors.text }]}>Add Expense</Text>
+          <Text style={[styles.title, { color: colors.text }]}>{t("expenses.addExpense")}</Text>
 
-          <Text style={[styles.label, { color: colors.text }]}>Amount</Text>
+          <Text style={[styles.label, { color: colors.text }]}>{t("expenses.amount")}</Text>
           <TextInput
             value={amount}
             onChangeText={setAmount}
             keyboardType="decimal-pad"
-            placeholder="25.00"
+            placeholder={t("expenses.amountPlaceholder")}
             placeholderTextColor={colors.muted}
             style={[
               styles.input,
@@ -99,7 +101,7 @@ export default function AddExpenseScreen() {
             ]}
           />
 
-          <Text style={[styles.label, { color: colors.text }]}>Category</Text>
+          <Text style={[styles.label, { color: colors.text }]}>{t("expenses.category")}</Text>
           <View style={styles.rowWrap}>
             {CATS.map((c) => {
               const on = category === c;
@@ -113,13 +115,13 @@ export default function AddExpenseScreen() {
                     on && { backgroundColor: colors.primary, borderColor: colors.primary },
                   ]}
                 >
-                  <Text style={[{ color: colors.text }, on && styles.chipTextOn]}>{c}</Text>
+                  <Text style={[{ color: colors.text }, on && styles.chipTextOn]}>{t(`expenses.categories.${c}`)}</Text>
                 </Pressable>
               );
             })}
           </View>
 
-          <Text style={[styles.label, { color: colors.text }]}>Date/time</Text>
+          <Text style={[styles.label, { color: colors.text }]}>{t("expenses.dateTime")}</Text>
           <Pressable
             onPress={() => setShowPicker(true)}
             style={[
@@ -130,11 +132,11 @@ export default function AddExpenseScreen() {
             <Text style={{ color: colors.text }}>{occurredAt.toLocaleString()}</Text>
           </Pressable>
 
-          <Text style={[styles.label, { color: colors.text }]}>Note (optional)</Text>
+          <Text style={[styles.label, { color: colors.text }]}>{t("expenses.noteOptional")}</Text>
           <TextInput
             value={note}
             onChangeText={setNote}
-            placeholder="Gas station, dock fee, etc."
+            placeholder={t("expenses.notePlaceholder")}
             placeholderTextColor={colors.muted}
             style={[
               styles.input,
@@ -148,7 +150,7 @@ export default function AddExpenseScreen() {
 
           {/* keep black */}
           <Pressable onPress={onSave} style={styles.saveBtn}>
-            <Text style={styles.saveBtnText}>Save Expense</Text>
+            <Text style={styles.saveBtnText}>{t("expenses.saveExpense")}</Text>
           </Pressable>
         </Pressable>
 
@@ -166,7 +168,7 @@ export default function AddExpenseScreen() {
               ]}
               onPress={() => {}}
             >
-              <Text style={[styles.pickerTitle, { color: colors.text }]}>Expense date</Text>
+              <Text style={[styles.pickerTitle, { color: colors.text }]}>{t("expenses.expenseDate")}</Text>
 
               <DateTimePicker
                 value={occurredAt}
@@ -180,7 +182,7 @@ export default function AddExpenseScreen() {
 
               {Platform.OS === "ios" && (
                 <Pressable style={styles.doneBtn} onPress={() => setShowPicker(false)}>
-                  <Text style={styles.doneBtnText}>Done</Text>
+                  <Text style={styles.doneBtnText}>{t("expenses.done")}</Text>
                 </Pressable>
               )}
             </Pressable>
