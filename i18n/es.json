@@ -22,32 +22,32 @@
     "goHome": "Go to home screen"
   },
   "settings": {
-    "title": "Settings",
-    "language": "Language",
-    "languageChangedRestart": "Language changed. Please restart the app to apply layout direction.",
-    "appearance": "Appearance",
-    "nightMode": "Night mode",
-    "nightModeSubtitle": "Smooth theme transition.",
-    "unitsFormatting": "Units & Formatting",
-    "weightUnit": "Weight unit",
-    "temperatureUnit": "Temperature unit",
-    "dateFormat": "Date format",
+    "title": "Configuración",
+    "language": "Idioma",
+    "languageChangedRestart": "Idioma cambiado. Reinicia la app para aplicar la dirección de diseño.",
+    "appearance": "Apariencia",
+    "nightMode": "Modo nocturno",
+    "nightModeSubtitle": "Transición suave del tema.",
+    "unitsFormatting": "Unidades y formato",
+    "weightUnit": "Unidad de peso",
+    "temperatureUnit": "Unidad de temperatura",
+    "dateFormat": "Formato de fecha",
     "languageLabels": {
-      "en": "English",
-      "zh": "Chinese (Simplified)",
-      "es": "Spanish",
+      "en": "Inglés",
+      "zh": "Chino (simplificado)",
+      "es": "Español",
       "hi": "Hindi",
-      "ar": "Arabic"
+      "ar": "Árabe"
     }
   },
   "tabs": {
-    "dashboard": "Dashboard",
-    "inventory": "Inventory",
-    "sales": "Sales",
-    "expenses": "Expenses",
-    "reports": "Reports",
-    "compliance": "Compliance",
-    "settings": "Settings"
+    "dashboard": "Panel",
+    "inventory": "Inventario",
+    "sales": "Ventas",
+    "expenses": "Gastos",
+    "reports": "Informes",
+    "compliance": "Cumplimiento",
+    "settings": "Configuración"
   },
   "dashboard": {
     "title": "Dashboard",

@@ -22,32 +22,32 @@
     "goHome": "Go to home screen"
   },
   "settings": {
-    "title": "Settings",
-    "language": "Language",
-    "languageChangedRestart": "Language changed. Please restart the app to apply layout direction.",
-    "appearance": "Appearance",
-    "nightMode": "Night mode",
-    "nightModeSubtitle": "Smooth theme transition.",
-    "unitsFormatting": "Units & Formatting",
-    "weightUnit": "Weight unit",
-    "temperatureUnit": "Temperature unit",
-    "dateFormat": "Date format",
+    "title": "الإعدادات",
+    "language": "اللغة",
+    "languageChangedRestart": "تم تغيير اللغة. يُرجى إعادة تشغيل التطبيق لتطبيق اتجاه الواجهة.",
+    "appearance": "المظهر",
+    "nightMode": "الوضع الليلي",
+    "nightModeSubtitle": "انتقال سلس للسمة.",
+    "unitsFormatting": "الوحدات والتنسيق",
+    "weightUnit": "وحدة الوزن",
+    "temperatureUnit": "وحدة الحرارة",
+    "dateFormat": "تنسيق التاريخ",
     "languageLabels": {
-      "en": "English",
-      "zh": "Chinese (Simplified)",
-      "es": "Spanish",
-      "hi": "Hindi",
-      "ar": "Arabic"
+      "en": "الإنجليزية",
+      "zh": "الصينية (المبسطة)",
+      "es": "الإسبانية",
+      "hi": "الهندية",
+      "ar": "العربية"
     }
   },
   "tabs": {
-    "dashboard": "Dashboard",
-    "inventory": "Inventory",
-    "sales": "Sales",
-    "expenses": "Expenses",
-    "reports": "Reports",
-    "compliance": "Compliance",
-    "settings": "Settings"
+    "dashboard": "لوحة التحكم",
+    "inventory": "المخزون",
+    "sales": "المبيعات",
+    "expenses": "المصروفات",
+    "reports": "التقارير",
+    "compliance": "الامتثال",
+    "settings": "الإعدادات"
   },
   "dashboard": {
     "title": "Dashboard",
