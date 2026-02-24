@@ -28,7 +28,7 @@ type Bucket = { label: string; revenue: number; expenses: number; countSales: nu
 
 export default function DashboardScreen() {
   const { colors } = useContext(ThemeContext);
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const [sales, setSales] = useState<Sale[]>([]);
   const [expenses, setExpenses] = useState<Expense[]>([]);
@@ -105,10 +105,19 @@ export default function DashboardScreen() {
     }
 
     return init;
-  }, [sales, expenses]);
+  }, [sales, expenses, t]);
 
   const allTimeRevenue = useMemo(() => sales.reduce((sum, s) => sum + s.total, 0), [sales]);
   const allTimeExpenses = useMemo(() => expenses.reduce((sum, e) => sum + e.amount, 0), [expenses]);
+
+  const formatMoney = useMemo(() => {
+    const formatter = new Intl.NumberFormat(i18n.language, {
+      style: "currency",
+      currency: "USD",
+      maximumFractionDigits: 2,
+    });
+    return (amount: number) => formatter.format(amount);
+  }, [i18n.language]);
 
   const topSpecies30 = useMemo(() => {
     const cutoff = startOfDay(daysAgo(29)).getTime(); // last 30 days incl today
@@ -128,7 +137,7 @@ export default function DashboardScreen() {
       .map(([speciesName, revenue]) => ({ speciesName, revenue }))
       .sort((a, b) => b.revenue - a.revenue)
       .slice(0, 8);
-  }, [sales]);
+  }, [sales, t]);
 
   return (
     <FlatList
@@ -154,7 +163,7 @@ export default function DashboardScreen() {
 
               {lastUpdated ? (
                 <Text style={[styles.updatedText, { color: colors.muted }]}>
-                  {t("dashboard.updated", { time: lastUpdated.toLocaleTimeString() })}
+                  {t("dashboard.updated", { time: lastUpdated.toLocaleTimeString(i18n.language) })}
                 </Text>
               ) : null}
             </View>
@@ -175,12 +184,14 @@ export default function DashboardScreen() {
               label={t("dashboard.allTimeRevenue")}
               amount={allTimeRevenue}
               subtitle={t("dashboard.salesCount", { count: sales.length })}
+              formatMoney={formatMoney}
             />
             <MoneyCard
               colors={colors}
               label={t("dashboard.allTimeExpenses")}
               amount={allTimeExpenses}
               subtitle={t("dashboard.expensesCount", { count: expenses.length })}
+              formatMoney={formatMoney}
             />
           </View>
 
@@ -190,14 +201,15 @@ export default function DashboardScreen() {
               label={t("dashboard.allTimeNet")}
               amount={allTimeRevenue - allTimeExpenses}
               subtitle={t("dashboard.revenueMinusExpenses")}
+              formatMoney={formatMoney}
               emphasize
             />
           </View>
 
           <Text style={[styles.sectionTitle, { color: colors.text }]}>{t("dashboard.thisPeriod")}</Text>
-          <PeriodRow colors={colors} bucket={buckets.today} />
-          <PeriodRow colors={colors} bucket={buckets.last7} />
-          <PeriodRow colors={colors} bucket={buckets.thisMonth} />
+          <PeriodRow colors={colors} bucket={buckets.today} formatMoney={formatMoney} />
+          <PeriodRow colors={colors} bucket={buckets.last7} formatMoney={formatMoney} />
+          <PeriodRow colors={colors} bucket={buckets.thisMonth} formatMoney={formatMoney} />
 
           <Text style={[styles.sectionTitle, { marginTop: 10, color: colors.text }]}>
             {t("dashboard.topSpeciesLast30")}
@@ -212,7 +224,7 @@ export default function DashboardScreen() {
         <View style={[styles.rankRow, { borderColor: colors.cardBorder }]}>
           <Text style={[styles.rankNum, { color: colors.muted }]}>{index + 1}</Text>
           <Text style={[styles.rankName, { color: colors.text }]}>{item.speciesName}</Text>
-          <Text style={[styles.rankVal, { color: colors.text }]}>${item.revenue.toFixed(2)}</Text>
+          <Text style={[styles.rankVal, { color: colors.text }]}>{formatMoney(item.revenue)}</Text>
         </View>
       )}
     />
@@ -224,12 +236,14 @@ function MoneyCard({
   label,
   amount,
   subtitle,
+  formatMoney,
   emphasize,
 }: {
   colors: any;
   label: string;
   amount: number;
   subtitle?: string;
+  formatMoney: (amount: number) => string;
   emphasize?: boolean;
 }) {
   const neg = amount < 0;
@@ -243,14 +257,14 @@ function MoneyCard({
     >
       <Text style={[styles.cardLabel, { color: colors.muted }]}>{label}</Text>
       <Text style={[styles.cardAmount, { color: colors.text }, neg && styles.negative]}>
-        ${amount.toFixed(2)}
+        {formatMoney(amount)}
       </Text>
       {subtitle ? <Text style={[styles.cardSub, { color: colors.muted }]}>{subtitle}</Text> : null}
     </View>
   );
 }
 
-function PeriodRow({ bucket, colors }: { bucket: Bucket; colors: any }) {
+function PeriodRow({ bucket, colors, formatMoney }: { bucket: Bucket; colors: any; formatMoney: (amount: number) => string }) {
   const { t } = useTranslation();
   const net = bucket.revenue - bucket.expenses;
 
@@ -260,19 +274,19 @@ function PeriodRow({ bucket, colors }: { bucket: Bucket; colors: any }) {
 
       <View style={{ flex: 1 }}>
         <Text style={[styles.periodLine, { color: colors.text }]}>
-          {t("dashboard.revenue")}: <Text style={styles.bold}>${bucket.revenue.toFixed(2)}</Text>{" "}
+          {t("dashboard.revenue")}: <Text style={styles.bold}>{formatMoney(bucket.revenue)}</Text>{" "}
           <Text style={[styles.muted, { color: colors.muted }]}>({bucket.countSales})</Text>
         </Text>
 
         <Text style={[styles.periodLine, { color: colors.text }]}>
-          {t("dashboard.expenses")}: <Text style={styles.bold}>${bucket.expenses.toFixed(2)}</Text>{" "}
+          {t("dashboard.expenses")}: <Text style={styles.bold}>{formatMoney(bucket.expenses)}</Text>{" "}
           <Text style={[styles.muted, { color: colors.muted }]}>({bucket.countExpenses})</Text>
         </Text>
 
         <Text style={[styles.periodLine, { color: colors.text }]}>
           {t("dashboard.net")}:{" "}
           <Text style={[styles.bold, net < 0 && styles.negative]}>
-            ${net.toFixed(2)}
+            {formatMoney(net)}
           </Text>
         </Text>
       </View>
