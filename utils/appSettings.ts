@@ -14,10 +14,6 @@ export async function loadAppSettings(): Promise<AppSettings> {
     companyProfile: { ...DEFAULT_APP_SETTINGS.companyProfile, ...stored.companyProfile },
   };
 
-  if (__DEV__) {
-    console.log("[settings] loaded settings.language:", merged.language);
-  }
-
   return merged;
 }
 
