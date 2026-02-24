@@ -1,5 +1,6 @@
 import { ThemeContext } from "@/theme/ThemeProvider";
 import { useFocusEffect } from "expo-router";
+import { useTranslation } from "react-i18next";
 import { useCallback, useContext, useMemo, useState } from "react";
 import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
@@ -140,6 +141,7 @@ async function shareTextFile(filename: string, mimeType: string, contents: strin
 
 export default function ComplianceWeek() {
   const { colors } = useContext(ThemeContext);
+  const { t } = useTranslation();
 
   const [sales, setSales] = useState<Sale[]>([]);
   const [inventory, setInventory] = useState<InventoryItem[]>([]);
@@ -205,13 +207,13 @@ export default function ComplianceWeek() {
     try {
       const filename = `catchledger_inspection_7days_${stampForName()}.csv`;
       const csv = buildInspectionCSV(profile, weekHarvest, weekSales);
-      await shareTextFile(filename, "text/csv", csv, "Export Inspection CSV (7 Days)");
+      await shareTextFile(filename, "text/csv", csv, t("compliance.exportInspectionCsv7Days"));
     } catch (e: any) {
-      Alert.alert("Export failed", e?.message ?? "Unknown error");
+      Alert.alert(t("reports.exportFailed"), e?.message ?? t("reports.unknownError"));
     } finally {
       setBusy(false);
     }
-  }, [busy, profile, weekHarvest, weekSales]);
+  }, [busy, profile, t, weekHarvest, weekSales]);
 
   return (
     <ScrollView
@@ -221,7 +223,7 @@ export default function ComplianceWeek() {
       {inspectionMode ? (
         <View style={styles.bannerWrap}>
           <View style={styles.banner}>
-            <Text style={styles.bannerText}>INSPECTION MODE — READ ONLY</Text>
+            <Text style={styles.bannerText}>{t("compliance.inspectionReadOnly")}</Text>
           </View>
 
           <Pressable
@@ -229,25 +231,25 @@ export default function ComplianceWeek() {
             onPress={async () => {
               await saveJSON(STORAGE_KEYS.INSPECTION_MODE, false);
               setInspectionMode(false);
-              Alert.alert("Inspection mode off");
+              Alert.alert(t("compliance.inspectionOff"));
             }}
           >
-            <Text style={styles.exitText}>Exit Inspection Mode</Text>
+            <Text style={styles.exitText}>{t("compliance.exitInspectionMode")}</Text>
           </Pressable>
         </View>
       ) : null}
 
       <View style={styles.headerRow}>
-        <View>
-          <Text style={[styles.h1, { color: colors.text }]}>Inspection — Last 7 Days</Text>
-          <Text style={[styles.sub, { color: colors.muted }]}>License + harvest log + sales log.</Text>
+        <View style={styles.headerMain}>
+          <Text style={[styles.h1, { color: colors.text }]}>{t("compliance.inspectionLast7Days")}</Text>
+          <Text style={[styles.sub, { color: colors.muted }]}>{t("compliance.licenseHarvestSalesLog")}</Text>
         </View>
 
         <Pressable
           style={[styles.refreshBtn, { borderColor: colors.cardBorder, backgroundColor: colors.cardBg }]}
           onPress={load}
         >
-          <Text style={[styles.refreshText, { color: colors.text }]}>Refresh</Text>
+          <Text style={[styles.refreshText, { color: colors.text }]}>{t("common.refresh")}</Text>
         </Pressable>
       </View>
 
@@ -259,13 +261,13 @@ export default function ComplianceWeek() {
             </Text>
 
             <Text style={[styles.profileLine, { color: colors.muted }]}>
-              {profile.state} Aquatic Life Distributor License:{" "}
+              {t("compliance.aquaticLifeDistributorLicense", { state: profile.state })}{" "}
               <Text style={[styles.bold, { color: colors.text }]}>{profile.licenseNumber}</Text>
             </Text>
 
             <Text style={[styles.profileLine, { color: colors.muted }]}>
-              Legal: {profile.legalName}
-              {profile.vehiclePlate ? ` • Plate: ${profile.vehiclePlate}` : ""}
+              {t("compliance.legalValue", { value: profile.legalName })}
+              {profile.vehiclePlate ? ` • ${t("compliance.plateValue", { value: profile.vehiclePlate })}` : ""}
             </Text>
 
             <Text style={[styles.profileLine, { color: colors.muted }]}>
@@ -275,18 +277,18 @@ export default function ComplianceWeek() {
             </Text>
 
             {profile.homeBaseCity ? (
-              <Text style={[styles.profileLine, { color: colors.muted }]}>Home base: {profile.homeBaseCity}</Text>
+              <Text style={[styles.profileLine, { color: colors.muted }]}>{t("compliance.homeBaseValue", { value: profile.homeBaseCity })}</Text>
             ) : null}
 
             <Text style={[styles.profileUpdated, { color: colors.muted }]}>
-              Updated: {new Date(profile.updatedAt).toLocaleString()}
+              {t("compliance.updatedValue", { value: new Date(profile.updatedAt).toLocaleString() })}
             </Text>
           </>
         ) : (
           <>
-            <Text style={[styles.profileTitle, { color: colors.text }]}>License profile not set</Text>
+            <Text style={[styles.profileTitle, { color: colors.text }]}>{t("compliance.licenseProfileNotSet")}</Text>
             <Text style={[styles.profileLine, { color: colors.muted }]}>
-              Go to Compliance → License Profile to configure.
+              {t("compliance.goToLicenseProfileToConfigure")}
             </Text>
           </>
         )}
@@ -294,13 +296,13 @@ export default function ComplianceWeek() {
 
       <View style={[styles.summaryCard, { borderColor: colors.cardBorder, backgroundColor: colors.cardBg }]}>
         <Text style={[styles.summaryLine, { color: colors.text }]}>
-          Sales: <Text style={styles.bold}>{weekSales.length}</Text>
+          {t("compliance.salesCount", { count: weekSales.length })}: <Text style={styles.bold}>{weekSales.length}</Text>
         </Text>
         <Text style={[styles.summaryLine, { color: colors.text }]}>
-          Revenue: <Text style={styles.bold}>${revenue.toFixed(2)}</Text>
+          {t("compliance.revenue")}: <Text style={styles.bold}>${revenue.toFixed(2)}</Text>
         </Text>
         <Text style={[styles.summaryLine, { color: colors.text }]}>
-          Harvest entries: <Text style={styles.bold}>{weekHarvest.length}</Text>
+          {t("compliance.harvestEntries")}: <Text style={styles.bold}>{weekHarvest.length}</Text>
         </Text>
       </View>
 
@@ -310,13 +312,13 @@ export default function ComplianceWeek() {
         disabled={busy}
       >
         <Text style={styles.exportBtnText}>
-          {busy ? "Exporting..." : "Export Inspection CSV (7 days)"}
+          {busy ? t("compliance.exporting") : t("compliance.exportInspectionCsv7Days")}
         </Text>
       </Pressable>
 
-      <Text style={[styles.sectionTitle, { color: colors.text }]}>Harvest log (last 7 days)</Text>
+      <Text style={[styles.sectionTitle, { color: colors.text }]}>{t("compliance.harvestLogLast7Days")}</Text>
       {weekHarvest.length === 0 ? (
-        <Text style={[styles.muted, { color: colors.muted }]}>No harvest logged in the last 7 days.</Text>
+        <Text style={[styles.muted, { color: colors.muted }]}>{t("compliance.noHarvestLast7Days")}</Text>
       ) : (
         weekHarvest.map((i) => (
           <View
@@ -331,23 +333,23 @@ export default function ComplianceWeek() {
             </View>
 
             <Text style={[styles.muted, { color: colors.muted }]}>
-              {i.catchLocation ? `Location: ${i.catchLocation}` : "Location: —"}
+              {i.catchLocation ? t("compliance.locationValue", { value: i.catchLocation }) : t("compliance.locationEmpty")}
             </Text>
             <Text style={[styles.muted, { color: colors.muted }]}>
-              {i.caughtAt ? `Caught: ${fmtWhen(i.caughtAt)}` : "Caught: —"}
+              {i.caughtAt ? t("compliance.caughtValue", { value: fmtWhen(i.caughtAt) }) : t("compliance.caughtEmpty")}
             </Text>
             {i.catchMethod ? (
-              <Text style={[styles.muted, { color: colors.muted }]}>Method: {i.catchMethod}</Text>
+              <Text style={[styles.muted, { color: colors.muted }]}>{t("compliance.methodValue", { value: i.catchMethod })}</Text>
             ) : null}
           </View>
         ))
       )}
 
       <Text style={[styles.sectionTitle, { marginTop: 10, color: colors.text }]}>
-        Sales log (last 7 days)
+        {t("compliance.salesLogLast7Days")}
       </Text>
       {weekSales.length === 0 ? (
-        <Text style={[styles.muted, { color: colors.muted }]}>No sales logged in the last 7 days.</Text>
+        <Text style={[styles.muted, { color: colors.muted }]}>{t("compliance.noSalesLast7Days")}</Text>
       ) : (
         weekSales.map((s) => (
           <View
@@ -356,8 +358,8 @@ export default function ComplianceWeek() {
           >
             <View style={styles.rowBetween}>
               <Text style={[styles.saleTitle, { color: colors.text }]}>
-                {(s.buyerName || "Unknown buyer") + " "}
-                <Text style={[styles.mutedInline, { color: colors.muted }]}>({s.buyerType || "OTHER"})</Text>
+                {(s.buyerName || t("compliance.unknownBuyer")) + " "}
+                <Text style={[styles.mutedInline, { color: colors.muted }]}>({s.buyerType || t("compliance.other")})</Text>
               </Text>
               <Text style={[styles.money, { color: colors.text }]}>${Number(s.total || 0).toFixed(2)}</Text>
             </View>
@@ -365,20 +367,20 @@ export default function ComplianceWeek() {
             <Text style={[styles.muted, { color: colors.muted }]}>{fmtWhen(s.occurredAt)}</Text>
 
             {s.buyerContact ? (
-              <Text style={[styles.muted, { color: colors.muted }]}>Contact: {s.buyerContact}</Text>
+              <Text style={[styles.muted, { color: colors.muted }]}>{t("compliance.contactValue", { value: s.buyerContact })}</Text>
             ) : null}
 
             <Text style={[styles.muted, { color: colors.muted }]}>
-              Payment: {s.paymentMethod}
+              {t("compliance.paymentValue", { value: s.paymentMethod })}
               {s.paymentNote ? ` • ${s.paymentNote}` : ""}
             </Text>
 
             <View style={{ marginTop: 8, gap: 6 }}>
               {s.lines.map((ln) => {
-                const origin = ln.originCatchLocation ? `Origin: ${ln.originCatchLocation}` : "Origin: —";
-                const caught = ln.originCaughtAt ? `Caught: ${fmtWhen(ln.originCaughtAt)}` : "Caught: —";
-                const method = ln.originCatchMethod ? `Method: ${ln.originCatchMethod}` : null;
-                const batch = (ln as any).originBatchId ? `Batch: ${(ln as any).originBatchId}` : null;
+                const origin = ln.originCatchLocation ? t("compliance.originValue", { value: ln.originCatchLocation }) : t("compliance.originEmpty");
+                const caught = ln.originCaughtAt ? t("compliance.caughtValue", { value: fmtWhen(ln.originCaughtAt) }) : t("compliance.caughtEmpty");
+                const method = ln.originCatchMethod ? t("compliance.methodValue", { value: ln.originCatchMethod }) : null;
+                const batch = (ln as any).originBatchId ? t("compliance.batchValue", { value: (ln as any).originBatchId }) : null;
 
                 return (
                   <View
@@ -386,7 +388,7 @@ export default function ComplianceWeek() {
                     style={[styles.lineBox, { borderColor: colors.cardBorder, backgroundColor: colors.bg }]}
                   >
                     <Text style={[styles.lineItem, { color: colors.text }]}>
-                      • {ln.speciesName}: {ln.quantity} {ln.unit} @ ${Number(ln.unitPrice).toFixed(2)}
+                      • {ln.speciesName}: {ln.quantity} {ln.unit} {t("compliance.atPrice", { price: Number(ln.unitPrice).toFixed(2) })}
                     </Text>
 
                     {batch ? <Text style={[styles.lineMeta, { color: colors.muted }]}>{batch}</Text> : null}
@@ -407,11 +409,12 @@ export default function ComplianceWeek() {
 const styles = StyleSheet.create({
   container: { padding: 16, gap: 12, paddingBottom: 40 },
 
-  headerRow: { flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
+  headerRow: { flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start", gap: 10 },
+  headerMain: { flex: 1, minWidth: 0 },
   h1: { fontSize: 20, fontWeight: "900" },
   sub: { marginTop: 2 },
 
-  refreshBtn: { borderWidth: 1, borderRadius: 12, paddingVertical: 8, paddingHorizontal: 12 },
+  refreshBtn: { borderWidth: 1, borderRadius: 12, paddingVertical: 8, paddingHorizontal: 12, alignSelf: "flex-start" },
   refreshText: { fontWeight: "900" },
 
   profileCard: { borderWidth: 1, borderRadius: 14, padding: 12, gap: 4 },

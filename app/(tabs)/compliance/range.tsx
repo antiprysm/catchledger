@@ -310,7 +310,7 @@ export default function ComplianceRange() {
 
 
       <View style={styles.headerRow}>
-        <View>
+        <View style={styles.headerMain}>
         <Text style={[styles.h1, { color: colors.text }]}>{t("compliance.range")}</Text>
         <Text style={[styles.sub, { color: colors.muted }]}>Select a range for harvest + sales logs.</Text>
         </View>
@@ -319,7 +319,7 @@ export default function ComplianceRange() {
           style={[styles.refreshBtn, { borderColor: colors.cardBorder, backgroundColor: colors.cardBg }]}
           onPress={load}
         >
-          <Text style={[styles.refreshText, { color: colors.text }]}>Refresh</Text>
+          <Text style={[styles.refreshText, { color: colors.text }]}>{t("common.refresh")}</Text>
         </Pressable>
 
       </View>
@@ -506,11 +506,12 @@ export default function ComplianceRange() {
 const styles = StyleSheet.create({
   container: { padding: 16, gap: 12, paddingBottom: 40 },
 
-  headerRow: { flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
+  headerRow: { flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start", gap: 10 },
+  headerMain: { flex: 1, minWidth: 0 },
   h1: { fontSize: 20, fontWeight: "900" },
   sub: { opacity: 0.75, marginTop: 2 },
 
-  refreshBtn: { borderWidth: 1, borderColor: "#ddd", borderRadius: 12, paddingVertical: 8, paddingHorizontal: 12 },
+  refreshBtn: { borderWidth: 1, borderColor: "#ddd", borderRadius: 12, paddingVertical: 8, paddingHorizontal: 12, alignSelf: "flex-start" },
   refreshText: { fontWeight: "900" },
 
   profileCard: { borderWidth: 1, borderColor: "#ddd", borderRadius: 14, padding: 12, gap: 4 },
