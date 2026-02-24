@@ -15,6 +15,13 @@ type IconSymbolName = keyof typeof MAPPING;
  */
 const MAPPING = {
   'house.fill': 'home',
+  'ferry.fill': 'directions-boat',
+  'fish.fill': 'set-meal',
+  'dollarsign.circle.fill': 'paid',
+  'anchor.fill': 'anchor',
+  'scroll.fill': 'description',
+  'lighthouse.fill': 'wb-incandescent',
+  'compass.fill': 'explore',
   'paperplane.fill': 'send',
   'chevron.left.forwardslash.chevron.right': 'code',
   'chevron.right': 'chevron-right',
@@ -39,3 +46,8 @@ export function IconSymbol({
 }) {
   return <MaterialIcons color={color} size={size} name={MAPPING[name]} style={style} />;
 }
+
+// Tab mappings: Dashboard=ferry.fill->directions-boat, Inventory=fish.fill->set-meal,
+// Sales=dollarsign.circle.fill->paid, Expenses=anchor.fill->anchor,
+// Reports=scroll.fill->description, Compliance=lighthouse.fill->wb-incandescent,
+// Settings=compass.fill->explore.

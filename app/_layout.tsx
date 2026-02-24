@@ -85,6 +85,23 @@ function NavThemeWrapper() {
     }
   }
 
+  const navTheme = React.useMemo(() => {
+    const baseTheme = mode === "DARK" ? DarkTheme : DefaultTheme;
+
+    return {
+      ...baseTheme,
+      colors: {
+        ...baseTheme.colors,
+        primary: colors.primary,
+        background: colors.bg,
+        card: colors.surface,
+        text: colors.text,
+        border: colors.border,
+        notification: colors.danger,
+      },
+    };
+  }, [mode, colors]);
+
   if (locked) {
     return (
       <View style={[styles.lockWrap, { backgroundColor: colors.bg }]}> 
@@ -96,27 +113,33 @@ function NavThemeWrapper() {
           placeholderTextColor={colors.muted}
           secureTextEntry
           keyboardType="number-pad"
-          style={[styles.lockInput, { color: colors.text, borderColor: colors.cardBorder }]}
+          style={[
+            styles.lockInput,
+            { color: colors.text, borderColor: colors.cardBorder, backgroundColor: colors.surface },
+          ]}
         />
-        <Pressable style={styles.lockBtn} onPress={unlockByPasscode}>
+        <Pressable style={[styles.lockBtn, { backgroundColor: colors.primary }]} onPress={unlockByPasscode}>
           <Text style={styles.lockBtnText}>{t("lock.unlock")}</Text>
         </Pressable>
-        {(settingsRef.current?.biometricsEnabled ?? false) ? (
-          <Pressable style={[styles.lockBtn, { backgroundColor: "#3b3b3b" }]} onPress={unlockByBiometric}>
-            <Text style={styles.lockBtnText}>{t("lock.unlockBiometric")}</Text>
+        {settingsRef.current?.biometricsEnabled ? (
+          <Pressable
+            style={[styles.lockBtn, { backgroundColor: colors.surface2, borderColor: colors.border }]}
+            onPress={unlockByBiometric}
+          >
+            <Text style={[styles.lockBtnText, { color: colors.text }]}>{t("lock.unlockBiometric")}</Text>
           </Pressable>
         ) : null}
-        {!!lockError && <Text style={[styles.lockErr, { color: "#d32f2f" }]}>{lockError}</Text>}
+        {!!lockError && <Text style={[styles.lockErr, { color: colors.danger }]}>{lockError}</Text>}
       </View>
     );
   }
 
   return (
-    <NavThemeProvider value={mode === "DARK" ? DarkTheme : DefaultTheme}>
+    <NavThemeProvider value={navTheme}>
       <Stack
         screenOptions={{
           contentStyle: { backgroundColor: colors.bg },
-          headerStyle: { backgroundColor: colors.bg },
+          headerStyle: { backgroundColor: colors.surface },
           headerTintColor: colors.text,
           headerShadowVisible: false,
         }}
@@ -139,7 +162,7 @@ export default function RootLayout() {
     (async () => {
       const settings = await loadAppSettings();
       await ensureI18nInitialized();
-      await applyLanguage(settings.language ?? "en"); // <-- key line
+      await applyLanguage(settings.language ?? "en");
       if (mounted) setReady(true);
     })();
     return () => {
@@ -162,7 +185,7 @@ const styles = StyleSheet.create({
   lockWrap: { flex: 1, justifyContent: "center", padding: 20, gap: 10 },
   lockTitle: { fontSize: 24, fontWeight: "900", marginBottom: 6, textAlign: "center" },
   lockInput: { borderWidth: 1, borderRadius: 12, padding: 12 },
-  lockBtn: { backgroundColor: "#111", padding: 12, borderRadius: 10, alignItems: "center" },
-  lockBtnText: { color: "white", fontWeight: "900" },
+  lockBtn: { padding: 12, borderRadius: 10, alignItems: "center", borderWidth: 1, borderColor: "transparent" },
+  lockBtnText: { color: "#F4F7FB", fontWeight: "900" },
   lockErr: { textAlign: "center", fontWeight: "700", marginTop: 4 },
 });
