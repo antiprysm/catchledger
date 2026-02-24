@@ -54,7 +54,9 @@ export default function TabLayout() {
         options={{
           title: t("tabs.expenses"),
           headerShown: false,
-          tabBarIcon: ({ color }) => <IconSymbol name="anchor.fill" color={color} size={24} />,
+          tabBarIcon: ({ color }) => (
+            <IconSymbol name="receipt.fill" color={color} size={24} />
+          ),
         }}
       />
       <Tabs.Screen
@@ -69,14 +71,19 @@ export default function TabLayout() {
         options={{
           title: t("tabs.compliance"),
           headerShown: false,
-          tabBarIcon: ({ color }) => <IconSymbol name="lighthouse.fill" color={color} size={24} />,
+          tabBarIcon: ({ color }) => (
+            <IconSymbol name="checkmark.shield.fill" color={color} size={24} />
+          ),
         }}
       />
       <Tabs.Screen
         name="settings"
         options={{
           title: t("tabs.settings"),
-          tabBarIcon: ({ color }) => <IconSymbol name="compass.fill" color={color} size={24} />,
+          headerShown: false,
+          tabBarIcon: ({ color }) => (
+            <IconSymbol name="gearshape.fill" color={color} size={24} />
+          ),
         }}
       />
     </Tabs>
