@@ -113,7 +113,9 @@
     "privacyPolicy": "Privacy policy",
     "terms": "Terms",
     "contactSupport": "Contact support",
-    "lastSynced": "آخر مزامنة: {{time}}"
+    "lastSynced": "آخر مزامنة: {{time}}",
+    "savedLanguage": "اللغة المحفوظة: {{language}}",
+    "activeLanguage": "لغة i18n النشطة: {{language}}"
   },
   "tabs": {
     "dashboard": "لوحة التحكم",

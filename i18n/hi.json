@@ -113,7 +113,9 @@
     "privacyPolicy": "Privacy policy",
     "terms": "Terms",
     "contactSupport": "Contact support",
-    "lastSynced": "आखिरी सिंक: {{time}}"
+    "lastSynced": "आखिरी सिंक: {{time}}",
+    "savedLanguage": "सहेजी गई भाषा: {{language}}",
+    "activeLanguage": "सक्रिय i18n.language: {{language}}"
   },
   "tabs": {
     "dashboard": "डैशबोर्ड",

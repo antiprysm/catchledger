@@ -174,8 +174,8 @@ export default function SettingsScreen() {
         />
         {__DEV__ ? (
           <View style={{ gap: 4, marginTop: 8 }}>
-            <Text style={[styles.metaText, { color: colors.muted }]}>Saved language: {settings.language}</Text>
-            <Text style={[styles.metaText, { color: colors.muted }]}>Active i18n.language: {i18n.language}</Text>
+            <Text style={[styles.metaText, { color: colors.muted }]}>{t("settings.savedLanguage", { language: settings.language })}</Text>
+            <Text style={[styles.metaText, { color: colors.muted }]}>{t("settings.activeLanguage", { language: i18n.language })}</Text>
           </View>
         ) : null}
       </Card>

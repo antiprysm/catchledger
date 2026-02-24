@@ -113,7 +113,9 @@
     "privacyPolicy": "Privacy policy",
     "terms": "Terms",
     "contactSupport": "Contact support",
-    "lastSynced": "Last synced: {{time}}"
+    "lastSynced": "Last synced: {{time}}",
+    "savedLanguage": "Saved language: {{language}}",
+    "activeLanguage": "Active i18n.language: {{language}}"
   },
   "tabs": {
     "dashboard": "Dashboard",

@@ -113,7 +113,9 @@
     "privacyPolicy": "Privacy policy",
     "terms": "Terms",
     "contactSupport": "Contact support",
-    "lastSynced": "上次同步：{{time}}"
+    "lastSynced": "上次同步：{{time}}",
+    "savedLanguage": "已保存语言：{{language}}",
+    "activeLanguage": "当前 i18n.language：{{language}}"
   },
   "tabs": {
     "dashboard": "仪表盘",
