@@ -1,6 +1,7 @@
 import { ThemeContext } from "@/theme/ThemeProvider";
 import { Link, router, useFocusEffect } from "expo-router";
 import { useCallback, useContext, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Alert, FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 
 import { STORAGE_KEYS } from "@/constants/storageKeys";
@@ -10,6 +11,7 @@ import { loadJSON, saveJSON } from "@/utils/storage";
 
 export default function SalesLogScreen() {
   const { colors } = useContext(ThemeContext);
+  const { t } = useTranslation();
 
   const [sales, setSales] = useState<Sale[]>([]);
   const [inspectionMode, setInspectionMode] = useState(false);
@@ -60,7 +62,7 @@ export default function SalesLogScreen() {
             onPress={async () => {
               await saveJSON(STORAGE_KEYS.INSPECTION_MODE, false);
               setInspectionMode(false);
-              Alert.alert("Inspection mode off");
+              Alert.alert(t("sales.inspectionOff"));
             }}
           >
             <Text style={styles.exitText}>Exit Inspection Mode</Text>
@@ -69,19 +71,19 @@ export default function SalesLogScreen() {
       ) : null}
 
       <View style={styles.headerRow}>
-        <Text style={[styles.title, { color: colors.text }]}>Sales</Text>
+        <Text style={[styles.title, { color: colors.text }]}>{t("sales.title")}</Text>
 
         {!inspectionMode && (
           <Link href="/(tabs)/sales/new" asChild>
             <Pressable style={styles.addBtn}>
-              <Text style={styles.addBtnText}>New Sale</Text>
+              <Text style={styles.addBtnText}>{t("sales.newSale")}</Text>
             </Pressable>
           </Link>
         )}
       </View>
 
       <Text style={[styles.sub, { color: colors.muted }]}>
-        Last 30 days: ${total30.toFixed(2)}
+        {t("sales.last30Days", { amount: total30.toFixed(2) })}
       </Text>
 
       {(lowCount > 0 || expiringCount > 0) ? (
@@ -96,7 +98,7 @@ export default function SalesLogScreen() {
         keyExtractor={(s) => s.id}
         ListEmptyComponent={
           <Text style={[styles.empty, { color: colors.muted }]}>
-            No sales yet. Create one in “New Sale”.
+            {t("sales.empty")}
           </Text>
         }
         renderItem={({ item }) => (

@@ -1,3 +1,4 @@
+import "@/i18n";
 import { ThemeProvider as AppThemeProvider, ThemeContext } from "@/theme/ThemeProvider";
 import { loadAppSettings } from "@/utils/appSettings";
 import { runNotificationChecks } from "@/utils/notifications";
@@ -83,7 +84,7 @@ function NavThemeWrapper() {
 
   if (locked) {
     return (
-      <View style={[styles.lockWrap, { backgroundColor: colors.bg }]}>
+      <View style={[styles.lockWrap, { backgroundColor: colors.bg }]}> 
         <Text style={[styles.lockTitle, { color: colors.text }]}>CatchLedger Locked</Text>
         <TextInput
           value={passcodeInput}
@@ -128,6 +129,21 @@ function NavThemeWrapper() {
 }
 
 export default function RootLayout() {
+  const [ready, setReady] = React.useState(false);
+
+  React.useEffect(() => {
+    let mounted = true;
+    (async () => {
+      await loadAppSettings();
+      if (mounted) setReady(true);
+    })();
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  if (!ready) return null;
+
   return (
     <AppThemeProvider>
       <NavThemeWrapper />
