@@ -1,4 +1,3 @@
-import { applyLanguage } from "@/i18n";
 import { STORAGE_KEYS } from "@/constants/storageKeys";
 import type { LicenseProfile } from "@/types/license";
 import { DEFAULT_APP_SETTINGS, type AppSettings } from "@/types/settings";
@@ -18,8 +17,6 @@ export async function loadAppSettings(): Promise<AppSettings> {
   if (__DEV__) {
     console.log("[settings] loaded settings.language:", merged.language);
   }
-
-  await applyLanguage(merged.language);
 
   return merged;
 }
