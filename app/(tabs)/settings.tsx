@@ -1,14 +1,15 @@
-import { STORAGE_KEYS } from "@/constants/storageKeys";
 import { ThemeContext } from "@/theme/ThemeProvider";
 import { DEFAULT_APP_SETTINGS, type AppSettings } from "@/types/settings";
+import { applyLanguage, type SupportedLanguage } from "@/i18n";
 import { exportFullBackup, restoreFullBackup } from "@/utils/backup";
 
-import { loadJSON, saveJSON } from "@/utils/storage";
+import { loadAppSettings, saveAppSettings } from "@/utils/appSettings";
 import Constants from "expo-constants";
 import * as DocumentPicker from "expo-document-picker";
 import { Image } from "expo-image";
 import * as Linking from "expo-linking";
 import { useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import { useTranslation } from "react-i18next";
 import { Alert, Pressable, ScrollView, StyleSheet, Switch, Text, TextInput, View } from "react-native";
 
 type Choice<T extends string | number> = { label: string; value: T };
@@ -61,23 +62,28 @@ const SESSION_TIMEOUT_TIMERS: Choice<AppSettings["sessionTimeoutMinutes"]>[] = [
   { label: "60 minutes", value: 60 },
 ];
 
-const APP_SETTINGS_STORAGE_KEY =
-  (STORAGE_KEYS as Record<string, string>).APP_SETTINGS ?? "catchledger_app_settings_v1";
+const LANGUAGES: Choice<AppSettings["language"]>[] = [
+  { label: "English", value: "en" },
+  { label: "Chinese (Simplified)", value: "zh" },
+  { label: "Spanish", value: "es" },
+  { label: "Hindi", value: "hi" },
+  { label: "Arabic", value: "ar" },
+];
 
 export default function SettingsScreen() {
   const { colors, mode, toggle } = useContext(ThemeContext);
+  const { t } = useTranslation();
   const [settings, setSettings] = useState<AppSettings>(DEFAULT_APP_SETTINGS);
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    loadJSON<AppSettings>(APP_SETTINGS_STORAGE_KEY, DEFAULT_APP_SETTINGS)
-      .then((stored) => setSettings({ ...DEFAULT_APP_SETTINGS, ...stored, companyProfile: { ...DEFAULT_APP_SETTINGS.companyProfile, ...stored.companyProfile } }))
+    loadAppSettings().then((stored) => setSettings(stored))
       .finally(() => setLoaded(true));
   }, []);
 
   useEffect(() => {
     if (!loaded) return;
-    saveJSON(APP_SETTINGS_STORAGE_KEY, settings);
+    saveAppSettings(settings);
   }, [loaded, settings]);
 
   const appVersion = useMemo(() => Constants.expoConfig?.version ?? "dev", []);
@@ -85,6 +91,14 @@ export default function SettingsScreen() {
   const updateSettings = useCallback((patch: Partial<AppSettings>) => {
     setSettings((prev) => ({ ...prev, ...patch }));
   }, []);
+
+  const updateLanguage = useCallback(async (language: SupportedLanguage) => {
+    updateSettings({ language });
+    const { shouldShowRtlRestartPrompt } = await applyLanguage(language);
+    if (shouldShowRtlRestartPrompt) {
+      Alert.alert(t("settings.language"), t("settings.languageChangedRestart"));
+    }
+  }, [t, updateSettings]);
 
   const updateCompany = useCallback((patch: Partial<AppSettings["companyProfile"]>) => {
     setSettings((prev) => ({ ...prev, companyProfile: { ...prev.companyProfile, ...patch } }));
@@ -131,7 +145,8 @@ export default function SettingsScreen() {
         text: "Clear",
         style: "destructive",
         onPress: async () => {
-          await saveJSON(APP_SETTINGS_STORAGE_KEY, DEFAULT_APP_SETTINGS);
+          await saveAppSettings(DEFAULT_APP_SETTINGS);
+          await applyLanguage(DEFAULT_APP_SETTINGS.language);
           setSettings(DEFAULT_APP_SETTINGS);
           Alert.alert("Cache cleared", "Local app settings cache was reset.");
         },
@@ -141,7 +156,17 @@ export default function SettingsScreen() {
 
   return (
     <ScrollView style={[styles.container, { backgroundColor: colors.bg }]} contentContainerStyle={styles.content}>
-      <Text style={[styles.title, { color: colors.text }]}>Settings</Text>
+      <Text style={[styles.title, { color: colors.text }]}>{t("settings.title")}</Text>
+      <Card colors={colors} title={t("settings.language")}>
+        <ChoiceGroup
+          colors={colors}
+          label={t("settings.language")}
+          value={settings.language}
+          options={LANGUAGES.map((opt) => ({ ...opt, label: t(`settings.languageLabels.${opt.value}`) }))}
+          onChange={(value) => void updateLanguage(value as SupportedLanguage)}
+        />
+      </Card>
+
       <Card colors={colors} title="Appearance">
         <ToggleRow
           colors={colors}

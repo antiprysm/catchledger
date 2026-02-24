@@ -4,6 +4,7 @@ export type DateFormat = "MM/DD/YYYY" | "DD/MM/YYYY";
 export type BuyerType = "Wholesale" | "Retail" | "Restaurant";
 export type PaymentMethod = "Cash" | "Card" | "Bank Transfer" | "Check";
 export type UserRole = "Owner" | "Employee" | "Viewer";
+export type Language = "en" | "es" | "zh" | "hi" | "ar";
 
 export type CompanyProfile = {
   businessName: string;
@@ -42,6 +43,8 @@ export type AppSettings = {
   biometricsEnabled: boolean;
   autoLockTimerMinutes: 1 | 5 | 10 | 15;
   sessionTimeoutMinutes: 5 | 15 | 30 | 60;
+
+  language: Language;
 };
 
 export const DEFAULT_APP_SETTINGS: AppSettings = {
@@ -79,4 +82,6 @@ export const DEFAULT_APP_SETTINGS: AppSettings = {
   biometricsEnabled: false,
   autoLockTimerMinutes: 5,
   sessionTimeoutMinutes: 30,
+
+  language: "en",
 };

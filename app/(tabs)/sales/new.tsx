@@ -1,6 +1,7 @@
 import { ThemeContext } from "@/theme/ThemeProvider";
 import { router, useFocusEffect } from "expo-router";
 import { useCallback, useContext, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   Alert,
   FlatList,
@@ -42,6 +43,7 @@ const SALE_LOCATION_TYPES: NonNullable<Sale["saleLocationType"]>[] = ["TRUCK", "
 
 export default function NewSaleScreen() {
   const { colors } = useContext(ThemeContext);
+  const { t } = useTranslation();
 
   const [inventory, setInventory] = useState<InventoryItem[]>([]);
   const [inspectionMode, setInspectionMode] = useState(false);
@@ -255,7 +257,7 @@ export default function NewSaleScreen() {
       >
         {/* Tap-to-dismiss wrapper */}
         <Pressable onPress={Keyboard.dismiss} style={{ gap: 10 }}>
-          <Text style={[styles.title, { color: colors.text }]}>New Sale</Text>
+          <Text style={[styles.title, { color: colors.text }]}>{t("sales.newSale")}</Text>
           <Text style={[styles.mutedText, { color: colors.muted }]}>Date format: {settings.dateFormat} • {applyDateFormat(new Date(), settings.dateFormat)}</Text>
 
           <FlatList

@@ -1,0 +1,33 @@
+{
+  "settings": {
+    "title": "Settings",
+    "language": "Language",
+    "languageChangedRestart": "Language changed. Please restart the app to apply layout direction.",
+    "languageLabels": {
+      "en": "English",
+      "zh": "Chinese (Simplified)",
+      "es": "Spanish",
+      "hi": "Hindi",
+      "ar": "Arabic"
+    }
+  },
+  "sales": {
+    "title": "Sales",
+    "newSale": "New Sale",
+    "empty": "No sales yet. Create one in \"New Sale\".",
+    "last30Days": "Last 30 days: ${{amount}}"
+  },
+  "inventory": {
+    "title": "Inventory",
+    "add": "Add Inventory"
+  },
+  "reports": {
+    "title": "Reports"
+  },
+  "compliance": {
+    "title": "Compliance",
+    "today": "Today",
+    "week": "Week",
+    "range": "Range"
+  }
+}

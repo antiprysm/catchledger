@@ -44,7 +44,9 @@
     "react-native-view-shot": "^4.0.3",
     "react-native-web": "~0.21.0",
     "react-native-worklets": "0.5.1",
-    "expo-notifications": "~0.32.12"
+    "expo-notifications": "~0.32.12",
+    "i18next": "^25.0.0",
+    "react-i18next": "^15.0.0"
   },
   "devDependencies": {
     "@types/react": "~19.1.0",

@@ -2,6 +2,7 @@ import { ThemeContext } from "@/theme/ThemeProvider";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useFocusEffect } from "expo-router";
 import { useCallback, useContext, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import { Alert, Platform, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
@@ -177,6 +178,7 @@ export default function ComplianceRange() {
   const [busy, setBusy] = useState(false);
   const [activePreset, setActivePreset] = useState<ActivePreset>("LAST_7");
   const { colors } = useContext(ThemeContext);
+  const { t } = useTranslation();
 
 
   const [startDate, setStartDate] = useState<Date>(() => daysAgo(6));
@@ -309,7 +311,7 @@ export default function ComplianceRange() {
 
       <View style={styles.headerRow}>
         <View>
-        <Text style={[styles.h1, { color: colors.text }]}>Inspection — Date Range</Text>
+        <Text style={[styles.h1, { color: colors.text }]}>{t("compliance.range")}</Text>
         <Text style={[styles.sub, { color: colors.muted }]}>Select a range for harvest + sales logs.</Text>
         </View>
 
