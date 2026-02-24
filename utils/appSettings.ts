@@ -1,3 +1,4 @@
+import { applyLanguage } from "@/i18n";
 import { STORAGE_KEYS } from "@/constants/storageKeys";
 import type { LicenseProfile } from "@/types/license";
 import { DEFAULT_APP_SETTINGS, type AppSettings } from "@/types/settings";
@@ -8,11 +9,19 @@ export const APP_SETTINGS_STORAGE_KEY =
 
 export async function loadAppSettings(): Promise<AppSettings> {
   const stored = await loadJSON<AppSettings>(APP_SETTINGS_STORAGE_KEY, DEFAULT_APP_SETTINGS);
-  return {
+  const merged = {
     ...DEFAULT_APP_SETTINGS,
     ...stored,
     companyProfile: { ...DEFAULT_APP_SETTINGS.companyProfile, ...stored.companyProfile },
   };
+
+  if (__DEV__) {
+    console.log("[settings] loaded settings.language:", merged.language);
+  }
+
+  await applyLanguage(merged.language);
+
+  return merged;
 }
 
 export async function saveAppSettings(settings: AppSettings) {
