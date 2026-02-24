@@ -3,10 +3,12 @@ import { ThemeContext } from "@/theme/ThemeProvider";
 import { loadJSON, saveJSON } from "@/utils/storage";
 import { Link, router, useFocusEffect } from "expo-router";
 import { useCallback, useContext, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Alert, Platform, Pressable, StyleSheet, Text, View } from "react-native";
 
 export default function ComplianceHome() {
   const { colors } = useContext(ThemeContext);
+  const { t } = useTranslation();
   const [inspectionMode, setInspectionMode] = useState(false);
 
   const loadInspectionMode = useCallback(() => {
@@ -57,7 +59,7 @@ export default function ComplianceHome() {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.bg }]}>
-      <Text style={[styles.title, { color: colors.text }]}>Compliance</Text>
+      <Text style={[styles.title, { color: colors.text }]}>{t("compliance.title")}</Text>
       <Text style={[styles.sub, { color: colors.muted }]}>
         Inspection-ready records (offline). Show harvest/sales logs quickly.
       </Text>

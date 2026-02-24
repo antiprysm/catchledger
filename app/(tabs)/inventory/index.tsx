@@ -1,5 +1,6 @@
 import { Link, router, useFocusEffect } from "expo-router";
 import { useCallback, useContext, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Alert, FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 
 import { ThemeContext } from "@/theme/ThemeProvider";
@@ -13,6 +14,7 @@ import { loadJSON, saveJSON } from "@/utils/storage";
 
 export default function InventoryScreen() {
   const { colors } = useContext(ThemeContext);
+  const { t } = useTranslation();
 
   const [items, setItems] = useState<InventoryItem[]>([]);
   const [inspectionMode, setInspectionMode] = useState(false);
@@ -58,7 +60,7 @@ export default function InventoryScreen() {
 
       <View style={styles.headerRow}>
         <View>
-          <Text style={[styles.title, { color: colors.text }]}>Inventory</Text>
+          <Text style={[styles.title, { color: colors.text }]}>{t("inventory.title")}</Text>
           <Text style={[styles.sub, { color: colors.muted }]}>
             Tap an item to view or edit.
           </Text>

@@ -1,6 +1,7 @@
 import { File, Paths } from "expo-file-system";
 import * as Sharing from "expo-sharing";
 import { useCallback, useContext, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
 
 import { ThemeContext } from "@/theme/ThemeProvider";
@@ -328,6 +329,7 @@ function buildQuarterlySummaryCSV(sales: Sale[], expenses: Expense[], settings: 
 
 export default function ReportsScreen() {
   const { colors } = useContext(ThemeContext);
+  const { t } = useTranslation();
 
   const [busy, setBusy] = useState<null | "sales" | "expenses" | "profit" | "bycat" | "allcat" | "quarter">(null);
 
@@ -473,7 +475,7 @@ export default function ReportsScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.bg }]}>
-      <Text style={[styles.title, { color: colors.text }]}>Reports</Text>
+      <Text style={[styles.title, { color: colors.text }]}>{t("reports.title")}</Text>
       <Text style={[styles.subtitle, { color: colors.muted }]}>
         Export records for bookkeeping, taxes, or sharing with an accountant.
       </Text>
