@@ -1,6 +1,7 @@
 import { ThemeContext } from "@/theme/ThemeProvider";
 import { router, useFocusEffect } from "expo-router";
 import { useCallback, useContext, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Alert, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 
 import { STORAGE_KEYS } from "@/constants/storageKeys";
@@ -9,6 +10,7 @@ import { loadJSON, saveJSON } from "@/utils/storage";
 
 export default function LicenseProfileScreen() {
   const { colors } = useContext(ThemeContext);
+  const { t } = useTranslation();
 
   const [legalName, setLegalName] = useState("");
   const [dbaName, setDbaName] = useState("");
@@ -39,9 +41,9 @@ export default function LicenseProfileScreen() {
   );
 
   async function onSave() {
-    if (!legalName.trim()) return Alert.alert("Required", "Legal name is required.");
-    if (!licenseNumber.trim()) return Alert.alert("Required", "License number is required.");
-    if (!stateCode.trim()) return Alert.alert("Required", "State is required (e.g. IL).");
+    if (!legalName.trim()) return Alert.alert(t("compliance.required"), t("compliance.legalNameRequired"));
+    if (!licenseNumber.trim()) return Alert.alert(t("compliance.required"), t("compliance.licenseNumberRequired"));
+    if (!stateCode.trim()) return Alert.alert(t("compliance.required"), t("compliance.stateRequired"));
 
     const profile: LicenseProfile = {
       legalName: legalName.trim(),
@@ -56,7 +58,7 @@ export default function LicenseProfileScreen() {
     };
 
     await saveJSON(STORAGE_KEYS.LICENSE_PROFILE, profile);
-    Alert.alert("Saved", "License profile updated.");
+    Alert.alert(t("compliance.saved"), t("compliance.licenseProfileUpdated"));
     router.back();
   }
 
@@ -71,96 +73,94 @@ export default function LicenseProfileScreen() {
       contentContainerStyle={styles.container}
       keyboardShouldPersistTaps="handled"
     >
-      <Text style={[styles.title, { color: colors.text }]}>License Profile</Text>
-      <Text style={[styles.sub, { color: colors.muted }]}>
-        Used for compliance screens during inspection. Stored locally on this device.
-      </Text>
+      <Text style={[styles.title, { color: colors.text }]}>{t("compliance.licenseProfile")}</Text>
+      <Text style={[styles.sub, { color: colors.muted }]}>{t("compliance.licenseProfileSubtitle")}</Text>
 
-      <Text style={[styles.label, { color: colors.text }]}>Legal name</Text>
+      <Text style={[styles.label, { color: colors.text }]}>{t("compliance.legalName")}</Text>
       <TextInput
         value={legalName}
         onChangeText={setLegalName}
         style={inputStyle}
-        placeholder="First Last"
+        placeholder={t("compliance.placeholders.legalName")}
         placeholderTextColor={colors.muted}
       />
 
-      <Text style={[styles.label, { color: colors.text }]}>DBA / Business name (optional)</Text>
+      <Text style={[styles.label, { color: colors.text }]}>{t("compliance.dbaNameOptional")}</Text>
       <TextInput
         value={dbaName}
         onChangeText={setDbaName}
         style={inputStyle}
-        placeholder="CatchLedger Fisheries"
+        placeholder={t("compliance.placeholders.dbaName")}
         placeholderTextColor={colors.muted}
       />
 
       <View style={styles.row}>
         <View style={{ flex: 1 }}>
-          <Text style={[styles.label, { color: colors.text }]}>State</Text>
+          <Text style={[styles.label, { color: colors.text }]}>{t("compliance.state")}</Text>
           <TextInput
             value={stateCode}
             onChangeText={setStateCode}
             style={inputStyle}
-            placeholder="IL"
+            placeholder={t("compliance.placeholders.state")}
             placeholderTextColor={colors.muted}
             autoCapitalize="characters"
           />
         </View>
 
         <View style={{ flex: 2 }}>
-          <Text style={[styles.label, { color: colors.text }]}>License #</Text>
+          <Text style={[styles.label, { color: colors.text }]}>{t("compliance.licenseNumber")}</Text>
           <TextInput
             value={licenseNumber}
             onChangeText={setLicenseNumber}
             style={inputStyle}
-            placeholder="Aquatic Life Distributor #"
+            placeholder={t("compliance.placeholders.licenseNumber")}
             placeholderTextColor={colors.muted}
           />
         </View>
       </View>
 
-      <Text style={[styles.label, { color: colors.text }]}>Phone (optional)</Text>
+      <Text style={[styles.label, { color: colors.text }]}>{t("compliance.phoneOptional")}</Text>
       <TextInput
         value={phone}
         onChangeText={setPhone}
         style={inputStyle}
-        placeholder="(555) 555-5555"
+        placeholder={t("compliance.placeholders.phone")}
         placeholderTextColor={colors.muted}
         keyboardType="phone-pad"
       />
 
-      <Text style={[styles.label, { color: colors.text }]}>Email (optional)</Text>
+      <Text style={[styles.label, { color: colors.text }]}>{t("compliance.emailOptional")}</Text>
       <TextInput
         value={email}
         onChangeText={setEmail}
         style={inputStyle}
-        placeholder="name@email.com"
+        placeholder={t("compliance.placeholders.email")}
         placeholderTextColor={colors.muted}
         autoCapitalize="none"
         keyboardType="email-address"
       />
 
-      <Text style={[styles.label, { color: colors.text }]}>Vehicle plate (optional)</Text>
+      <Text style={[styles.label, { color: colors.text }]}>{t("compliance.vehiclePlateOptional")}</Text>
       <TextInput
         value={vehiclePlate}
         onChangeText={setVehiclePlate}
         style={inputStyle}
-        placeholder="ABC1234"
+        placeholder={t("compliance.placeholders.vehiclePlate")}
         placeholderTextColor={colors.muted}
         autoCapitalize="characters"
       />
 
-      <Text style={[styles.label, { color: colors.text }]}>Home base city (optional)</Text>
+      <Text style={[styles.label, { color: colors.text }]}>{t("compliance.homeBaseCityOptional")}</Text>
       <TextInput
         value={homeBaseCity}
         onChangeText={setHomeBaseCity}
         style={inputStyle}
-        placeholder="Waukegan, IL"
+        placeholder={t("compliance.placeholders.homeBaseCity")}
         placeholderTextColor={colors.muted}
       />
 
       <Pressable onPress={onSave} style={styles.saveBtn}>
-        <Text style={styles.saveBtnText}>Save</Text>
+        <Text style={styles.saveBtnText}>{t("compliance.save")}</Text>
       </Pressable>
     </ScrollView>
   );
@@ -181,7 +181,6 @@ const styles = StyleSheet.create({
 
   row: { flexDirection: "row", gap: 10 },
 
-  // keep your black button
   saveBtn: {
     marginTop: 10,
     backgroundColor: "#111",

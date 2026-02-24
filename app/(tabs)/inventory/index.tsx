@@ -50,7 +50,7 @@ export default function InventoryScreen() {
             onPress={async () => {
               await saveJSON(STORAGE_KEYS.INSPECTION_MODE, false);
               setInspectionMode(false);
-              Alert.alert(t("sales.inspectionOff"));
+              Alert.alert(t("compliance.inspectionOff"));
             }}
           >
             <Text style={styles.exitText}>{t("compliance.exitInspectionMode")}</Text>
@@ -118,7 +118,7 @@ export default function InventoryScreen() {
 
               <View style={{ alignItems: "flex-end" }}>
                 <Text style={[styles.badge, { color: colors.text }]}>
-                  {item.quality}
+                  {t(`inventory.quality.${item.quality}`)}
                 </Text>
                 {expired ? (
                   <Text style={[styles.expired, { color: colors.muted }]}>

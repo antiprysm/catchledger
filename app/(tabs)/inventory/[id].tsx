@@ -1,6 +1,7 @@
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { router, useLocalSearchParams } from "expo-router";
 import { useContext, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   Alert,
   Keyboard,
@@ -28,6 +29,7 @@ import { loadJSON, saveJSON } from "@/utils/storage";
 
 export default function EditInventoryScreen() {
   const { colors } = useContext(ThemeContext);
+  const { t } = useTranslation();
   const { id } = useLocalSearchParams<{ id: string }>();
 
   const [item, setItem] = useState<InventoryItem | null>(null);
@@ -70,18 +72,18 @@ export default function EditInventoryScreen() {
     if (!item) return;
 
     const price = Number(pricePerUnit);
-    if (!speciesName.trim()) return Alert.alert("Required", "Species name required.");
-    if (!Number.isFinite(price) || price <= 0) return Alert.alert("Invalid", "Enter valid price.");
+    if (!speciesName.trim()) return Alert.alert(t("inventory.requiredTitle"), t("inventory.speciesRequiredMessage"));
+    if (!Number.isFinite(price) || price <= 0) return Alert.alert(t("inventory.invalidPriceTitle"), t("inventory.invalidPriceMessage"));
 
     const qtyText = quantity.trim();
     const qty = qtyText === "" ? undefined : Number(qtyText);
 
     if (qtyText !== "" && (!Number.isFinite(qty) || (qty ?? 0) <= 0)) {
-      Alert.alert("Invalid quantity", "Quantity must be greater than 0 (or leave it blank).");
+      Alert.alert(t("inventory.invalidQuantityTitle"), t("inventory.invalidQuantityMessage"));
       return;
     }
 
-    if (!catchLocation.trim()) return Alert.alert("Required", "Catch location required.");
+    if (!catchLocation.trim()) return Alert.alert(t("inventory.catchLocationRequiredTitle"), t("inventory.catchLocationRequiredMessage"));
 
     const items = await loadJSON<InventoryItem[]>(STORAGE_KEYS.INVENTORY, []);
     const caughtISO = caughtAt?.toISOString();
@@ -110,10 +112,10 @@ export default function EditInventoryScreen() {
   }
 
   async function onDelete() {
-    Alert.alert("Delete item?", "This cannot be undone.", [
-      { text: "Cancel", style: "cancel" },
+    Alert.alert(t("inventory.deleteItemTitle"), t("common.cannotBeUndone"), [
+            { text: t("common.cancel"), style: "cancel" },
       {
-        text: "Delete",
+        text: t("common.delete"),
         style: "destructive",
         onPress: async () => {
           const items = await loadJSON<InventoryItem[]>(STORAGE_KEYS.INVENTORY, []);

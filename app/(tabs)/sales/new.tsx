@@ -92,8 +92,8 @@ export default function NewSaleScreen() {
 
       if (mode) {
         Alert.alert(
-          "Inspection Mode",
-          "Sales creation is disabled in read-only inspection mode."
+          t("sales.inspectionModeTitle"),
+          t("sales.inspectionModeDisabledMessage")
         );
         router.replace("/(tabs)/sales");
       } else {
@@ -158,19 +158,19 @@ export default function NewSaleScreen() {
     if (inspectionMode) return;
 
     if (lines.length === 0) {
-      Alert.alert("Add at least one item", "Tap an inventory item to add it to the sale.");
+      Alert.alert(t("sales.addAtLeastOneItemTitle"), t("sales.addAtLeastOneItemMessage"));
       return;
     }
 
     const trimmedBuyer = buyerName.trim();
     if (!trimmedBuyer) {
-      Alert.alert("Buyer required", "Enter the buyer name for compliance records.");
+      Alert.alert(t("sales.buyerRequiredTitle"), t("sales.buyerRequiredMessage"));
       return;
     }
 
     const badQty = lines.find((l) => !Number.isFinite(l.quantity) || l.quantity <= 0);
     if (badQty) {
-      Alert.alert("Invalid quantity", `Fix quantity for ${badQty.speciesName}.`);
+      Alert.alert(t("sales.invalidQuantityTitle"), t("sales.fixQuantityFor", { species: badQty.speciesName }));
       return;
     }
 
@@ -188,8 +188,8 @@ export default function NewSaleScreen() {
       const inv = invById.get(oversold.itemId);
       const available = Number(inv?.quantity ?? 0);
       Alert.alert(
-        "Not enough inventory",
-        `${oversold.speciesName}: trying to sell ${oversold.quantity}, available ${available}.`
+        t("sales.notEnoughInventoryTitle"),
+        t("sales.notEnoughInventoryMessage", { species: oversold.speciesName, requested: oversold.quantity, available })
       );
       return;
     }
@@ -258,7 +258,7 @@ export default function NewSaleScreen() {
         {/* Tap-to-dismiss wrapper */}
         <Pressable onPress={Keyboard.dismiss} style={{ gap: 10 }}>
           <Text style={[styles.title, { color: colors.text }]}>{t("sales.newSale")}</Text>
-          <Text style={[styles.mutedText, { color: colors.muted }]}>Date format: {settings.dateFormat} • {applyDateFormat(new Date(), settings.dateFormat)}</Text>
+          <Text style={[styles.mutedText, { color: colors.muted }]}>{t("sales.dateFormatValue", { format: settings.dateFormat, date: applyDateFormat(new Date(), settings.dateFormat) })}</Text>
 
           <FlatList
             data={inventory}
@@ -266,16 +266,16 @@ export default function NewSaleScreen() {
             scrollEnabled={false}
             ListEmptyComponent={
               <Text style={[styles.mutedText, { color: colors.muted }]}>
-                No inventory yet. Add fish first.
+                {t("sales.noInventoryYet")}
               </Text>
             }
             ListHeaderComponent={
               <View style={{ gap: 10 }}>
-                <Text style={[styles.sectionTitle, { color: colors.text }]}>Cart</Text>
+                <Text style={[styles.sectionTitle, { color: colors.text }]}>{t("sales.cart")}</Text>
 
                 {lines.length === 0 ? (
                   <Text style={[styles.mutedText, { color: colors.muted }]}>
-                    No items yet. Add from inventory below.
+                    {t("sales.noItemsYetAddFromInventory")}
                   </Text>
                 ) : (
                   <View style={{ gap: 8 }}>
@@ -295,7 +295,7 @@ export default function NewSaleScreen() {
                         </View>
 
                         <View style={{ width: 70 }}>
-                          <Text style={[styles.smallLabel, { color: colors.muted }]}>Qty</Text>
+                          <Text style={[styles.smallLabel, { color: colors.muted }]}>{t("sales.qty")}</Text>
                           <TextInput
                             value={String(line.quantity)}
                             onChangeText={(t) => updateQty(line.itemId, t)}
@@ -313,12 +313,12 @@ export default function NewSaleScreen() {
                         </View>
 
                         <View style={{ width: 90, alignItems: "flex-end" }}>
-                          <Text style={[styles.smallLabel, { color: colors.muted }]}>Subtotal</Text>
+                          <Text style={[styles.smallLabel, { color: colors.muted }]}>{t("sales.subtotal")}</Text>
                           <Text style={[styles.bold, { color: colors.text }]}>
                             ${line.subtotal.toFixed(2)}
                           </Text>
                           <Pressable onPress={() => removeLine(line.itemId)}>
-                            <Text style={styles.remove}>Remove</Text>
+                            <Text style={styles.remove}>{t("sales.remove")}</Text>
                           </Pressable>
                         </View>
                       </View>
@@ -327,89 +327,89 @@ export default function NewSaleScreen() {
                 )}
 
                 <View style={[styles.totalBar, { borderColor: colors.cardBorder }]}>
-                  <Text style={[styles.bold, { color: colors.text }]}>Total</Text>
+                  <Text style={[styles.bold, { color: colors.text }]}>{t("sales.total")}</Text>
                   <Text style={[styles.bold, { color: colors.text }]}>${total.toFixed(2)}</Text>
                 </View>
 
-                <Text style={[styles.label, { color: colors.text }]}>Buyer name</Text>
+                <Text style={[styles.label, { color: colors.text }]}>{t("sales.buyerName")}</Text>
                 <TextInput
                   value={buyerName}
                   onChangeText={setBuyerName}
                   style={inputStyle}
-                  placeholder="Joe’s Fish House"
+                  placeholder={t("sales.buyerNamePlaceholder")}
                   placeholderTextColor={colors.muted}
                 />
 
-                <Text style={[styles.label, { color: colors.text }]}>Buyer type</Text>
+                <Text style={[styles.label, { color: colors.text }]}>{t("sales.buyerType")}</Text>
                 <View style={styles.row}>
-                  {BUYER_TYPES.map((t) => {
-                    const on = buyerType === t;
+                  {BUYER_TYPES.map((buyerTypeOption) => {
+                    const on = buyerType === buyerTypeOption;
                     return (
                       <Pressable
-                        key={t}
-                        onPress={() => setBuyerType(t)}
+                        key={buyerTypeOption}
+                        onPress={() => setBuyerType(buyerTypeOption)}
                         style={[
                           styles.chip,
                           { borderColor: colors.cardBorder, backgroundColor: colors.cardBg },
                           on && { backgroundColor: colors.primary, borderColor: colors.primary },
                         ]}
                       >
-                        <Text style={[{ color: colors.text }, on && styles.chipTextOn]}>{t}</Text>
+                        <Text style={[{ color: colors.text }, on && styles.chipTextOn]}>{t(`sales.buyerTypes.${buyerTypeOption}`)}</Text>
                       </Pressable>
                     );
                   })}
                 </View>
 
-                <Text style={[styles.label, { color: colors.text }]}>Buyer contact (optional)</Text>
+                <Text style={[styles.label, { color: colors.text }]}>{t("sales.buyerContactOptional")}</Text>
                 <TextInput
                   value={buyerContact}
                   onChangeText={setBuyerContact}
                   style={inputStyle}
-                  placeholder="phone or email"
+                  placeholder={t("sales.buyerContactPlaceholder")}
                   placeholderTextColor={colors.muted}
                 />
 
                 <Text style={[styles.label, { color: colors.text }]}>
-                  Buyer license / business ID (optional)
+                  {t("sales.buyerLicenseOptional")}
                 </Text>
                 <TextInput
                   value={buyerLicenseId}
                   onChangeText={setBuyerLicenseId}
                   style={inputStyle}
-                  placeholder="License # / permit # / EIN"
+                  placeholder={t("sales.buyerLicensePlaceholder")}
                   placeholderTextColor={colors.muted}
                 />
 
-                <Text style={[styles.label, { color: colors.text }]}>Sale location</Text>
+                <Text style={[styles.label, { color: colors.text }]}>{t("sales.saleLocation")}</Text>
                 <View style={styles.row}>
-                  {SALE_LOCATION_TYPES.map((t) => {
-                    const on = saleLocationType === t;
+                  {SALE_LOCATION_TYPES.map((saleLocationTypeOption) => {
+                    const on = saleLocationType === saleLocationTypeOption;
                     return (
                       <Pressable
-                        key={t}
-                        onPress={() => setSaleLocationType(t)}
+                        key={saleLocationTypeOption}
+                        onPress={() => setSaleLocationType(saleLocationTypeOption)}
                         style={[
                           styles.chip,
                           { borderColor: colors.cardBorder, backgroundColor: colors.cardBg },
                           on && { backgroundColor: colors.primary, borderColor: colors.primary },
                         ]}
                       >
-                        <Text style={[{ color: colors.text }, on && styles.chipTextOn]}>{t}</Text>
+                        <Text style={[{ color: colors.text }, on && styles.chipTextOn]}>{t(`sales.saleLocationTypes.${saleLocationTypeOption}`)}</Text>
                       </Pressable>
                     );
                   })}
                 </View>
 
-                <Text style={[styles.label, { color: colors.text }]}>Sale location note (optional)</Text>
+                <Text style={[styles.label, { color: colors.text }]}>{t("sales.saleLocationNoteOptional")}</Text>
                 <TextInput
                   value={saleLocationNote}
                   onChangeText={setSaleLocationNote}
                   style={inputStyle}
-                  placeholder='e.g. "Waukegan harbor parking lot"'
+                  placeholder={t("sales.saleLocationNotePlaceholder")}
                   placeholderTextColor={colors.muted}
                 />
 
-                <Text style={[styles.sectionTitle, { color: colors.text }]}>Payment</Text>
+                <Text style={[styles.sectionTitle, { color: colors.text }]}>{t("sales.payment")}</Text>
                 <View style={styles.row}>
                   {PAYMENT_METHODS.map((m) => {
                     const on = paymentMethod === m;
@@ -423,7 +423,7 @@ export default function NewSaleScreen() {
                           on && { backgroundColor: colors.primary, borderColor: colors.primary },
                         ]}
                       >
-                        <Text style={[{ color: colors.text }, on && styles.chipTextOn]}>{m}</Text>
+                        <Text style={[{ color: colors.text }, on && styles.chipTextOn]}>{t(`sales.paymentMethods.${m}`)}</Text>
                       </Pressable>
                     );
                   })}
@@ -432,18 +432,18 @@ export default function NewSaleScreen() {
                 <TextInput
                   value={paymentNote}
                   onChangeText={setPaymentNote}
-                  placeholder="Payment note (optional) e.g. CashApp $handle, PayPal ref"
+                  placeholder={t("sales.paymentNotePlaceholder")}
                   placeholderTextColor={colors.muted}
                   style={inputStyle}
                 />
 
                 {/* keep black */}
                 <Pressable onPress={saveSale} style={styles.saveBtn}>
-                  <Text style={styles.saveBtnText}>Save Sale</Text>
+                  <Text style={styles.saveBtnText}>{t("sales.saveSale")}</Text>
                 </Pressable>
 
                 <Text style={[styles.sectionTitle, { color: colors.text }]}>
-                  Tap inventory to add
+                  {t("sales.tapInventoryToAdd")}
                 </Text>
               </View>
             }
@@ -472,12 +472,12 @@ export default function NewSaleScreen() {
                       ${item.pricePerUnit}/{weightUnitLabel(item.unit, settings.weightUnit)}
                     </Text>
                     <Text style={[styles.availability, { color: colors.muted }]}>
-                      Available: {tracked ? String(available) : "—"}
+                      {t("sales.availableValue", { value: tracked ? String(available) : "—" })}
                     </Text>
                   </View>
 
                   <Text style={[styles.tapToAdd, { color: outOfStock ? "#c62828" : colors.muted, fontWeight: "900" }]}>
-                    {outOfStock ? "Out" : "Tap to add"}
+                    {outOfStock ? t("sales.out") : t("sales.tapToAdd")}
                   </Text>
                 </Pressable>
               );
