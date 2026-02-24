@@ -33,7 +33,8 @@ async function shareTextFile(
   filename: string,
   mimeType: string,
   content: string,
-  dialogTitle: string
+  dialogTitle: string,
+  t: (key: string, options?: Record<string, unknown>) => string
 ) {
   const file = new File(Paths.cache, filename);
   try {
@@ -43,7 +44,7 @@ async function shareTextFile(
 
   const canShare = await Sharing.isAvailableAsync();
   if (!canShare) {
-    Alert.alert("Export complete", `Saved file to: ${file.uri}`);
+    Alert.alert(t("reports.exportComplete"), t("reports.savedFile", { uri: file.uri }));
     return;
   }
 
@@ -55,7 +56,7 @@ async function shareTextFile(
 }
 
 /** SALES CSV: line-level */
-function buildSalesCSV(sales: Sale[], settings: AppSettings) {
+function buildSalesCSV(sales: Sale[], settings: AppSettings, t: (key: string, options?: Record<string, unknown>) => string) {
   const headers = [
     "sale_id",
     "occurred_at_iso",
@@ -87,8 +88,8 @@ function buildSalesCSV(sales: Sale[], settings: AppSettings) {
         formatISODate(s.occurredAt),
         s.paymentMethod,
         s.paymentNote ?? "",
-        s.requireSignature ? "yes" : "no",
-        s.requirePhoto ? "yes" : "no",
+        s.requireSignature ? t("common.yes") : t("common.no"),
+        s.requirePhoto ? t("common.yes") : t("common.no"),
         s.invoiceNumber ?? "",
         Number(s.total).toFixed(2),
         line.itemId,
@@ -106,7 +107,7 @@ function buildSalesCSV(sales: Sale[], settings: AppSettings) {
 }
 
 /** EXPENSES CSV: one row per expense */
-function buildExpensesCSV(expenses: Expense[], settings: AppSettings) {
+function buildExpensesCSV(expenses: Expense[], settings: AppSettings, t: (key: string, options?: Record<string, unknown>) => string) {
   const headers = ["expense_id", "occurred_at_iso", "category", "amount", "note"];
 
   const rows: string[] = [];
@@ -131,7 +132,7 @@ function buildExpensesCSV(expenses: Expense[], settings: AppSettings) {
 }
 
 /** PROFIT SUMMARY CSV: monthly rollups */
-function buildProfitSummaryCSV(sales: Sale[], expenses: Expense[], settings: AppSettings) {
+function buildProfitSummaryCSV(sales: Sale[], expenses: Expense[], settings: AppSettings, t: (key: string, options?: Record<string, unknown>) => string) {
   type Rollup = {
     month: string;
     revenue: number;
@@ -144,7 +145,7 @@ function buildProfitSummaryCSV(sales: Sale[], expenses: Expense[], settings: App
 
   const keyFor = (iso: string) => {
     const d = new Date(iso);
-    if (Number.isNaN(d.getTime())) return "Unknown";
+    if (Number.isNaN(d.getTime())) return t("common.unknown");
     const y = d.getFullYear();
     const m = String(d.getMonth() + 1).padStart(2, "0");
     return `${y}-${m}`;
@@ -191,10 +192,10 @@ function buildProfitSummaryCSV(sales: Sale[], expenses: Expense[], settings: App
   return rows.join("\n");
 }
 
-function buildProfitByCategoryCSV(sales: Sale[], expenses: Expense[], settings: AppSettings) {
+function buildProfitByCategoryCSV(sales: Sale[], expenses: Expense[], settings: AppSettings, t: (key: string, options?: Record<string, unknown>) => string) {
   const monthKey = (iso: string) => {
     const d = new Date(iso);
-    if (Number.isNaN(d.getTime())) return "Unknown";
+    if (Number.isNaN(d.getTime())) return t("common.unknown");
     const y = d.getFullYear();
     const m = String(d.getMonth() + 1).padStart(2, "0");
     return `${y}-${m}`;
@@ -243,7 +244,7 @@ function buildProfitByCategoryCSV(sales: Sale[], expenses: Expense[], settings: 
   return rows.join("\n");
 }
 
-function buildAllTimeCategoryCSV(expenses: Expense[]) {
+function buildAllTimeCategoryCSV(expenses: Expense[], t: (key: string, options?: Record<string, unknown>) => string) {
   const byCat = new Map<string, number>();
 
   for (const e of expenses) {
@@ -268,10 +269,10 @@ function buildAllTimeCategoryCSV(expenses: Expense[]) {
   return rows.join("\n");
 }
 
-function buildQuarterlySummaryCSV(sales: Sale[], expenses: Expense[], settings: AppSettings) {
+function buildQuarterlySummaryCSV(sales: Sale[], expenses: Expense[], settings: AppSettings, t: (key: string, options?: Record<string, unknown>) => string) {
   const keyFor = (iso: string) => {
     const d = new Date(iso);
-    if (Number.isNaN(d.getTime())) return "Unknown";
+    if (Number.isNaN(d.getTime())) return t("common.unknown");
     const y = d.getFullYear();
     const q = Math.floor(d.getMonth() / 3) + 1;
     return `${y}-Q${q}`;
@@ -348,14 +349,14 @@ export default function ReportsScreen() {
     try {
       const { sales, settings } = await loadAll();
       if (!sales.length) {
-        Alert.alert("No sales", "There are no sales to export yet.");
+        Alert.alert(t("reports.noSalesTitle"), t("reports.noSalesMessage"));
         return;
       }
-      const csv = buildSalesCSV(sales, settings);
+      const csv = buildSalesCSV(sales, settings, t);
       const filename = `catchledger_sales_${stampForName()}.csv`;
-      await shareTextFile(filename, "text/csv", csv, "Export Sales CSV");
+      await shareTextFile(filename, "text/csv", csv, t("reports.exportSalesCsv"), t);
     } catch (e: any) {
-      Alert.alert("Export failed", e?.message ?? "Unknown error");
+      Alert.alert(t("reports.exportFailed"), e?.message ?? t("reports.unknownError"));
     } finally {
       setBusy(null);
     }
@@ -367,14 +368,14 @@ export default function ReportsScreen() {
     try {
       const { expenses, settings } = await loadAll();
       if (!expenses.length) {
-        Alert.alert("No expenses", "There are no expenses to export yet.");
+        Alert.alert(t("reports.noExpensesTitle"), t("reports.noExpensesMessage"));
         return;
       }
-      const csv = buildExpensesCSV(expenses, settings);
+      const csv = buildExpensesCSV(expenses, settings, t);
       const filename = `catchledger_expenses_${stampForName()}.csv`;
-      await shareTextFile(filename, "text/csv", csv, "Export Expenses CSV");
+      await shareTextFile(filename, "text/csv", csv, t("reports.exportExpensesCsv"), t);
     } catch (e: any) {
-      Alert.alert("Export failed", e?.message ?? "Unknown error");
+      Alert.alert(t("reports.exportFailed"), e?.message ?? t("reports.unknownError"));
     } finally {
       setBusy(null);
     }
@@ -386,14 +387,14 @@ export default function ReportsScreen() {
     try {
       const { sales, expenses, settings } = await loadAll();
       if (!sales.length && !expenses.length) {
-        Alert.alert("Nothing to export", "No sales or expenses found yet.");
+        Alert.alert(t("reports.nothingToExportTitle"), t("reports.nothingToExportMessage"));
         return;
       }
-      const csv = buildProfitSummaryCSV(sales, expenses, settings);
+      const csv = buildProfitSummaryCSV(sales, expenses, settings, t);
       const filename = `catchledger_profit_summary_${stampForName()}.csv`;
-      await shareTextFile(filename, "text/csv", csv, "Export Profit Summary CSV");
+      await shareTextFile(filename, "text/csv", csv, t("reports.exportProfitSummaryCsv"), t);
     } catch (e: any) {
-      Alert.alert("Export failed", e?.message ?? "Unknown error");
+      Alert.alert(t("reports.exportFailed"), e?.message ?? t("reports.unknownError"));
     } finally {
       setBusy(null);
     }
@@ -405,19 +406,19 @@ export default function ReportsScreen() {
     try {
       const { sales, expenses, settings } = await loadAll();
       if (!sales.length && !expenses.length) {
-        Alert.alert("Nothing to export", "No sales or expenses found yet.");
+        Alert.alert(t("reports.nothingToExportTitle"), t("reports.nothingToExportMessage"));
         return;
       }
       if (!expenses.length) {
-        Alert.alert("No expenses", "Add at least one expense category to export this report.");
+        Alert.alert(t("reports.noExpensesTitle"), t("reports.noExpensesForCategory"));
         return;
       }
 
-      const csv = buildProfitByCategoryCSV(sales, expenses, settings);
+      const csv = buildProfitByCategoryCSV(sales, expenses, settings, t);
       const filename = `catchledger_profit_by_category_${stampForName()}.csv`;
-      await shareTextFile(filename, "text/csv", csv, "Export Profit by Category CSV");
+      await shareTextFile(filename, "text/csv", csv, t("reports.exportProfitByCategoryCsv"), t);
     } catch (e: any) {
-      Alert.alert("Export failed", e?.message ?? "Unknown error");
+      Alert.alert(t("reports.exportFailed"), e?.message ?? t("reports.unknownError"));
     } finally {
       setBusy(null);
     }
@@ -429,15 +430,15 @@ export default function ReportsScreen() {
     try {
       const { expenses } = await loadAll();
       if (!expenses.length) {
-        Alert.alert("No expenses", "There are no expenses to export yet.");
+        Alert.alert(t("reports.noExpensesTitle"), t("reports.noExpensesMessage"));
         return;
       }
 
-      const csv = buildAllTimeCategoryCSV(expenses);
+      const csv = buildAllTimeCategoryCSV(expenses, t);
       const filename = `catchledger_expenses_by_category_${stampForName()}.csv`;
-      await shareTextFile(filename, "text/csv", csv, "Export Expenses by Category (All-time)");
+      await shareTextFile(filename, "text/csv", csv, t("reports.exportExpensesByCategoryAllTimeCsv"), t);
     } catch (e: any) {
-      Alert.alert("Export failed", e?.message ?? "Unknown error");
+      Alert.alert(t("reports.exportFailed"), e?.message ?? t("reports.unknownError"));
     } finally {
       setBusy(null);
     }
@@ -449,27 +450,27 @@ export default function ReportsScreen() {
     try {
       const { sales, expenses, settings } = await loadAll();
       if (!sales.length && !expenses.length) {
-        Alert.alert("Nothing to export", "No sales or expenses found yet.");
+        Alert.alert(t("reports.nothingToExportTitle"), t("reports.nothingToExportMessage"));
         return;
       }
 
-      const csv = buildQuarterlySummaryCSV(sales, expenses, settings);
+      const csv = buildQuarterlySummaryCSV(sales, expenses, settings, t);
       const filename = `catchledger_quarterly_summary_${stampForName()}.csv`;
-      await shareTextFile(filename, "text/csv", csv, "Export Quarterly Summary CSV");
+      await shareTextFile(filename, "text/csv", csv, t("reports.exportQuarterlySummaryCsv"), t);
     } catch (e: any) {
-      Alert.alert("Export failed", e?.message ?? "Unknown error");
+      Alert.alert(t("reports.exportFailed"), e?.message ?? t("reports.unknownError"));
     } finally {
       setBusy(null);
     }
   }, [busy, loadAll]);
 
   const busyLabel = useMemo(() => {
-    if (busy === "sales") return "Exporting sales...";
-    if (busy === "expenses") return "Exporting expenses...";
-    if (busy === "profit") return "Exporting summary...";
-    if (busy === "bycat") return "Exporting by category...";
-    if (busy === "allcat") return "Exporting all-time categories...";
-    if (busy === "quarter") return "Exporting quarterly summary...";
+    if (busy === "sales") return t("reports.exportingSales");
+    if (busy === "expenses") return t("reports.exportingExpenses");
+    if (busy === "profit") return t("reports.exportingSummary");
+    if (busy === "bycat") return t("reports.exportingByCategory");
+    if (busy === "allcat") return t("reports.exportingAllTimeCategories");
+    if (busy === "quarter") return t("reports.exportingQuarterlySummary");
     return null;
   }, [busy]);
 
@@ -477,42 +478,42 @@ export default function ReportsScreen() {
     <View style={[styles.container, { backgroundColor: colors.bg }]}>
       <Text style={[styles.title, { color: colors.text }]}>{t("reports.title")}</Text>
       <Text style={[styles.subtitle, { color: colors.muted }]}>
-        Export records for bookkeeping, taxes, or sharing with an accountant.
+        {t("reports.subtitle")}
       </Text>
 
       <Pressable onPress={exportSales} style={[styles.btn, busy && styles.btnDisabled]}>
-        <Text style={styles.btnText}>Export Sales CSV</Text>
+        <Text style={styles.btnText}>{t("reports.exportSalesCsv")}</Text>
       </Pressable>
 
       <Pressable onPress={exportExpenses} style={[styles.btn, busy && styles.btnDisabled]}>
-        <Text style={styles.btnText}>Export Expenses CSV</Text>
+        <Text style={styles.btnText}>{t("reports.exportExpensesCsv")}</Text>
       </Pressable>
 
       <Pressable onPress={exportProfitSummary} style={[styles.btn, busy && styles.btnDisabled]}>
-        <Text style={styles.btnText}>Export Profit Summary CSV</Text>
+        <Text style={styles.btnText}>{t("reports.exportProfitSummaryCsv")}</Text>
       </Pressable>
 
       <Pressable onPress={exportProfitByCategory} style={[styles.btn, busy && styles.btnDisabled]}>
-        <Text style={styles.btnText}>Export Profit by Category CSV</Text>
+        <Text style={styles.btnText}>{t("reports.exportProfitByCategoryCsv")}</Text>
       </Pressable>
 
       <Pressable onPress={exportAllTimeByCategory} style={[styles.btn, busy && styles.btnDisabled]}>
-        <Text style={styles.btnText}>Export Expenses by Category (All-time)</Text>
+        <Text style={styles.btnText}>{t("reports.exportExpensesByCategoryAllTimeCsv")}</Text>
       </Pressable>
 
       <Pressable onPress={exportQuarterlySummary} style={[styles.btn, busy && styles.btnDisabled]}>
-        <Text style={styles.btnText}>Export Quarterly Summary CSV</Text>
+        <Text style={styles.btnText}>{t("reports.exportQuarterlySummaryCsv")}</Text>
       </Pressable>
 
       {busyLabel ? <Text style={[styles.busy, { color: colors.muted }]}>{busyLabel}</Text> : null}
 
       <Text style={[styles.note, { color: colors.muted }]}>
-        • Sales export is line-item level (best for spreadsheets).{"\n"}
-        • Expenses export is one row per expense.{"\n"}
-        • Profit Summary groups by month (YYYY-MM).{"\n"}
-        • Profit by Category breaks monthly expenses into columns by category.{"\n"}
-        • All-time Categories shows totals + percent share by expense category.{"\n"}
-        • Quarterly Summary groups into YYYY-Q1..Q4 (useful for estimated taxes).{"\n"}
+        {t("reports.notes.sales")}{"\n"}
+        {t("reports.notes.expenses")}{"\n"}
+        {t("reports.notes.profitSummary")}{"\n"}
+        {t("reports.notes.profitByCategory")}{"\n"}
+        {t("reports.notes.allTimeCategories")}{"\n"}
+        {t("reports.notes.quarterlySummary")}{"\n"}
       </Text>
     </View>
   );
