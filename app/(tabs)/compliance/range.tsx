@@ -41,13 +41,13 @@ function csvEscape(value: unknown) {
     );
   }
   
-  async function shareTextFile(filename: string, mimeType: string, contents: string, dialogTitle: string) {
+  async function shareTextFile(filename: string, mimeType: string, contents: string, dialogTitle: string, sharingUnavailableMessage: string) {
     const file = new File(Paths.cache, filename);
     try { file.create(); } catch {}
     file.write(contents);
   
     const canShare = await Sharing.isAvailableAsync();
-    if (!canShare) throw new Error("Sharing not available on this device.");
+    if (!canShare) throw new Error(sharingUnavailableMessage);
     await Sharing.shareAsync(file.uri, {
       mimeType,
       dialogTitle,
@@ -163,11 +163,11 @@ function startOfMonth(d: Date) {
   type PresetType = "TODAY" | "LAST_7" | "LAST_30" | "THIS_MONTH";
     type ActivePreset = PresetType | null;
 
-    const PRESETS: { key: PresetType; label: string }[] = [
-    { key: "TODAY", label: "Today" },
-    { key: "LAST_7", label: "Last 7" },
-    { key: "LAST_30", label: "Last 30" },
-    { key: "THIS_MONTH", label: "This Month" },
+    const PRESETS: { key: PresetType; labelKey: string }[] = [
+    { key: "TODAY", labelKey: "compliance.presetToday" },
+    { key: "LAST_7", labelKey: "compliance.presetLast7" },
+    { key: "LAST_30", labelKey: "compliance.presetLast30" },
+    { key: "THIS_MONTH", labelKey: "compliance.presetThisMonth" },
     ];
   
 
@@ -243,15 +243,15 @@ export default function ComplianceRange() {
     setBusy(true);
     try {
       if (!rangeSales.length && !rangeHarvest.length) {
-        Alert.alert("Nothing to export", "No harvest or sales in this date range.");
+        Alert.alert(t("compliance.nothingToExportTitle"), t("compliance.noHarvestOrSalesInRange"));
         return;
       }
   
       const filename = `catchledger_inspection_range_${stampForName()}.csv`;
       const csv = buildInspectionCSV(profile, rangeHarvest, rangeSales);
-      await shareTextFile(filename, "text/csv", csv, "Export Inspection CSV (Range)");
+      await shareTextFile(filename, "text/csv", csv, t("compliance.exportInspectionCsvRange"), t("compliance.sharingNotAvailable"));
     } catch (e: any) {
-      Alert.alert("Export failed", e?.message ?? "Unknown error");
+      Alert.alert(t("reports.exportFailed"), e?.message ?? t("reports.unknownError"));
     } finally {
       setBusy(false);
     }
@@ -292,7 +292,7 @@ export default function ComplianceRange() {
         {inspectionMode ? (
             <View style={styles.bannerWrap}>
                 <View style={styles.banner}>
-                <Text style={styles.bannerText}>INSPECTION MODE — READ ONLY</Text>
+                <Text style={styles.bannerText}>{t("compliance.inspectionReadOnly")}</Text>
                 </View>
 
                 <Pressable
@@ -300,10 +300,10 @@ export default function ComplianceRange() {
                 onPress={async () => {
                     await saveJSON(STORAGE_KEYS.INSPECTION_MODE, false);
                     setInspectionMode(false);
-                    Alert.alert("Inspection mode off");
+                    Alert.alert(t("compliance.inspectionOff"));
                 }}
                 >
-                <Text style={styles.exitText}>Exit Inspection Mode</Text>
+                <Text style={styles.exitText}>{t("compliance.exitInspectionMode")}</Text>
                 </Pressable>
             </View>
             ) : null}
@@ -312,7 +312,7 @@ export default function ComplianceRange() {
       <View style={styles.headerRow}>
         <View style={styles.headerMain}>
         <Text style={[styles.h1, { color: colors.text }]}>{t("compliance.range")}</Text>
-        <Text style={[styles.sub, { color: colors.muted }]}>Select a range for harvest + sales logs.</Text>
+        <Text style={[styles.sub, { color: colors.muted }]}>{t("compliance.selectRangeForLogs")}</Text>
         </View>
 
         <Pressable
@@ -331,17 +331,17 @@ export default function ComplianceRange() {
               {profile.dbaName ? profile.dbaName : profile.legalName}
             </Text>
             <Text style={[styles.profileLine, { color: colors.muted }]}>
-              {profile.state} License: <Text style={styles.bold}>{profile.licenseNumber}</Text>
+              {t("compliance.licenseForState", { state: profile.state })} <Text style={styles.bold}>{profile.licenseNumber}</Text>
             </Text>
             <Text style={[styles.profileLine, { color: colors.muted }]}>
-              Legal: {profile.legalName}
-              {profile.vehiclePlate ? ` • Plate: ${profile.vehiclePlate}` : ""}
+              {t("compliance.legalValue", { value: profile.legalName })}
+              {profile.vehiclePlate ? ` • ${t("compliance.plateValue", { value: profile.vehiclePlate })}` : ""}
             </Text>
           </>
         ) : (
           <>
-            <Text style={[styles.profileTitle, {color: colors.text}]}>License profile not set</Text>
-            <Text style={[styles.profileLine, { color: colors.muted }]}>Go to Compliance → License Profile to configure.</Text>
+            <Text style={[styles.profileTitle, {color: colors.text}]}>{t("compliance.licenseProfileNotSet")}</Text>
+            <Text style={[styles.profileLine, { color: colors.muted }]}>{t("compliance.goToLicenseProfileToConfigure")}</Text>
           </>
         )}
       </View>
@@ -361,7 +361,7 @@ export default function ComplianceRange() {
                 ]}                
             >
                 <Text style={isActive ? styles.presetTextActive : [styles.presetText, { color: colors.text }]}>
-                {p.label}
+                {t(p.labelKey)}
                 </Text>
             </Pressable>
             );
@@ -373,12 +373,12 @@ export default function ComplianceRange() {
 
       <View style={styles.rangeRow}>
         <Pressable style={[styles.dateBtn, { borderColor: colors.cardBorder, backgroundColor: colors.cardBg }]} onPress={() => setShowStart(true)}>
-          <Text style={[styles.dateBtnLabel, { color: colors.muted }]}>Start</Text>
+          <Text style={[styles.dateBtnLabel, { color: colors.muted }]}>{t("compliance.start")}</Text>
           <Text style={[styles.dateBtnValue, { color: colors.text }]}>{startDate.toLocaleDateString()}</Text>
         </Pressable>
 
         <Pressable style={[styles.dateBtn, { borderColor: colors.cardBorder, backgroundColor: colors.cardBg }]} onPress={() => setShowEnd(true)}>
-          <Text style={[styles.dateBtnLabel, { color: colors.muted }]}>End</Text>
+          <Text style={[styles.dateBtnLabel, { color: colors.muted }]}>{t("compliance.end")}</Text>
           <Text style={[styles.dateBtnValue, { color: colors.text }]}>{endDate.toLocaleDateString()}</Text>
         </Pressable>
       </View>
@@ -415,13 +415,13 @@ export default function ComplianceRange() {
 
         <View style={[styles.summaryCard, { borderColor: colors.cardBorder, backgroundColor: colors.cardBg }]}>
         <Text style={[styles.summaryLine, { color: colors.text }]}>
-          Harvest entries: <Text style={styles.bold}>{rangeHarvest.length}</Text>
+          {t("compliance.harvestEntries")}: <Text style={styles.bold}>{rangeHarvest.length}</Text>
         </Text>
         <Text style={[styles.summaryLine, { color: colors.text }]}>
-          Sales: <Text style={styles.bold}>{rangeSales.length}</Text>
+          {t("compliance.salesCount", { count: rangeSales.length })}: <Text style={styles.bold}>{rangeSales.length}</Text>
         </Text>
         <Text style={[styles.summaryLine, { color: colors.text }]}>
-          Revenue: <Text style={styles.bold}>${revenue.toFixed(2)}</Text>
+          {t("compliance.revenue")}: <Text style={styles.bold}>${revenue.toFixed(2)}</Text>
         </Text>
       </View>
       
@@ -431,14 +431,14 @@ export default function ComplianceRange() {
         disabled={busy}
         >
         <Text style={styles.exportBtnText}>
-            {busy ? "Exporting..." : "Export Inspection CSV (range)"}
+            {busy ? t("compliance.exporting") : t("compliance.exportInspectionCsvRange")}
         </Text>
         </Pressable>
 
 
-      <Text style={[styles.sectionTitle, { color: colors.text }]}>Harvest log</Text>
+      <Text style={[styles.sectionTitle, { color: colors.text }]}>{t("compliance.harvestLog")}</Text>
       {rangeHarvest.length === 0 ? (
-        <Text style={[styles.muted, { color: colors.muted }]}>No harvest entries in this range.</Text>
+        <Text style={[styles.muted, { color: colors.muted }]}>{t("compliance.noHarvestInRange")}</Text>
       ) : (
         rangeHarvest.map((i) => (
           <View
@@ -451,23 +451,23 @@ export default function ComplianceRange() {
                 {typeof i.quantity === "number" ? `${i.quantity} ${i.unit}` : `— ${i.unit}`}
               </Text>
             </View>
-            <Text style={[styles.muted, { color: colors.muted }]}>{i.catchLocation ? `Location: ${i.catchLocation}` : "Location: —"}</Text>
-            <Text style={[styles.muted, { color: colors.muted }]}>{i.caughtAt ? `Caught: ${fmtWhen(i.caughtAt)}` : "Caught: —"}</Text>
-            {i.catchMethod ? <Text style={[styles.muted, { color: colors.muted }]}>Method: {i.catchMethod}</Text> : null}
+            <Text style={[styles.muted, { color: colors.muted }]}>{i.catchLocation ? t("compliance.locationValue", { value: i.catchLocation }) : t("compliance.locationEmpty")}</Text>
+            <Text style={[styles.muted, { color: colors.muted }]}>{i.caughtAt ? t("compliance.caughtValue", { value: fmtWhen(i.caughtAt) }) : t("compliance.caughtEmpty")}</Text>
+            {i.catchMethod ? <Text style={[styles.muted, { color: colors.muted }]}>{t("compliance.methodValue", { value: i.catchMethod })}</Text> : null}
           </View>
         ))
       )}
 
-      <Text style={[styles.sectionTitle, { marginTop: 10 }]}>Sales log</Text>
+      <Text style={[styles.sectionTitle, { marginTop: 10, color: colors.text }]}>{t("compliance.salesLog")}</Text>
       {rangeSales.length === 0 ? (
-        <Text style={[styles.muted, { color: colors.muted }]}>No sales in this range.</Text>
+        <Text style={[styles.muted, { color: colors.muted }]}>{t("compliance.noSalesInRange")}</Text>
       ) : (
         rangeSales.map((s) => (
           <View key={s.id} style={[styles.saleCard, { borderColor: colors.cardBorder, backgroundColor: colors.cardBg }]}>
             <View style={styles.rowBetween}>
               <Text style={[styles.saleTitle, { color: colors.text }]}>
-                {(s as any).buyerName || "Unknown buyer"}{" "}
-                <Text style={[styles.mutedInline, { color: colors.muted }]}>({(s as any).buyerType || "OTHER"})</Text>
+                {(s as any).buyerName || t("compliance.unknownBuyer")}{" "}
+                <Text style={[styles.mutedInline, { color: colors.muted }]}>({(s as any).buyerType || t("compliance.other")})</Text>
               </Text>
               <Text style={[styles.money, { color: colors.text }]}>${Number(s.total || 0).toFixed(2)}</Text>
             </View>
@@ -478,19 +478,19 @@ export default function ComplianceRange() {
             {s.lines.map((ln) => (
               <View key={`${s.id}-${ln.itemId}`} style={[styles.lineBox, { borderColor: colors.cardBorder, backgroundColor: colors.bg }]}>
                 <Text style={[styles.lineItem, { color: colors.text }]}>
-                  • {ln.speciesName}: {ln.quantity} {ln.unit} @ ${Number(ln.unitPrice).toFixed(2)}
+                  • {ln.speciesName}: {ln.quantity} {ln.unit} {t("compliance.atPrice", { price: Number(ln.unitPrice).toFixed(2) })}
                 </Text>
 
                 <Text style={[styles.lineMeta, { color: colors.muted }]}>
-                  {ln.originCatchLocation ? `Origin: ${ln.originCatchLocation}` : "Origin: —"}
+                  {ln.originCatchLocation ? t("compliance.originValue", { value: ln.originCatchLocation }) : t("compliance.originEmpty")}
                 </Text>
 
                 <Text style={[styles.lineMeta, { color: colors.muted }]}>
-                  {ln.originCaughtAt ? `Caught: ${fmtWhen(ln.originCaughtAt)}` : "Caught: —"}
+                  {ln.originCaughtAt ? t("compliance.caughtValue", { value: fmtWhen(ln.originCaughtAt) }) : t("compliance.caughtEmpty")}
                 </Text>
 
                 {ln.originCatchMethod ? (
-                  <Text style={[styles.lineMeta, { color: colors.muted }]}>Method: {ln.originCatchMethod}</Text>
+                  <Text style={[styles.lineMeta, { color: colors.muted }]}>{t("compliance.methodValue", { value: ln.originCatchMethod })}</Text>
                 ) : null}
               </View>
             ))}

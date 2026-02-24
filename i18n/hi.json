@@ -325,6 +325,22 @@
     "noHarvestToday": "आज कोई हार्वेस्ट दर्ज नहीं।",
     "todaysSales": "आज की बिक्री",
     "noSalesToday": "आज कोई बिक्री दर्ज नहीं।",
-    "nextNote": "अगला: खरीदार लाइसेंस # (वैकल्पिक) + हार्वेस्ट लॉग सेक्शन + निरीक्षण निर्यात जोड़ें।"
+    "nextNote": "अगला: खरीदार लाइसेंस # (वैकल्पिक) + हार्वेस्ट लॉग सेक्शन + निरीक्षण निर्यात जोड़ें।",
+    "presetToday": "आज",
+    "presetLast7": "पिछले 7 दिन",
+    "presetLast30": "पिछले 30 दिन",
+    "presetThisMonth": "यह महीना",
+    "selectRangeForLogs": "लॉग के लिए तिथि सीमा चुनें।",
+    "harvestLog": "हार्वेस्ट लॉग",
+    "salesLog": "बिक्री लॉग",
+    "noHarvestInRange": "इस सीमा में कोई हार्वेस्ट दर्ज नहीं है।",
+    "noSalesInRange": "इस सीमा में कोई बिक्री दर्ज नहीं है।",
+    "noHarvestOrSalesInRange": "इस सीमा में कोई हार्वेस्ट या बिक्री नहीं है।",
+    "exportInspectionCsvRange": "निरीक्षण CSV निर्यात करें (सीमा)",
+    "start": "प्रारंभ",
+    "end": "अंत",
+    "licenseForState": "{{state}} के लिए लाइसेंस",
+    "nothingToExportTitle": "निर्यात हेतु कुछ नहीं",
+    "sharingNotAvailable": "इस डिवाइस पर शेयरिंग उपलब्ध नहीं है।"
   }
 }

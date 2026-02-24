@@ -325,6 +325,22 @@
     "noHarvestToday": "No harvest logged today.",
     "todaysSales": "Today's sales",
     "noSalesToday": "No sales logged today.",
-    "nextNote": "Next: add buyer license # (optional) + harvest log section + inspection export."
+    "nextNote": "Next: add buyer license # (optional) + harvest log section + inspection export.",
+    "presetToday": "Today",
+    "presetLast7": "Last 7 days",
+    "presetLast30": "Last 30 days",
+    "presetThisMonth": "This month",
+    "selectRangeForLogs": "Select a date range for logs.",
+    "harvestLog": "Harvest log",
+    "salesLog": "Sales log",
+    "noHarvestInRange": "No harvest logged in this range.",
+    "noSalesInRange": "No sales logged in this range.",
+    "noHarvestOrSalesInRange": "No harvest or sales in this range.",
+    "exportInspectionCsvRange": "Export Inspection CSV (range)",
+    "start": "Start",
+    "end": "End",
+    "licenseForState": "License for {{state}}",
+    "nothingToExportTitle": "Nothing to export",
+    "sharingNotAvailable": "Sharing is not available on this device."
   }
 }

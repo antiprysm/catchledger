@@ -325,6 +325,22 @@
     "noHarvestToday": "No hay capturas registradas hoy.",
     "todaysSales": "Ventas de hoy",
     "noSalesToday": "No hay ventas registradas hoy.",
-    "nextNote": "Siguiente: agregar # de licencia del comprador (opcional) + sección de captura + exportación de inspección."
+    "nextNote": "Siguiente: agregar # de licencia del comprador (opcional) + sección de captura + exportación de inspección.",
+    "presetToday": "Hoy",
+    "presetLast7": "Últimos 7 días",
+    "presetLast30": "Últimos 30 días",
+    "presetThisMonth": "Este mes",
+    "selectRangeForLogs": "Selecciona un rango de fechas para los registros.",
+    "harvestLog": "Registro de captura",
+    "salesLog": "Registro de ventas",
+    "noHarvestInRange": "No hay capturas registradas en este rango.",
+    "noSalesInRange": "No hay ventas registradas en este rango.",
+    "noHarvestOrSalesInRange": "No hay capturas ni ventas en este rango.",
+    "exportInspectionCsvRange": "Exportar CSV de inspección (rango)",
+    "start": "Inicio",
+    "end": "Fin",
+    "licenseForState": "Licencia para {{state}}",
+    "nothingToExportTitle": "Nada para exportar",
+    "sharingNotAvailable": "Compartir no está disponible en este dispositivo."
   }
 }

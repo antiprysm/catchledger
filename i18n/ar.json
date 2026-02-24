@@ -325,6 +325,22 @@
     "noHarvestToday": "لا يوجد حصاد مسجل اليوم.",
     "todaysSales": "مبيعات اليوم",
     "noSalesToday": "لا توجد مبيعات مسجلة اليوم.",
-    "nextNote": "التالي: إضافة رقم ترخيص المشتري (اختياري) + قسم سجل الحصاد + تصدير التفتيش."
+    "nextNote": "التالي: إضافة رقم ترخيص المشتري (اختياري) + قسم سجل الحصاد + تصدير التفتيش.",
+    "presetToday": "اليوم",
+    "presetLast7": "آخر 7 أيام",
+    "presetLast30": "آخر 30 يومًا",
+    "presetThisMonth": "هذا الشهر",
+    "selectRangeForLogs": "حدد نطاق التاريخ للسجلات.",
+    "harvestLog": "سجل الحصاد",
+    "salesLog": "سجل المبيعات",
+    "noHarvestInRange": "لا يوجد حصاد مسجل في هذا النطاق.",
+    "noSalesInRange": "لا توجد مبيعات مسجلة في هذا النطاق.",
+    "noHarvestOrSalesInRange": "لا يوجد حصاد أو مبيعات في هذا النطاق.",
+    "exportInspectionCsvRange": "تصدير CSV التفتيش (النطاق)",
+    "start": "البداية",
+    "end": "النهاية",
+    "licenseForState": "ترخيص لولاية {{state}}",
+    "nothingToExportTitle": "لا يوجد ما يتم تصديره",
+    "sharingNotAvailable": "المشاركة غير متاحة على هذا الجهاز."
   }
 }

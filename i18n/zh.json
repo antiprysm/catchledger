@@ -325,6 +325,22 @@
     "noHarvestToday": "今天没有捕捞记录。",
     "todaysSales": "今日销售",
     "noSalesToday": "今天没有销售记录。",
-    "nextNote": "下一步：添加买家许可证号（可选）+ 捕捞日志部分 + 检查导出。"
+    "nextNote": "下一步：添加买家许可证号（可选）+ 捕捞日志部分 + 检查导出。",
+    "presetToday": "今天",
+    "presetLast7": "最近7天",
+    "presetLast30": "最近30天",
+    "presetThisMonth": "本月",
+    "selectRangeForLogs": "选择日志的日期范围。",
+    "harvestLog": "捕捞日志",
+    "salesLog": "销售日志",
+    "noHarvestInRange": "此范围内无捕捞记录。",
+    "noSalesInRange": "此范围内无销售记录。",
+    "noHarvestOrSalesInRange": "此范围内无捕捞或销售记录。",
+    "exportInspectionCsvRange": "导出检查 CSV（范围）",
+    "start": "开始",
+    "end": "结束",
+    "licenseForState": "{{state}}州许可证",
+    "nothingToExportTitle": "无可导出内容",
+    "sharingNotAvailable": "此设备不支持分享。"
   }
 }
