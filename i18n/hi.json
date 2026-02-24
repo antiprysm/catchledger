@@ -171,7 +171,30 @@
   "expenses": {
     "title": "खर्च",
     "addExpense": "खर्च जोड़ें",
-    "editExpense": "खर्च संपादित करें"
+    "editExpense": "खर्च संपादित करें",
+    "last30DaysTotal": "पिछले 30 दिन: ${{amount}}",
+    "noExpensesYet": "अभी तक कोई खर्च नहीं।",
+    "invalidAmountTitle": "अमान्य राशि",
+    "invalidAmountMessage": "खर्च की धनराशि धनात्मक दर्ज करें।",
+    "amount": "राशि",
+    "amountPlaceholder": "25.00",
+    "category": "श्रेणी",
+    "dateTime": "तारीख/समय",
+    "noteOptional": "नोट (वैकल्पिक)",
+    "notePlaceholder": "पेट्रोल पंप, घाट शुल्क आदि।",
+    "saveExpense": "खर्च सहेजें",
+    "expenseDate": "खर्च की तारीख",
+    "done": "पूर्ण",
+    "categories": {
+      "FUEL": "ईंधन",
+      "ICE": "बर्फ",
+      "BAIT": "चारा",
+      "GEAR": "उपकरण",
+      "MAINTENANCE": "रखरखाव",
+      "FEES": "शुल्क",
+      "PACKAGING": "पैकेजिंग",
+      "OTHER": "अन्य"
+    }
   },
   "reports": {
     "title": "रिपोर्ट",

@@ -171,7 +171,30 @@
   "expenses": {
     "title": "المصروفات",
     "addExpense": "إضافة مصروف",
-    "editExpense": "تعديل المصروف"
+    "editExpense": "تعديل المصروف",
+    "last30DaysTotal": "آخر 30 يومًا: ${{amount}}",
+    "noExpensesYet": "لا توجد مصروفات بعد.",
+    "invalidAmountTitle": "مبلغ غير صالح",
+    "invalidAmountMessage": "أدخل مبلغ مصروف موجبًا.",
+    "amount": "المبلغ",
+    "amountPlaceholder": "25.00",
+    "category": "الفئة",
+    "dateTime": "التاريخ/الوقت",
+    "noteOptional": "ملاحظة (اختياري)",
+    "notePlaceholder": "محطة وقود، رسوم الرصيف، إلخ.",
+    "saveExpense": "حفظ المصروف",
+    "expenseDate": "تاريخ المصروف",
+    "done": "تم",
+    "categories": {
+      "FUEL": "وقود",
+      "ICE": "ثلج",
+      "BAIT": "طُعم",
+      "GEAR": "معدات",
+      "MAINTENANCE": "صيانة",
+      "FEES": "رسوم",
+      "PACKAGING": "تغليف",
+      "OTHER": "أخرى"
+    }
   },
   "reports": {
     "title": "التقارير",

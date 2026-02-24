@@ -171,7 +171,30 @@
   "expenses": {
     "title": "Expenses",
     "addExpense": "Add Expense",
-    "editExpense": "Edit Expense"
+    "editExpense": "Edit Expense",
+    "last30DaysTotal": "Last 30 days: ${{amount}}",
+    "noExpensesYet": "No expenses yet.",
+    "invalidAmountTitle": "Invalid amount",
+    "invalidAmountMessage": "Enter a positive expense amount.",
+    "amount": "Amount",
+    "amountPlaceholder": "25.00",
+    "category": "Category",
+    "dateTime": "Date/time",
+    "noteOptional": "Note (optional)",
+    "notePlaceholder": "Gas station, dock fee, etc.",
+    "saveExpense": "Save Expense",
+    "expenseDate": "Expense date",
+    "done": "Done",
+    "categories": {
+      "FUEL": "Fuel",
+      "ICE": "Ice",
+      "BAIT": "Bait",
+      "GEAR": "Gear",
+      "MAINTENANCE": "Maintenance",
+      "FEES": "Fees",
+      "PACKAGING": "Packaging",
+      "OTHER": "Other"
+    }
   },
   "reports": {
     "title": "Reports",

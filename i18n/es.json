@@ -171,7 +171,30 @@
   "expenses": {
     "title": "Gastos",
     "addExpense": "Agregar gasto",
-    "editExpense": "Editar gasto"
+    "editExpense": "Editar gasto",
+    "last30DaysTotal": "Últimos 30 días: ${{amount}}",
+    "noExpensesYet": "Aún no hay gastos.",
+    "invalidAmountTitle": "Monto no válido",
+    "invalidAmountMessage": "Ingresa un monto de gasto positivo.",
+    "amount": "Monto",
+    "amountPlaceholder": "25.00",
+    "category": "Categoría",
+    "dateTime": "Fecha/hora",
+    "noteOptional": "Nota (opcional)",
+    "notePlaceholder": "Gasolinera, tarifa de muelle, etc.",
+    "saveExpense": "Guardar gasto",
+    "expenseDate": "Fecha del gasto",
+    "done": "Listo",
+    "categories": {
+      "FUEL": "Combustible",
+      "ICE": "Hielo",
+      "BAIT": "Carnada",
+      "GEAR": "Equipo",
+      "MAINTENANCE": "Mantenimiento",
+      "FEES": "Tarifas",
+      "PACKAGING": "Empaque",
+      "OTHER": "Otro"
+    }
   },
   "reports": {
     "title": "Informes",

@@ -171,7 +171,30 @@
   "expenses": {
     "title": "支出",
     "addExpense": "新增支出",
-    "editExpense": "编辑支出"
+    "editExpense": "编辑支出",
+    "last30DaysTotal": "最近30天：${{amount}}",
+    "noExpensesYet": "暂无支出。",
+    "invalidAmountTitle": "金额无效",
+    "invalidAmountMessage": "请输入大于 0 的支出金额。",
+    "amount": "金额",
+    "amountPlaceholder": "25.00",
+    "category": "类别",
+    "dateTime": "日期/时间",
+    "noteOptional": "备注（可选）",
+    "notePlaceholder": "加油站、码头费用等。",
+    "saveExpense": "保存支出",
+    "expenseDate": "支出日期",
+    "done": "完成",
+    "categories": {
+      "FUEL": "燃油",
+      "ICE": "冰块",
+      "BAIT": "鱼饵",
+      "GEAR": "装备",
+      "MAINTENANCE": "维护",
+      "FEES": "费用",
+      "PACKAGING": "包装",
+      "OTHER": "其他"
+    }
   },
   "reports": {
     "title": "报表",
