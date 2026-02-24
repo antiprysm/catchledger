@@ -1,4 +1,26 @@
 {
+  "common": {
+    "refresh": "Refresh",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "unknown": "Unknown"
+  },
+  "lock": {
+    "title": "CatchLedger Locked",
+    "enterPasscode": "Enter passcode",
+    "unlock": "Unlock",
+    "unlockBiometric": "Unlock with FaceID / TouchID",
+    "errors": {
+      "setPasscode": "Set a passcode in Settings > Security first.",
+      "incorrectPasscode": "Incorrect passcode.",
+      "biometricFailed": "Biometric unlock failed."
+    }
+  },
+  "modal": {
+    "title": "Modal",
+    "bodyTitle": "This is a modal",
+    "goHome": "Go to home screen"
+  },
   "settings": {
     "title": "Settings",
     "language": "Language",
@@ -27,16 +49,52 @@
     "compliance": "Compliance",
     "settings": "Settings"
   },
+  "dashboard": {
+    "title": "Dashboard",
+    "today": "Today",
+    "last7Days": "Last 7 days",
+    "thisMonth": "This month",
+    "updated": "Updated {{time}}",
+    "lowInventoryItems": "Low inventory items: {{count}}",
+    "expiringLotsSoon": "Expiring lots soon: {{count}}",
+    "totals": "Totals",
+    "allTimeRevenue": "All time revenue",
+    "allTimeExpenses": "All time expenses",
+    "allTimeNet": "All time net",
+    "salesCount_one": "{{count}} sale",
+    "salesCount_other": "{{count}} sales",
+    "expensesCount_one": "{{count}} expense",
+    "expensesCount_other": "{{count}} expenses",
+    "revenueMinusExpenses": "Revenue − Expenses",
+    "thisPeriod": "This period",
+    "topSpeciesLast30": "Top species (last 30 days)",
+    "noSalesYet": "No sales yet.",
+    "revenue": "Revenue",
+    "expenses": "Expenses",
+    "net": "Net"
+  },
   "sales": {
     "title": "Sales",
     "newSale": "New Sale",
+    "editSale": "Edit Sale",
     "empty": "No sales yet. Create one in \"New Sale\".",
     "last30Days": "Last 30 days: ${{amount}}",
     "inspectionOff": "Inspection mode off"
   },
   "inventory": {
     "title": "Inventory",
-    "add": "Add Inventory"
+    "add": "Add Inventory",
+    "addFish": "Add Fish",
+    "editFish": "Edit Fish",
+    "tapToViewEdit": "Tap an item to view or edit.",
+    "empty": "No inventory yet. Tap “Add Fish”.",
+    "qty": "• Qty {{qty}}",
+    "expired": "Expired"
+  },
+  "expenses": {
+    "title": "Expenses",
+    "addExpense": "Add Expense",
+    "editExpense": "Edit Expense"
   },
   "reports": {
     "title": "Reports"
@@ -45,6 +103,12 @@
     "title": "Compliance",
     "today": "Today",
     "week": "Week",
-    "range": "Range"
+    "range": "Range",
+    "dateRange": "Date Range",
+    "licenseProfile": "License Profile",
+    "inspectionControls": "Inspection Controls",
+    "last7Days": "Last 7 Days",
+    "inspectionReadOnly": "INSPECTION MODE — READ ONLY",
+    "exitInspectionMode": "Exit Inspection Mode"
   }
 }

@@ -42,7 +42,7 @@ export default function InventoryScreen() {
       {inspectionMode ? (
         <View style={styles.bannerWrap}>
           <View style={styles.banner}>
-            <Text style={styles.bannerText}>INSPECTION MODE — READ ONLY</Text>
+            <Text style={styles.bannerText}>{t("compliance.inspectionReadOnly")}</Text>
           </View>
 
           <Pressable
@@ -50,10 +50,10 @@ export default function InventoryScreen() {
             onPress={async () => {
               await saveJSON(STORAGE_KEYS.INSPECTION_MODE, false);
               setInspectionMode(false);
-              Alert.alert("Inspection mode off");
+              Alert.alert(t("sales.inspectionOff"));
             }}
           >
-            <Text style={styles.exitText}>Exit Inspection Mode</Text>
+            <Text style={styles.exitText}>{t("compliance.exitInspectionMode")}</Text>
           </Pressable>
         </View>
       ) : null}
@@ -62,7 +62,7 @@ export default function InventoryScreen() {
         <View>
           <Text style={[styles.title, { color: colors.text }]}>{t("inventory.title")}</Text>
           <Text style={[styles.sub, { color: colors.muted }]}>
-            Tap an item to view or edit.
+            {t("inventory.tapToViewEdit")}
           </Text>
         </View>
 
@@ -70,7 +70,7 @@ export default function InventoryScreen() {
           style={[styles.refreshBtn, { borderColor: colors.cardBorder }]}
           onPress={loadAll}
         >
-          <Text style={[styles.refreshText, { color: colors.text }]}>Refresh</Text>
+          <Text style={[styles.refreshText, { color: colors.text }]}>{t("common.refresh")}</Text>
         </Pressable>
       </View>
 
@@ -79,7 +79,7 @@ export default function InventoryScreen() {
         keyExtractor={(i) => i.id}
         ListEmptyComponent={
           <Text style={{ color: colors.muted }}>
-            No inventory yet. Tap “Add Fish”.
+            {t("inventory.empty")}
           </Text>
         }
         renderItem={({ item }) => {
@@ -111,7 +111,7 @@ export default function InventoryScreen() {
                 <Text style={{ color: colors.text }}>
                   ${item.pricePerUnit}/{weightUnitLabel(item.unit, weightUnit)}{" "}
                   <Text style={{ color: colors.muted }}>
-                    {item.quantity != null ? `• Qty ${item.quantity}` : ""}
+                    {item.quantity != null ? t("inventory.qty", { qty: item.quantity }) : ""}
                   </Text>
                 </Text>
               </View>
@@ -122,7 +122,7 @@ export default function InventoryScreen() {
                 </Text>
                 {expired ? (
                   <Text style={[styles.expired, { color: colors.muted }]}>
-                    Expired
+                    {t("inventory.expired")}
                   </Text>
                 ) : null}
               </View>
@@ -135,7 +135,7 @@ export default function InventoryScreen() {
       {!inspectionMode && (
         <Link href="/(tabs)/inventory/add" asChild>
           <Pressable style={styles.addBtn}>
-            <Text style={styles.addBtnText}>Add Fish</Text>
+            <Text style={styles.addBtnText}>{t("inventory.addFish")}</Text>
           </Pressable>
         </Link>
       )}
