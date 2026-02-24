@@ -1,5 +1,51 @@
 {
   "settings": {
+    "title": "设置",
+    "language": "语言",
+    "languageChangedRestart": "语言已更改。请重启应用以应用布局方向。",
+    "appearance": "外观",
+    "nightMode": "夜间模式",
+    "nightModeSubtitle": "平滑主题过渡。",
+    "unitsFormatting": "单位与格式",
+    "weightUnit": "重量单位",
+    "temperatureUnit": "温度单位",
+    "dateFormat": "日期格式",
+    "languageLabels": {
+      "en": "英语",
+      "zh": "简体中文",
+      "es": "西班牙语",
+      "hi": "印地语",
+      "ar": "阿拉伯语"
+    }
+  },
+  "tabs": {
+    "dashboard": "仪表盘",
+    "inventory": "库存",
+    "sales": "销售",
+    "expenses": "支出",
+    "reports": "报表",
+    "compliance": "合规",
+    "settings": "设置"
+  },
+  "sales": {
+    "title": "销售",
+    "newSale": "新建销售",
+    "empty": "暂无销售。请在\"新建销售\"中创建。",
+    "last30Days": "近30天：${{amount}}",
+    "inspectionOff": "检查模式已关闭"
+  },
+  "inventory": {
+    "title": "库存",
+    "add": "添加库存"
+  },
+  "reports": {
+    "title": "报表"
+  },
+  "compliance": {
+    "title": "合规",
+    "today": "今天",
+    "week": "本周",
+    "range": "范围"
     "title": "Settings",
     "language": "Language",
     "languageChangedRestart": "Language changed. Please restart the app to apply layout direction.",

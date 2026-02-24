@@ -62,6 +62,7 @@ export default function SalesLogScreen() {
             onPress={async () => {
               await saveJSON(STORAGE_KEYS.INSPECTION_MODE, false);
               setInspectionMode(false);
+              Alert.alert(t("sales.inspectionOff"));
               Alert.alert(t("sales.inspectionOff", { defaultValue: "Inspection mode off" }));
             }}
           >

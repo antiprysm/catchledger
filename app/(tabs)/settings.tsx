@@ -93,6 +93,19 @@ export default function SettingsScreen() {
   }, []);
 
   const updateLanguage = useCallback(async (language: SupportedLanguage) => {
+    const nextSettings = { ...settings, language };
+    setSettings(nextSettings);
+    await saveAppSettings(nextSettings);
+
+    const { shouldShowRtlRestartPrompt } = await applyLanguage(language);
+    if (__DEV__) {
+      console.log("[settings] user selected language:", language);
+    }
+
+    if (shouldShowRtlRestartPrompt) {
+      Alert.alert(t("settings.language"), t("settings.languageChangedRestart"));
+    }
+  }, [settings, t]);
     updateSettings({ language });
     const { shouldShowRtlRestartPrompt } = await applyLanguage(language);
     if (shouldShowRtlRestartPrompt) {
@@ -167,6 +180,7 @@ export default function SettingsScreen() {
         />
       </Card>
 
+      <Card colors={colors} title={t("settings.appearance")}>
       <Card colors={colors} title="Appearance">
         <ToggleRow
           colors={colors}

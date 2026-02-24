@@ -3,6 +3,13 @@
     "title": "Settings",
     "language": "Language",
     "languageChangedRestart": "Language changed. Please restart the app to apply layout direction.",
+    "appearance": "Appearance",
+    "nightMode": "Night mode",
+    "nightModeSubtitle": "Smooth theme transition.",
+    "unitsFormatting": "Units & Formatting",
+    "weightUnit": "Weight unit",
+    "temperatureUnit": "Temperature unit",
+    "dateFormat": "Date format",
     "languageLabels": {
       "en": "English",
       "zh": "Chinese (Simplified)",
@@ -11,10 +18,21 @@
       "ar": "Arabic"
     }
   },
+  "tabs": {
+    "dashboard": "Dashboard",
+    "inventory": "Inventory",
+    "sales": "Sales",
+    "expenses": "Expenses",
+    "reports": "Reports",
+    "compliance": "Compliance",
+    "settings": "Settings"
+  },
   "sales": {
     "title": "Sales",
     "newSale": "New Sale",
     "empty": "No sales yet. Create one in \"New Sale\".",
+    "last30Days": "Last 30 days: ${{amount}}",
+    "inspectionOff": "Inspection mode off"
     "last30Days": "Last 30 days: ${{amount}}"
   },
   "inventory": {
