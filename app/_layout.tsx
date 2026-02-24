@@ -135,7 +135,6 @@ export default function RootLayout() {
   React.useEffect(() => {
     let mounted = true;
     (async () => {
-      await ensureI18nInitialized();
       await loadAppSettings();
       if (mounted) setReady(true);
     })();
