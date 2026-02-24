@@ -14,52 +14,9 @@ import { Alert, Pressable, ScrollView, StyleSheet, Switch, Text, TextInput, View
 
 type Choice<T extends string | number> = { label: string; value: T };
 
-const WEIGHT_UNITS: Choice<AppSettings["weightUnit"]>[] = [
-  { label: "Pounds (lb)", value: "lb" },
-  { label: "Kilograms (kg)", value: "kg" },
-];
-
-const TEMP_UNITS: Choice<AppSettings["temperatureUnit"]>[] = [
-  { label: "Fahrenheit", value: "fahrenheit" },
-  { label: "Celsius", value: "celsius" },
-];
-
 const DATE_FORMATS: Choice<AppSettings["dateFormat"]>[] = [
   { label: "MM/DD/YYYY", value: "MM/DD/YYYY" },
   { label: "DD/MM/YYYY", value: "DD/MM/YYYY" },
-];
-
-const BUYER_TYPES: Choice<AppSettings["defaultBuyerType"]>[] = [
-  { label: "Wholesale", value: "Wholesale" },
-  { label: "Retail", value: "Retail" },
-  { label: "Restaurant", value: "Restaurant" },
-];
-
-const PAYMENT_METHODS: Choice<AppSettings["defaultPaymentMethod"]>[] = [
-  { label: "Cash", value: "Cash" },
-  { label: "Card", value: "Card" },
-  { label: "Bank Transfer", value: "Bank Transfer" },
-  { label: "Check", value: "Check" },
-];
-
-const USER_ROLES: Choice<AppSettings["userRole"]>[] = [
-  { label: "Owner", value: "Owner" },
-  { label: "Employee", value: "Employee" },
-  { label: "Viewer", value: "Viewer" },
-];
-
-const AUTO_LOCK_TIMERS: Choice<AppSettings["autoLockTimerMinutes"]>[] = [
-  { label: "1 minute", value: 1 },
-  { label: "5 minutes", value: 5 },
-  { label: "10 minutes", value: 10 },
-  { label: "15 minutes", value: 15 },
-];
-
-const SESSION_TIMEOUT_TIMERS: Choice<AppSettings["sessionTimeoutMinutes"]>[] = [
-  { label: "5 minutes", value: 5 },
-  { label: "15 minutes", value: 15 },
-  { label: "30 minutes", value: 30 },
-  { label: "60 minutes", value: 60 },
 ];
 
 const LANGUAGES: Choice<AppSettings["language"]>[] = [
@@ -82,6 +39,43 @@ export default function SettingsScreen() {
   }, []);
 
   const appVersion = useMemo(() => Constants.expoConfig?.version ?? "dev", []);
+
+  const weightUnits = useMemo<Choice<AppSettings["weightUnit"]>[]>(() => [
+    { label: t("settings.values.pounds"), value: "lb" },
+    { label: t("settings.values.kilograms"), value: "kg" },
+  ], [t]);
+  const tempUnits = useMemo<Choice<AppSettings["temperatureUnit"]>[]>(() => [
+    { label: t("settings.values.fahrenheit"), value: "fahrenheit" },
+    { label: t("settings.values.celsius"), value: "celsius" },
+  ], [t]);
+  const buyerTypes = useMemo<Choice<AppSettings["defaultBuyerType"]>[]>(() => [
+    { label: t("settings.values.wholesale"), value: "Wholesale" },
+    { label: t("settings.values.retail"), value: "Retail" },
+    { label: t("settings.values.restaurant"), value: "Restaurant" },
+  ], [t]);
+  const paymentMethods = useMemo<Choice<AppSettings["defaultPaymentMethod"]>[]>(() => [
+    { label: t("settings.values.cash"), value: "Cash" },
+    { label: t("settings.values.card"), value: "Card" },
+    { label: t("settings.values.bankTransfer"), value: "Bank Transfer" },
+    { label: t("settings.values.check"), value: "Check" },
+  ], [t]);
+  const userRoles = useMemo<Choice<AppSettings["userRole"]>[]>(() => [
+    { label: t("settings.values.owner"), value: "Owner" },
+    { label: t("settings.values.employee"), value: "Employee" },
+    { label: t("settings.values.viewer"), value: "Viewer" },
+  ], [t]);
+  const autoLockTimers = useMemo<Choice<AppSettings["autoLockTimerMinutes"]>[]>(() => [
+    { label: t("settings.values.minuteCount", { count: 1 }), value: 1 },
+    { label: t("settings.values.minuteCount", { count: 5 }), value: 5 },
+    { label: t("settings.values.minuteCount", { count: 10 }), value: 10 },
+    { label: t("settings.values.minuteCount", { count: 15 }), value: 15 },
+  ], [t]);
+  const sessionTimeoutTimers = useMemo<Choice<AppSettings["sessionTimeoutMinutes"]>[]>(() => [
+    { label: t("settings.values.minuteCount", { count: 5 }), value: 5 },
+    { label: t("settings.values.minuteCount", { count: 15 }), value: 15 },
+    { label: t("settings.values.minuteCount", { count: 30 }), value: 30 },
+    { label: t("settings.values.minuteCount", { count: 60 }), value: 60 },
+  ], [t]);
 
   const updateSettings = useCallback(async (patch: Partial<AppSettings>) => {
     setSettings((prev) => {
@@ -118,17 +112,17 @@ export default function SettingsScreen() {
   }, []);
 
   async function handleRestore() {
-    Alert.alert("Restore Backup?", "This will overwrite all current data.", [
-      { text: "Cancel", style: "cancel" },
+    Alert.alert(t("settings.restoreBackupTitle"), t("settings.restoreBackupMessage"), [
+      { text: t("common.cancel"), style: "cancel" },
       {
-        text: "Restore",
+        text: t("settings.restore"),
         style: "destructive",
         onPress: async () => {
           try {
             await restoreFullBackup();
-            Alert.alert("Success", "Backup restored successfully.");
+            Alert.alert(t("settings.success"), t("settings.restoreSuccess"));
           } catch (e: any) {
-            Alert.alert("Restore failed", e?.message ?? "Invalid file.");
+            Alert.alert(t("settings.restoreFailed"), e?.message ?? t("settings.invalidFile"));
           }
         },
       },
@@ -143,25 +137,25 @@ export default function SettingsScreen() {
 
   function syncNow() {
     updateSettings({ lastSyncedAt: new Date().toISOString() });
-    Alert.alert("Synced", "CatchLedger data synced to local queue.");
+    Alert.alert(t("settings.syncedTitle"), t("settings.syncedMessage"));
   }
 
   async function clearLocalCache() {
     if (settings.userRole !== "Owner") {
-      Alert.alert("Admin only", "Only Owner can clear local cache.");
+      Alert.alert(t("settings.adminOnlyTitle"), t("settings.adminOnlyMessage"));
       return;
     }
 
-    Alert.alert("Clear local cache?", "This removes unsynced local cache values.", [
-      { text: "Cancel", style: "cancel" },
+    Alert.alert(t("settings.clearCacheTitle"), t("settings.clearCacheMessage"), [
+      { text: t("common.cancel"), style: "cancel" },
       {
-        text: "Clear",
+        text: t("settings.clear"),
         style: "destructive",
         onPress: async () => {
           await saveAppSettings(DEFAULT_APP_SETTINGS);
           await applyLanguage(DEFAULT_APP_SETTINGS.language);
           setSettings(DEFAULT_APP_SETTINGS);
-          Alert.alert("Cache cleared", "Local app settings cache was reset.");
+          Alert.alert(t("settings.cacheClearedTitle"), t("settings.cacheClearedMessage"));
         },
       },
     ]);
@@ -180,8 +174,8 @@ export default function SettingsScreen() {
         />
         {__DEV__ ? (
           <View style={{ gap: 4, marginTop: 8 }}>
-            <Text style={[styles.metaText, { color: colors.muted }]}>Saved language: {settings.language}</Text>
-            <Text style={[styles.metaText, { color: colors.muted }]}>Active i18n.language: {i18n.language}</Text>
+            <Text style={[styles.metaText, { color: colors.muted }]}>{t("settings.savedLanguage", { language: settings.language })}</Text>
+            <Text style={[styles.metaText, { color: colors.muted }]}>{t("settings.activeLanguage", { language: i18n.language })}</Text>
           </View>
         ) : null}
       </Card>
@@ -197,67 +191,67 @@ export default function SettingsScreen() {
           </Card>
     
           <Card colors={colors} title={t("settings.unitsFormatting")}>
-            <ChoiceGroup colors={colors} label={t("settings.weightUnit")} value={settings.weightUnit} options={WEIGHT_UNITS} onChange={(value) => updateSettings({ weightUnit: value })} />
-            <ChoiceGroup colors={colors} label={t("settings.temperatureUnit")} value={settings.temperatureUnit} options={TEMP_UNITS} onChange={(value) => updateSettings({ temperatureUnit: value })} />
+            <ChoiceGroup colors={colors} label={t("settings.weightUnit")} value={settings.weightUnit} options={weightUnits} onChange={(value) => updateSettings({ weightUnit: value })} />
+            <ChoiceGroup colors={colors} label={t("settings.temperatureUnit")} value={settings.temperatureUnit} options={tempUnits} onChange={(value) => updateSettings({ temperatureUnit: value })} />
             <ChoiceGroup colors={colors} label={t("settings.dateFormat")} value={settings.dateFormat} options={DATE_FORMATS} onChange={(value) => updateSettings({ dateFormat: value })} />
           </Card>
     
-          <Card colors={colors} title="Company Profile">
-            <InputRow colors={colors} label="Business Name" value={settings.companyProfile.businessName} onChangeText={(businessName) => updateCompany({ businessName })} />
-            <InputRow colors={colors} label="Business Address" value={settings.companyProfile.businessAddress} onChangeText={(businessAddress) => updateCompany({ businessAddress })} />
-            <InputRow colors={colors} label="Phone" value={settings.companyProfile.phone} onChangeText={(phone) => updateCompany({ phone })} keyboardType="phone-pad" />
-            <InputRow colors={colors} label="Email" value={settings.companyProfile.email} onChangeText={(email) => updateCompany({ email })} keyboardType="email-address" />
-            <InputRow colors={colors} label="License number" value={settings.companyProfile.licenseNumber} onChangeText={(licenseNumber) => updateCompany({ licenseNumber })} />
-            <InputRow colors={colors} label="EIN (optional)" value={settings.companyProfile.ein ?? ""} onChangeText={(ein) => updateCompany({ ein })} />
+          <Card colors={colors} title={t("settings.companyProfile")}>
+            <InputRow colors={colors} label={t("settings.businessName")} value={settings.companyProfile.businessName} onChangeText={(businessName) => updateCompany({ businessName })} />
+            <InputRow colors={colors} label={t("settings.businessAddress")} value={settings.companyProfile.businessAddress} onChangeText={(businessAddress) => updateCompany({ businessAddress })} />
+            <InputRow colors={colors} label={t("settings.phone")} value={settings.companyProfile.phone} onChangeText={(phone) => updateCompany({ phone })} keyboardType="phone-pad" />
+            <InputRow colors={colors} label={t("settings.email")} value={settings.companyProfile.email} onChangeText={(email) => updateCompany({ email })} keyboardType="email-address" />
+            <InputRow colors={colors} label={t("settings.licenseNumber")} value={settings.companyProfile.licenseNumber} onChangeText={(licenseNumber) => updateCompany({ licenseNumber })} />
+            <InputRow colors={colors} label={t("settings.einOptional")} value={settings.companyProfile.ein ?? ""} onChangeText={(ein) => updateCompany({ ein })} />
     
             <View style={styles.logoWrap}>
               <Pressable style={styles.secondaryBtn} onPress={pickLogo}>
-                <Text style={styles.secondaryBtnText}>{settings.companyProfile.logoUri ? "Replace logo" : "Upload logo"}</Text>
+                <Text style={styles.secondaryBtnText}>{settings.companyProfile.logoUri ? t("settings.replaceLogo") : t("settings.uploadLogo")}</Text>
               </Pressable>
               {settings.companyProfile.logoUri ? <Image source={settings.companyProfile.logoUri} style={styles.logoPreview} contentFit="contain" /> : null}
             </View>
           </Card>
     
-          <Card colors={colors} title="Data & Sync Controls">
-            <Pressable onPress={syncNow} style={styles.btn}><Text style={styles.btnText}>🔄 Sync Now</Text></Pressable>
-            <ToggleRow colors={colors} title="📡 Auto-sync" subtitle="Sync automatically when connection is available." value={settings.autoSync} onValueChange={(autoSync) => updateSettings({ autoSync })} />
-            <Pressable onPress={exportFullBackup} style={styles.btn}><Text style={styles.btnText}>📦 Backup data</Text></Pressable>
-            <Pressable onPress={handleRestore} style={styles.secondaryBtn}><Text style={styles.secondaryBtnText}>Restore from backup</Text></Pressable>
-            <Pressable onPress={clearLocalCache} style={styles.dangerBtn}><Text style={styles.btnText}>🗑 Clear local cache (admin)</Text></Pressable>
+          <Card colors={colors} title={t("settings.backupSync")}>
+            <Pressable onPress={syncNow} style={styles.btn}><Text style={styles.btnText}>{t("settings.syncNow")}</Text></Pressable>
+            <ToggleRow colors={colors} title={t("settings.autoSync")} subtitle={t("settings.autoSyncSubtitle")} value={settings.autoSync} onValueChange={(autoSync) => updateSettings({ autoSync })} />
+            <Pressable onPress={exportFullBackup} style={styles.btn}><Text style={styles.btnText}>{t("settings.exportBackup")}</Text></Pressable>
+            <Pressable onPress={handleRestore} style={styles.secondaryBtn}><Text style={styles.secondaryBtnText}>{t("settings.importBackup")}</Text></Pressable>
+            <Pressable onPress={clearLocalCache} style={styles.dangerBtn}><Text style={styles.btnText}>{t("settings.clearLocalCache")}</Text></Pressable>
           </Card>
     
-          <Card colors={colors} title="Notifications">
-            <ToggleRow colors={colors} title="Delivery reminders" value={settings.deliveryReminders} onValueChange={(deliveryReminders) => updateSettings({ deliveryReminders })} />
-            <ToggleRow colors={colors} title="Payment reminders" value={settings.paymentReminders} onValueChange={(paymentReminders) => updateSettings({ paymentReminders })} />
-            <ToggleRow colors={colors} title="Low inventory alerts" value={settings.lowInventoryAlerts} onValueChange={(lowInventoryAlerts) => updateSettings({ lowInventoryAlerts })} />
-            <ToggleRow colors={colors} title="Expiring product alert" value={settings.expiringProductAlerts} onValueChange={(expiringProductAlerts) => updateSettings({ expiringProductAlerts })} />
+          <Card colors={colors} title={t("settings.remindersAlerts")}>
+            <ToggleRow colors={colors} title={t("settings.deliveryReminders")} value={settings.deliveryReminders} onValueChange={(deliveryReminders) => updateSettings({ deliveryReminders })} />
+            <ToggleRow colors={colors} title={t("settings.paymentReminders")} value={settings.paymentReminders} onValueChange={(paymentReminders) => updateSettings({ paymentReminders })} />
+            <ToggleRow colors={colors} title={t("settings.lowInventoryAlerts")} value={settings.lowInventoryAlerts} onValueChange={(lowInventoryAlerts) => updateSettings({ lowInventoryAlerts })} />
+            <ToggleRow colors={colors} title={t("settings.expiringProductAlerts")} value={settings.expiringProductAlerts} onValueChange={(expiringProductAlerts) => updateSettings({ expiringProductAlerts })} />
           </Card>
     
-          <Card colors={colors} title="Default Sale Settings">
-            <ChoiceGroup colors={colors} label="Default buyer type" value={settings.defaultBuyerType} options={BUYER_TYPES} onChange={(defaultBuyerType) => updateSettings({ defaultBuyerType })} />
-            <ChoiceGroup colors={colors} label="Default payment method" value={settings.defaultPaymentMethod} options={PAYMENT_METHODS} onChange={(defaultPaymentMethod) => updateSettings({ defaultPaymentMethod })} />
-            <ToggleRow colors={colors} title="Require signature?" value={settings.requireSignature} onValueChange={(requireSignature) => updateSettings({ requireSignature })} />
-            <ToggleRow colors={colors} title="Require photo?" value={settings.requirePhoto} onValueChange={(requirePhoto) => updateSettings({ requirePhoto })} />
-            <ToggleRow colors={colors} title="Auto-generate invoice?" value={settings.autoGenerateInvoice} onValueChange={(autoGenerateInvoice) => updateSettings({ autoGenerateInvoice })} />
+          <Card colors={colors} title={t("settings.defaultSaleSettings")}>
+            <ChoiceGroup colors={colors} label={t("settings.defaultBuyerType")} value={settings.defaultBuyerType} options={buyerTypes} onChange={(defaultBuyerType) => updateSettings({ defaultBuyerType })} />
+            <ChoiceGroup colors={colors} label={t("settings.defaultPaymentMethod")} value={settings.defaultPaymentMethod} options={paymentMethods} onChange={(defaultPaymentMethod) => updateSettings({ defaultPaymentMethod })} />
+            <ToggleRow colors={colors} title={t("settings.requireSignature")} value={settings.requireSignature} onValueChange={(requireSignature) => updateSettings({ requireSignature })} />
+            <ToggleRow colors={colors} title={t("settings.requirePhoto")} value={settings.requirePhoto} onValueChange={(requirePhoto) => updateSettings({ requirePhoto })} />
+            <ToggleRow colors={colors} title={t("settings.autoGenerateInvoice")} value={settings.autoGenerateInvoice} onValueChange={(autoGenerateInvoice) => updateSettings({ autoGenerateInvoice })} />
           </Card>
     
-          <Card colors={colors} title="User Role">
-            <ChoiceGroup colors={colors} label="Role" value={settings.userRole} options={USER_ROLES} onChange={(userRole) => updateSettings({ userRole })} />
+          <Card colors={colors} title={t("settings.userRole")}>
+            <ChoiceGroup colors={colors} label={t("settings.role")} value={settings.userRole} options={userRoles} onChange={(userRole) => updateSettings({ userRole })} />
           </Card>
     
-          <Card colors={colors} title="Security">
-            <ToggleRow colors={colors} title="Passcode lock" value={settings.passcodeLockEnabled} onValueChange={(passcodeLockEnabled) => updateSettings({ passcodeLockEnabled })} />
-            <ToggleRow colors={colors} title="FaceID / TouchID" value={settings.biometricsEnabled} onValueChange={(biometricsEnabled) => updateSettings({ biometricsEnabled })} />
-            <ChoiceGroup colors={colors} label="Auto-lock timer" value={settings.autoLockTimerMinutes} options={AUTO_LOCK_TIMERS} onChange={(autoLockTimerMinutes) => updateSettings({ autoLockTimerMinutes })} />
-            <ChoiceGroup colors={colors} label="Session timeout" value={settings.sessionTimeoutMinutes} options={SESSION_TIMEOUT_TIMERS} onChange={(sessionTimeoutMinutes) => updateSettings({ sessionTimeoutMinutes })} />
+          <Card colors={colors} title={t("settings.security")}>
+            <ToggleRow colors={colors} title={t("settings.passcodeLock")} value={settings.passcodeLockEnabled} onValueChange={(passcodeLockEnabled) => updateSettings({ passcodeLockEnabled })} />
+            <ToggleRow colors={colors} title={t("settings.faceIdTouchId")} value={settings.biometricsEnabled} onValueChange={(biometricsEnabled) => updateSettings({ biometricsEnabled })} />
+            <ChoiceGroup colors={colors} label={t("settings.autoLockTimer")} value={settings.autoLockTimerMinutes} options={autoLockTimers} onChange={(autoLockTimerMinutes) => updateSettings({ autoLockTimerMinutes })} />
+            <ChoiceGroup colors={colors} label={t("settings.sessionTimeout")} value={settings.sessionTimeoutMinutes} options={sessionTimeoutTimers} onChange={(sessionTimeoutMinutes) => updateSettings({ sessionTimeoutMinutes })} />
           </Card>
     
-          <Card colors={colors} title="About / Legal">
-            <Text style={[styles.metaText, { color: colors.text }]}>App version: {appVersion}</Text>
-            <Pressable onPress={() => Linking.openURL("https://example.com/privacy")}><Text style={[styles.link, { color: colors.primary }]}>Privacy policy</Text></Pressable>
-            <Pressable onPress={() => Linking.openURL("https://example.com/terms")}><Text style={[styles.link, { color: colors.primary }]}>Terms</Text></Pressable>
-            <Pressable onPress={() => Linking.openURL("mailto:support@catchledger.app")}><Text style={[styles.link, { color: colors.primary }]}>Contact support</Text></Pressable>
-            {!!settings.lastSyncedAt && <Text style={[styles.metaText, { color: colors.muted }]}>Last synced: {new Date(settings.lastSyncedAt).toLocaleString()}</Text>}
+          <Card colors={colors} title={t("settings.aboutLegal")}>
+            <Text style={[styles.metaText, { color: colors.text }]}>{t("settings.appVersion", { version: appVersion })}</Text>
+            <Pressable onPress={() => Linking.openURL("https://example.com/privacy")}><Text style={[styles.link, { color: colors.primary }]}>{t("settings.privacyPolicy")}</Text></Pressable>
+            <Pressable onPress={() => Linking.openURL("https://example.com/terms")}><Text style={[styles.link, { color: colors.primary }]}>{t("settings.terms")}</Text></Pressable>
+            <Pressable onPress={() => Linking.openURL("mailto:support@catchledger.app")}><Text style={[styles.link, { color: colors.primary }]}>{t("settings.contactSupport")}</Text></Pressable>
+            {!!settings.lastSyncedAt && <Text style={[styles.metaText, { color: colors.muted }]}>{t("settings.lastSynced", { time: new Date(settings.lastSyncedAt).toLocaleString() })}</Text>}
           </Card>
         </ScrollView>
       );
