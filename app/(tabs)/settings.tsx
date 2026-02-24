@@ -1,4 +1,4 @@
-import { applyLanguage, type SupportedLanguage } from "@/i18n";
+import i18n, { applyLanguage, type SupportedLanguage } from "@/i18n";
 import { ThemeContext } from "@/theme/ThemeProvider";
 import { DEFAULT_APP_SETTINGS, type AppSettings } from "@/types/settings";
 import { exportFullBackup, restoreFullBackup } from "@/utils/backup";
@@ -92,24 +92,18 @@ export default function SettingsScreen() {
   }, []);
 
   const updateLanguage = useCallback(async (language: SupportedLanguage) => {
-    let nextSettings: AppSettings | null = null;
-  
-    setSettings((prev) => {
-      nextSettings = { ...prev, language };
-      return nextSettings!;
+    const nextSettings = await new Promise<AppSettings>((resolve) => {
+      setSettings((prev) => {
+        const next = { ...prev, language };
+        resolve(next);
+        return next;
+      });
     });
-  
-    // persist the same object we just staged
-    if (nextSettings) {
-      await saveAppSettings(nextSettings);
-    } else {
-      // fallback (shouldn’t happen)
-      const stored = await loadAppSettings();
-      await saveAppSettings({ ...stored, language });
-    }
-  
+
+    await saveAppSettings(nextSettings);
+
     const { shouldShowRtlRestartPrompt } = await applyLanguage(language);
-  
+
     if (shouldShowRtlRestartPrompt) {
       Alert.alert(t("settings.language"), t("settings.languageChangedRestart"));
     }
@@ -184,6 +178,12 @@ export default function SettingsScreen() {
           options={LANGUAGES.map((opt) => ({ ...opt, label: t(`settings.languageLabels.${opt.value}`) }))}
           onChange={(value) => void updateLanguage(value as SupportedLanguage)}
         />
+        {__DEV__ ? (
+          <View style={{ gap: 4, marginTop: 8 }}>
+            <Text style={[styles.metaText, { color: colors.muted }]}>Saved language: {settings.language}</Text>
+            <Text style={[styles.metaText, { color: colors.muted }]}>Active i18n.language: {i18n.language}</Text>
+          </View>
+        ) : null}
       </Card>
 
       <Card colors={colors} title={t("settings.appearance")}>

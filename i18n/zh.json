@@ -1,50 +1,114 @@
 {
+  "common": {
+    "refresh": "Refresh",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "unknown": "Unknown"
+  },
+  "lock": {
+    "title": "CatchLedger Locked",
+    "enterPasscode": "Enter passcode",
+    "unlock": "Unlock",
+    "unlockBiometric": "Unlock with FaceID / TouchID",
+    "errors": {
+      "setPasscode": "Set a passcode in Settings > Security first.",
+      "incorrectPasscode": "Incorrect passcode.",
+      "biometricFailed": "Biometric unlock failed."
+    }
+  },
+  "modal": {
+    "title": "Modal",
+    "bodyTitle": "This is a modal",
+    "goHome": "Go to home screen"
+  },
   "settings": {
-    "title": "设置",
-    "language": "语言",
-    "languageChangedRestart": "语言已更改。请重启应用以应用布局方向。",
-    "appearance": "外观",
-    "nightMode": "夜间模式",
-    "nightModeSubtitle": "平滑主题过渡。",
-    "unitsFormatting": "单位与格式",
-    "weightUnit": "重量单位",
-    "temperatureUnit": "温度单位",
-    "dateFormat": "日期格式",
+    "title": "Settings",
+    "language": "Language",
+    "languageChangedRestart": "Language changed. Please restart the app to apply layout direction.",
+    "appearance": "Appearance",
+    "nightMode": "Night mode",
+    "nightModeSubtitle": "Smooth theme transition.",
+    "unitsFormatting": "Units & Formatting",
+    "weightUnit": "Weight unit",
+    "temperatureUnit": "Temperature unit",
+    "dateFormat": "Date format",
     "languageLabels": {
-      "en": "英语",
-      "zh": "简体中文",
-      "es": "西班牙语",
-      "hi": "印地语",
-      "ar": "阿拉伯语"
+      "en": "English",
+      "zh": "Chinese (Simplified)",
+      "es": "Spanish",
+      "hi": "Hindi",
+      "ar": "Arabic"
     }
   },
   "tabs": {
-    "dashboard": "仪表盘",
-    "inventory": "库存",
-    "sales": "销售",
-    "expenses": "支出",
-    "reports": "报表",
-    "compliance": "合规",
-    "settings": "设置"
+    "dashboard": "Dashboard",
+    "inventory": "Inventory",
+    "sales": "Sales",
+    "expenses": "Expenses",
+    "reports": "Reports",
+    "compliance": "Compliance",
+    "settings": "Settings"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "today": "Today",
+    "last7Days": "Last 7 days",
+    "thisMonth": "This month",
+    "updated": "Updated {{time}}",
+    "lowInventoryItems": "Low inventory items: {{count}}",
+    "expiringLotsSoon": "Expiring lots soon: {{count}}",
+    "totals": "Totals",
+    "allTimeRevenue": "All time revenue",
+    "allTimeExpenses": "All time expenses",
+    "allTimeNet": "All time net",
+    "salesCount_one": "{{count}} sale",
+    "salesCount_other": "{{count}} sales",
+    "expensesCount_one": "{{count}} expense",
+    "expensesCount_other": "{{count}} expenses",
+    "revenueMinusExpenses": "Revenue − Expenses",
+    "thisPeriod": "This period",
+    "topSpeciesLast30": "Top species (last 30 days)",
+    "noSalesYet": "No sales yet.",
+    "revenue": "Revenue",
+    "expenses": "Expenses",
+    "net": "Net"
   },
   "sales": {
-    "title": "销售",
-    "newSale": "新建销售",
-    "empty": "暂无销售。请在\"新建销售\"中创建。",
-    "last30Days": "近30天：${{amount}}",
-    "inspectionOff": "检查模式已关闭"
+    "title": "Sales",
+    "newSale": "New Sale",
+    "editSale": "Edit Sale",
+    "empty": "No sales yet. Create one in \"New Sale\".",
+    "last30Days": "Last 30 days: ${{amount}}",
+    "inspectionOff": "Inspection mode off"
   },
   "inventory": {
-    "title": "库存",
-    "add": "添加库存"
+    "title": "Inventory",
+    "add": "Add Inventory",
+    "addFish": "Add Fish",
+    "editFish": "Edit Fish",
+    "tapToViewEdit": "Tap an item to view or edit.",
+    "empty": "No inventory yet. Tap “Add Fish”.",
+    "qty": "• Qty {{qty}}",
+    "expired": "Expired"
+  },
+  "expenses": {
+    "title": "Expenses",
+    "addExpense": "Add Expense",
+    "editExpense": "Edit Expense"
   },
   "reports": {
-    "title": "报表"
+    "title": "Reports"
   },
   "compliance": {
-    "title": "合规",
-    "today": "今天",
-    "week": "本周",
-    "range": "范围"
+    "title": "Compliance",
+    "today": "Today",
+    "week": "Week",
+    "range": "Range",
+    "dateRange": "Date Range",
+    "licenseProfile": "License Profile",
+    "inspectionControls": "Inspection Controls",
+    "last7Days": "Last 7 Days",
+    "inspectionReadOnly": "INSPECTION MODE — READ ONLY",
+    "exitInspectionMode": "Exit Inspection Mode"
   }
 }

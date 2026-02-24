@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { I18nManager } from "react-native";
-import i18n from "i18next";
+import { createInstance } from "i18next";
 import { initReactI18next } from "react-i18next";
 
 import ar from "@/i18n/ar.json";
@@ -12,27 +12,34 @@ import zh from "@/i18n/zh.json";
 export type SupportedLanguage = "en" | "es" | "zh" | "hi" | "ar";
 
 const RTL_NOTICE_KEY = "catchledger_rtl_notice_shown";
-let initialized = false;
+const i18n = createInstance();
+let initPromise: Promise<typeof i18n> | null = null;
 
 export async function ensureI18nInitialized() {
-  if (initialized) return i18n;
+  if (i18n.isInitialized) return i18n;
+  if (initPromise) return initPromise;
 
-  await i18n.use(initReactI18next).init({
-    lng: "en",
-    fallbackLng: false,
-    compatibilityJSON: "v4",
-    interpolation: { escapeValue: false },
-    returnNull: false,
-    resources: {
-      en: { translation: en },
-      es: { translation: es },
-      zh: { translation: zh },
-      hi: { translation: hi },
-      ar: { translation: ar },
-    },
-  });
+  initPromise = i18n.use(initReactI18next).init({
+      lng: "en",
+      fallbackLng: false,
+      compatibilityJSON: "v4",
+      interpolation: { escapeValue: false },
+      returnNull: false,
+      resources: {
+        en: { translation: en },
+        es: { translation: es },
+        zh: { translation: zh },
+        hi: { translation: hi },
+        ar: { translation: ar },
+      },
+    })
+    .then(() => i18n)
+    .catch((error) => {
+      initPromise = null;
+      throw error;
+    });
 
-  initialized = true;
+  await initPromise;
 
   if (__DEV__) {
     console.log("[i18n] initialized language:", i18n.language);
@@ -44,8 +51,8 @@ export async function ensureI18nInitialized() {
 void ensureI18nInitialized();
 
 export async function applyLanguage(language: SupportedLanguage) {
-  await ensureI18nInitialized();
-  await i18n.changeLanguage(language);
+  const instance = await ensureI18nInitialized();
+  await instance.changeLanguage(language);
 
   if (__DEV__) {
     console.log("[i18n] language after changeLanguage:", i18n.language);

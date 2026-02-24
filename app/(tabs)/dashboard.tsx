@@ -1,6 +1,7 @@
 import { ThemeContext } from "@/theme/ThemeProvider";
 import { useFocusEffect } from "expo-router";
 import { useCallback, useContext, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 
 import { STORAGE_KEYS } from "@/constants/storageKeys";
@@ -27,6 +28,7 @@ type Bucket = { label: string; revenue: number; expenses: number; countSales: nu
 
 export default function DashboardScreen() {
   const { colors } = useContext(ThemeContext);
+  const { t } = useTranslation();
 
   const [sales, setSales] = useState<Sale[]>([]);
   const [expenses, setExpenses] = useState<Expense[]>([]);
@@ -61,9 +63,9 @@ export default function DashboardScreen() {
     const m0 = startOfMonth(now).getTime();
 
     const init: { today: Bucket; last7: Bucket; thisMonth: Bucket } = {
-      today: { label: "Today", revenue: 0, expenses: 0, countSales: 0, countExpenses: 0 },
-      last7: { label: "Last 7 days", revenue: 0, expenses: 0, countSales: 0, countExpenses: 0 },
-      thisMonth: { label: "This month", revenue: 0, expenses: 0, countSales: 0, countExpenses: 0 },
+      today: { label: t("dashboard.today"), revenue: 0, expenses: 0, countSales: 0, countExpenses: 0 },
+      last7: { label: t("dashboard.last7Days"), revenue: 0, expenses: 0, countSales: 0, countExpenses: 0 },
+      thisMonth: { label: t("dashboard.thisMonth"), revenue: 0, expenses: 0, countSales: 0, countExpenses: 0 },
     };
 
     for (const s of sales) {
@@ -117,7 +119,7 @@ export default function DashboardScreen() {
       if (Number.isNaN(ts) || ts < cutoff) continue;
 
       for (const line of s.lines) {
-        const key = line.speciesName?.trim() || "Unknown";
+        const key = line.speciesName?.trim() || t("common.unknown");
         bySpecies.set(key, (bySpecies.get(key) ?? 0) + (line.subtotal ?? 0));
       }
     }
@@ -137,7 +139,7 @@ export default function DashboardScreen() {
       ListHeaderComponent={
         <>
           <View style={styles.headerRow}>
-            <Text style={[styles.title, { color: colors.text }]}>Dashboard</Text>
+            <Text style={[styles.title, { color: colors.text }]}>{t("dashboard.title")}</Text>
 
             <View style={{ alignItems: "flex-end" }}>
               <Pressable
@@ -147,12 +149,12 @@ export default function DashboardScreen() {
                   { borderColor: colors.cardBorder, backgroundColor: colors.cardBg },
                 ]}
               >
-                <Text style={[styles.refreshText, { color: colors.text }]}>Refresh</Text>
+                <Text style={[styles.refreshText, { color: colors.text }]}>{t("common.refresh")}</Text>
               </Pressable>
 
               {lastUpdated ? (
                 <Text style={[styles.updatedText, { color: colors.muted }]}>
-                  Updated {lastUpdated.toLocaleTimeString()}
+                  {t("dashboard.updated", { time: lastUpdated.toLocaleTimeString() })}
                 </Text>
               ) : null}
             </View>
@@ -160,49 +162,49 @@ export default function DashboardScreen() {
 
           {(lowCount > 0 || expiringCount > 0) ? (
             <View style={[styles.alertCard, { borderColor: colors.cardBorder, backgroundColor: colors.cardBg }]}>
-              {lowCount > 0 ? <Text style={[styles.alertText, { color: colors.text }]}>Low inventory items: {lowCount}</Text> : null}
-              {expiringCount > 0 ? <Text style={[styles.alertText, { color: colors.text }]}>Expiring lots soon: {expiringCount}</Text> : null}
+              {lowCount > 0 ? <Text style={[styles.alertText, { color: colors.text }]}>{t("dashboard.lowInventoryItems", { count: lowCount })}</Text> : null}
+              {expiringCount > 0 ? <Text style={[styles.alertText, { color: colors.text }]}>{t("dashboard.expiringLotsSoon", { count: expiringCount })}</Text> : null}
             </View>
           ) : null}
 
-          <Text style={[styles.sectionTitle, { color: colors.text }]}>Totals</Text>
+          <Text style={[styles.sectionTitle, { color: colors.text }]}>{t("dashboard.totals")}</Text>
 
           <View style={styles.cardsRow}>
             <MoneyCard
               colors={colors}
-              label="All time revenue"
+              label={t("dashboard.allTimeRevenue")}
               amount={allTimeRevenue}
-              subtitle={`${sales.length} sale${sales.length === 1 ? "" : "s"}`}
+              subtitle={t("dashboard.salesCount", { count: sales.length })}
             />
             <MoneyCard
               colors={colors}
-              label="All time expenses"
+              label={t("dashboard.allTimeExpenses")}
               amount={allTimeExpenses}
-              subtitle={`${expenses.length} expense${expenses.length === 1 ? "" : "s"}`}
+              subtitle={t("dashboard.expensesCount", { count: expenses.length })}
             />
           </View>
 
           <View style={styles.cardsRow}>
             <MoneyCard
               colors={colors}
-              label="All time net"
+              label={t("dashboard.allTimeNet")}
               amount={allTimeRevenue - allTimeExpenses}
-              subtitle="Revenue − Expenses"
+              subtitle={t("dashboard.revenueMinusExpenses")}
               emphasize
             />
           </View>
 
-          <Text style={[styles.sectionTitle, { color: colors.text }]}>This period</Text>
+          <Text style={[styles.sectionTitle, { color: colors.text }]}>{t("dashboard.thisPeriod")}</Text>
           <PeriodRow colors={colors} bucket={buckets.today} />
           <PeriodRow colors={colors} bucket={buckets.last7} />
           <PeriodRow colors={colors} bucket={buckets.thisMonth} />
 
           <Text style={[styles.sectionTitle, { marginTop: 10, color: colors.text }]}>
-            Top species (last 30 days)
+            {t("dashboard.topSpeciesLast30")}
           </Text>
 
           {topSpecies30.length === 0 ? (
-            <Text style={{ color: colors.muted, marginTop: 6 }}>No sales yet.</Text>
+            <Text style={{ color: colors.muted, marginTop: 6 }}>{t("dashboard.noSalesYet")}</Text>
           ) : null}
         </>
       }
@@ -249,6 +251,7 @@ function MoneyCard({
 }
 
 function PeriodRow({ bucket, colors }: { bucket: Bucket; colors: any }) {
+  const { t } = useTranslation();
   const net = bucket.revenue - bucket.expenses;
 
   return (
@@ -257,17 +260,17 @@ function PeriodRow({ bucket, colors }: { bucket: Bucket; colors: any }) {
 
       <View style={{ flex: 1 }}>
         <Text style={[styles.periodLine, { color: colors.text }]}>
-          Revenue: <Text style={styles.bold}>${bucket.revenue.toFixed(2)}</Text>{" "}
+          {t("dashboard.revenue")}: <Text style={styles.bold}>${bucket.revenue.toFixed(2)}</Text>{" "}
           <Text style={[styles.muted, { color: colors.muted }]}>({bucket.countSales})</Text>
         </Text>
 
         <Text style={[styles.periodLine, { color: colors.text }]}>
-          Expenses: <Text style={styles.bold}>${bucket.expenses.toFixed(2)}</Text>{" "}
+          {t("dashboard.expenses")}: <Text style={styles.bold}>${bucket.expenses.toFixed(2)}</Text>{" "}
           <Text style={[styles.muted, { color: colors.muted }]}>({bucket.countExpenses})</Text>
         </Text>
 
         <Text style={[styles.periodLine, { color: colors.text }]}>
-          Net:{" "}
+          {t("dashboard.net")}:{" "}
           <Text style={[styles.bold, net < 0 && styles.negative]}>
             ${net.toFixed(2)}
           </Text>
