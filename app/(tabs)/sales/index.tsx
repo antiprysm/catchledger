@@ -63,6 +63,7 @@ export default function SalesLogScreen() {
               await saveJSON(STORAGE_KEYS.INSPECTION_MODE, false);
               setInspectionMode(false);
               Alert.alert(t("sales.inspectionOff"));
+              Alert.alert(t("sales.inspectionOff", { defaultValue: "Inspection mode off" }));
             }}
           >
             <Text style={styles.exitText}>Exit Inspection Mode</Text>

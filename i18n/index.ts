@@ -12,6 +12,7 @@ import zh from "@/i18n/zh.json";
 export type SupportedLanguage = "en" | "es" | "zh" | "hi" | "ar";
 
 const RTL_NOTICE_KEY = "catchledger_rtl_notice_shown";
+<<<<<<< codex/add-i18n-support-with-language-switching-ls18m7
 let initialized = false;
 
 export async function ensureI18nInitialized() {
@@ -54,6 +55,28 @@ export async function applyLanguage(language: SupportedLanguage) {
   const wantsRTL = language === "ar";
   const rtlChanged = I18nManager.isRTL !== wantsRTL;
 
+=======
+
+void i18n.use(initReactI18next).init({
+  lng: "en",
+  fallbackLng: "en",
+  compatibilityJSON: "v4",
+  interpolation: { escapeValue: false },
+  resources: {
+    en: { translation: en },
+    es: { translation: es },
+    zh: { translation: zh },
+    hi: { translation: hi },
+    ar: { translation: ar },
+  },
+});
+
+export async function applyLanguage(language: SupportedLanguage) {
+  await i18n.changeLanguage(language);
+
+  const wantsRTL = language === "ar";
+  const rtlChanged = I18nManager.isRTL !== wantsRTL;
+>>>>>>> main
   if (rtlChanged) {
     I18nManager.allowRTL(wantsRTL);
     I18nManager.forceRTL(wantsRTL);
@@ -67,6 +90,7 @@ export async function applyLanguage(language: SupportedLanguage) {
   }
 
   return { shouldShowRtlRestartPrompt, rtlChanged };
+  return { shouldShowRtlRestartPrompt };
 }
 
 export default i18n;

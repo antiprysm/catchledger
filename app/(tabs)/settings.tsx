@@ -106,6 +106,12 @@ export default function SettingsScreen() {
       Alert.alert(t("settings.language"), t("settings.languageChangedRestart"));
     }
   }, [settings, t]);
+    updateSettings({ language });
+    const { shouldShowRtlRestartPrompt } = await applyLanguage(language);
+    if (shouldShowRtlRestartPrompt) {
+      Alert.alert(t("settings.language"), t("settings.languageChangedRestart"));
+    }
+  }, [t, updateSettings]);
 
   const updateCompany = useCallback((patch: Partial<AppSettings["companyProfile"]>) => {
     setSettings((prev) => ({ ...prev, companyProfile: { ...prev.companyProfile, ...patch } }));
@@ -175,6 +181,7 @@ export default function SettingsScreen() {
       </Card>
 
       <Card colors={colors} title={t("settings.appearance")}>
+      <Card colors={colors} title="Appearance">
         <ToggleRow
           colors={colors}
           title={t("settings.nightMode")}

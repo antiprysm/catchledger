@@ -33,6 +33,7 @@
     "empty": "No sales yet. Create one in \"New Sale\".",
     "last30Days": "Last 30 days: ${{amount}}",
     "inspectionOff": "Inspection mode off"
+    "last30Days": "Last 30 days: ${{amount}}"
   },
   "inventory": {
     "title": "Inventory",
