@@ -1,6 +1,6 @@
+import { applyLanguage, type SupportedLanguage } from "@/i18n";
 import { ThemeContext } from "@/theme/ThemeProvider";
 import { DEFAULT_APP_SETTINGS, type AppSettings } from "@/types/settings";
-import { applyLanguage, type SupportedLanguage } from "@/i18n";
 import { exportFullBackup, restoreFullBackup } from "@/utils/backup";
 
 import { loadAppSettings, saveAppSettings } from "@/utils/appSettings";
@@ -81,34 +81,46 @@ export default function SettingsScreen() {
       .finally(() => setLoaded(true));
   }, []);
 
-  useEffect(() => {
-    if (!loaded) return;
-    saveAppSettings(settings);
-  }, [loaded, settings]);
-
   const appVersion = useMemo(() => Constants.expoConfig?.version ?? "dev", []);
 
-  const updateSettings = useCallback((patch: Partial<AppSettings>) => {
-    setSettings((prev) => ({ ...prev, ...patch }));
+  const updateSettings = useCallback(async (patch: Partial<AppSettings>) => {
+    setSettings((prev) => {
+      const next = { ...prev, ...patch };
+      void saveAppSettings(next);
+      return next;
+    });
   }, []);
 
   const updateLanguage = useCallback(async (language: SupportedLanguage) => {
-    const nextSettings = { ...settings, language };
-    setSettings(nextSettings);
-    await saveAppSettings(nextSettings);
-
-    const { shouldShowRtlRestartPrompt } = await applyLanguage(language);
-    if (__DEV__) {
-      console.log("[settings] user selected language:", language);
+    let nextSettings: AppSettings | null = null;
+  
+    setSettings((prev) => {
+      nextSettings = { ...prev, language };
+      return nextSettings!;
+    });
+  
+    // persist the same object we just staged
+    if (nextSettings) {
+      await saveAppSettings(nextSettings);
+    } else {
+      // fallback (shouldn’t happen)
+      const stored = await loadAppSettings();
+      await saveAppSettings({ ...stored, language });
     }
-
+  
+    const { shouldShowRtlRestartPrompt } = await applyLanguage(language);
+  
     if (shouldShowRtlRestartPrompt) {
       Alert.alert(t("settings.language"), t("settings.languageChangedRestart"));
     }
-  }, [settings, t]);
+  }, [t]);
 
-  const updateCompany = useCallback((patch: Partial<AppSettings["companyProfile"]>) => {
-    setSettings((prev) => ({ ...prev, companyProfile: { ...prev.companyProfile, ...patch } }));
+  const updateCompany = useCallback(async (patch: Partial<AppSettings["companyProfile"]>) => {
+    setSettings((prev) => {
+      const next = { ...prev, companyProfile: { ...prev.companyProfile, ...patch } };
+      void saveAppSettings(next);
+      return next;
+    });
   }, []);
 
   async function handleRestore() {

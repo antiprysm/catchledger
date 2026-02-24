@@ -1,4 +1,4 @@
-import "@/i18n";
+import i18n, { applyLanguage, ensureI18nInitialized } from "@/i18n";
 import { ThemeProvider as AppThemeProvider, ThemeContext } from "@/theme/ThemeProvider";
 import { loadAppSettings } from "@/utils/appSettings";
 import { runNotificationChecks } from "@/utils/notifications";
@@ -135,7 +135,9 @@ export default function RootLayout() {
   React.useEffect(() => {
     let mounted = true;
     (async () => {
-      await loadAppSettings();
+      const settings = await loadAppSettings();
+      await ensureI18nInitialized();
+      await applyLanguage(settings.language ?? "en"); // <-- key line
       if (mounted) setReady(true);
     })();
     return () => {
