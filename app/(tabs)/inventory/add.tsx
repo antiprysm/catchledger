@@ -1,6 +1,7 @@
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { router } from "expo-router";
 import { useContext, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   Alert,
   Keyboard,
@@ -34,6 +35,7 @@ function uid() {
 
 export default function AddInventoryScreen() {
   const { colors } = useContext(ThemeContext);
+  const { t } = useTranslation();
 
   const [speciesName, setSpeciesName] = useState("");
   const [unit, setUnit] = useState<UnitType>("lb");
@@ -69,15 +71,15 @@ export default function AddInventoryScreen() {
     const price = Number(pricePerUnit);
 
     if (!speciesName.trim()) {
-      Alert.alert("Required", "Species name is required.");
+      Alert.alert(t("inventory.requiredTitle"), t("inventory.speciesRequiredMessage"));
       return;
     }
     if (!Number.isFinite(price) || price <= 0) {
-      Alert.alert("Invalid price", "Enter a valid price.");
+      Alert.alert(t("inventory.invalidPriceTitle"), t("inventory.invalidPriceMessage"));
       return;
     }
     if (!batchId.trim()) {
-      Alert.alert("Required", "Batch ID required.");
+      Alert.alert(t("inventory.requiredTitle"), t("inventory.batchIdRequiredMessage"));
       return;
     }
 
@@ -85,12 +87,12 @@ export default function AddInventoryScreen() {
     const qty = qtyText === "" ? undefined : Number(qtyText);
 
     if (qtyText !== "" && (!Number.isFinite(qty) || (qty ?? 0) <= 0)) {
-      Alert.alert("Invalid quantity", "Quantity must be greater than 0 (or leave it blank).");
+      Alert.alert(t("inventory.invalidQuantityTitle"), t("inventory.invalidQuantityMessage"));
       return;
     }
 
     if (!catchLocation.trim()) {
-      Alert.alert("Catch location required", "Enter the water body / area for compliance records.");
+      Alert.alert(t("inventory.catchLocationRequiredTitle"), t("inventory.catchLocationRequiredMessage"));
       return;
     }
 
@@ -157,31 +159,31 @@ export default function AddInventoryScreen() {
       >
         {/* Tap-to-dismiss wrapper that DOES NOT include the picker */}
         <Pressable onPress={Keyboard.dismiss} style={{ gap: 10 }}>
-          <Text style={[styles.title, { color: colors.text }]}>Add Fish</Text>
+          <Text style={[styles.title, { color: colors.text }]}>{t("inventory.addFish")}</Text>
 
-          <Text style={[styles.label, { color: colors.text }]}>Species</Text>
+          <Text style={[styles.label, { color: colors.text }]}>{t("inventory.species")}</Text>
           <TextInput
             value={speciesName}
             onChangeText={setSpeciesName}
             style={inputStyle}
-            placeholder="Walleye"
+            placeholder={t("inventory.speciesPlaceholder")}
             placeholderTextColor={colors.muted}
           />
 
-          <Text style={[styles.label, { color: colors.text }]}>Batch ID</Text>
+          <Text style={[styles.label, { color: colors.text }]}>{t("inventory.batchId")}</Text>
           <TextInput
             value={batchId}
             onChangeText={setBatchId}
             style={inputStyle}
-            placeholder="20260215-WALLEYE-A1F3"
+            placeholder={t("inventory.batchIdPlaceholder")}
             placeholderTextColor={colors.muted}
             autoCapitalize="characters"
           />
           <Text style={{ opacity: 0.75, color: colors.muted, fontSize: 12, marginTop: -6 }}>
-            Used for inspection traceability (harvest → sale).
+            {t("inventory.batchIdHelp")}
           </Text>
 
-          <Text style={[styles.label, { color: colors.text }]}>Unit</Text>
+          <Text style={[styles.label, { color: colors.text }]}>{t("inventory.unit")}</Text>
           <View style={styles.row}>
             {(["lb", "kg", "fish", "dozen"] as UnitType[]).map((u) => {
               const on = unit === u;
@@ -195,33 +197,33 @@ export default function AddInventoryScreen() {
                     on && { backgroundColor: colors.primary, borderColor: colors.primary },
                   ]}
                 >
-                  <Text style={[{ color: colors.text }, on && styles.chipTextOn]}>{u}</Text>
+                  <Text style={[{ color: colors.text }, on && styles.chipTextOn]}>{t(`inventory.units.${u}`)}</Text>
                 </Pressable>
               );
             })}
           </View>
 
-          <Text style={[styles.label, { color: colors.text }]}>Price per unit</Text>
+          <Text style={[styles.label, { color: colors.text }]}>{t("inventory.pricePerUnit")}</Text>
           <TextInput
             value={pricePerUnit}
             onChangeText={setPricePerUnit}
             style={inputStyle}
-            placeholder="12.00"
+            placeholder={t("inventory.pricePerUnitPlaceholder")}
             placeholderTextColor={colors.muted}
             keyboardType="decimal-pad"
           />
 
-          <Text style={[styles.label, { color: colors.text }]}>Quantity (optional)</Text>
+          <Text style={[styles.label, { color: colors.text }]}>{t("inventory.quantityOptional")}</Text>
           <TextInput
             value={quantity}
             onChangeText={setQuantity}
             style={inputStyle}
-            placeholder="10"
+            placeholder={t("inventory.quantityPlaceholder")}
             placeholderTextColor={colors.muted}
             keyboardType="number-pad"
           />
 
-          <Text style={[styles.label, { color: colors.text }]}>Quality</Text>
+          <Text style={[styles.label, { color: colors.text }]}>{t("inventory.qualityLabel")}</Text>
           <View style={styles.row}>
             {(["LIVE", "FRESH", "FROZEN", "THAWED"] as QualityStatus[]).map((q) => {
               const on = quality === q;
@@ -235,31 +237,31 @@ export default function AddInventoryScreen() {
                     on && { backgroundColor: colors.primary, borderColor: colors.primary },
                   ]}
                 >
-                  <Text style={[{ color: colors.text }, on && styles.chipTextOn]}>{q}</Text>
+                  <Text style={[{ color: colors.text }, on && styles.chipTextOn]}>{t(`inventory.quality.${q}`)}</Text>
                 </Pressable>
               );
             })}
           </View>
 
-          <Text style={[styles.label, { color: colors.text }]}>Catch location (water body)</Text>
+          <Text style={[styles.label, { color: colors.text }]}>{t("inventory.catchLocation")}</Text>
           <TextInput
             value={catchLocation}
             onChangeText={setCatchLocation}
             style={inputStyle}
-            placeholder="Lake Michigan — Waukegan Harbor"
+            placeholder={t("inventory.catchLocationPlaceholder")}
             placeholderTextColor={colors.muted}
           />
 
-          <Text style={[styles.label, { color: colors.text }]}>Catch method (optional)</Text>
+          <Text style={[styles.label, { color: colors.text }]}>{t("inventory.catchMethodOptional")}</Text>
           <TextInput
             value={catchMethod}
             onChangeText={setCatchMethod}
             style={inputStyle}
-            placeholder="Rod & reel / Net / Trap"
+            placeholder={t("inventory.catchMethodPlaceholder")}
             placeholderTextColor={colors.muted}
           />
 
-          <Text style={[styles.label, { color: colors.text }]}>Caught time</Text>
+          <Text style={[styles.label, { color: colors.text }]}>{t("inventory.caughtTime")}</Text>
           <Pressable
             onPress={() => setShowPicker(true)}
             style={[
@@ -268,14 +270,14 @@ export default function AddInventoryScreen() {
             ]}
           >
             <Text style={{ color: colors.text }}>
-              {caughtAt ? `${applyDateFormat(caughtAt, dateFormat)} ${caughtAt.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}` : "Not set"}
+              {caughtAt ? `${applyDateFormat(caughtAt, dateFormat)} ${caughtAt.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}` : t("inventory.notSet")}
             </Text>
-            <Text style={{ color: colors.muted }}>Best before: {bestBeforeHours}h</Text>
+            <Text style={{ color: colors.muted }}>{t("inventory.bestBeforeHours", { hours: bestBeforeHours })}</Text>
           </Pressable>
 
           {/* keep black */}
           <Pressable onPress={onSave} style={styles.saveBtn}>
-            <Text style={styles.saveBtnText}>Save</Text>
+            <Text style={styles.saveBtnText}>{t("inventory.save")}</Text>
           </Pressable>
         </Pressable>
 
@@ -294,7 +296,7 @@ export default function AddInventoryScreen() {
               ]}
               onPress={() => {}}
             >
-              <Text style={[styles.pickerTitle, { color: colors.text }]}>Caught time</Text>
+              <Text style={[styles.pickerTitle, { color: colors.text }]}>{t("inventory.caughtTime")}</Text>
 
               <DateTimePicker
                 value={caughtAt ?? new Date()}
@@ -308,7 +310,7 @@ export default function AddInventoryScreen() {
 
               {Platform.OS === "ios" && (
                 <Pressable style={styles.doneBtn} onPress={() => setShowPicker(false)}>
-                  <Text style={styles.doneBtnText}>Done</Text>
+                  <Text style={styles.doneBtnText}>{t("inventory.done")}</Text>
                 </Pressable>
               )}
             </Pressable>

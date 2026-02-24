@@ -4,6 +4,7 @@ import { Expense } from "@/types/expenses";
 import { loadJSON } from "@/utils/storage";
 import { Link, useFocusEffect, useRouter } from "expo-router";
 import { useCallback, useContext, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 
 function formatDate(iso: string) {
@@ -13,6 +14,7 @@ function formatDate(iso: string) {
 
 export default function ExpensesIndex() {
   const { colors } = useContext(ThemeContext);
+  const { t } = useTranslation();
 
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [inspectionMode, setInspectionMode] = useState(false);
@@ -42,19 +44,19 @@ export default function ExpensesIndex() {
   return (
     <View style={[styles.container, { backgroundColor: colors.bg }]}>
       <View style={styles.headerRow}>
-        <Text style={[styles.title, { color: colors.text }]}>Expenses</Text>
+        <Text style={[styles.title, { color: colors.text }]}>{t("expenses.title")}</Text>
 
         {!inspectionMode && (
           <Link href="/(tabs)/expenses/add" asChild>
             <Pressable style={styles.addBtn}>
-              <Text style={styles.addBtnText}>Add Expense</Text>
+              <Text style={styles.addBtnText}>{t("expenses.addExpense")}</Text>
             </Pressable>
           </Link>
         )}
       </View>
 
       <Text style={[styles.sub, { color: colors.muted }]}>
-        Last 30 days: ${total30.toFixed(2)}
+        {t("expenses.last30DaysTotal", { amount: total30.toFixed(2) })}
       </Text>
 
       <FlatList
@@ -62,7 +64,7 @@ export default function ExpensesIndex() {
         keyExtractor={(e) => e.id}
         contentContainerStyle={{ paddingBottom: 20 }}
         ListEmptyComponent={
-          <Text style={{ color: colors.muted, marginTop: 8 }}>No expenses yet.</Text>
+          <Text style={{ color: colors.muted, marginTop: 8 }}>{t("expenses.noExpensesYet")}</Text>
         }
         renderItem={({ item }) => (
           <Pressable
@@ -87,7 +89,7 @@ export default function ExpensesIndex() {
                 ${item.amount.toFixed(2)}
               </Text>
               <Text style={{ color: colors.text, opacity: 0.85 }}>
-                {item.category}
+                {t(`expenses.categories.${item.category}`)}
               </Text>
               {item.note ? (
                 <Text style={{ color: colors.muted }}>{item.note}</Text>
