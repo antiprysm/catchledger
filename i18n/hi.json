@@ -22,32 +22,32 @@
     "goHome": "Go to home screen"
   },
   "settings": {
-    "title": "Settings",
-    "language": "Language",
-    "languageChangedRestart": "Language changed. Please restart the app to apply layout direction.",
-    "appearance": "Appearance",
-    "nightMode": "Night mode",
-    "nightModeSubtitle": "Smooth theme transition.",
-    "unitsFormatting": "Units & Formatting",
-    "weightUnit": "Weight unit",
-    "temperatureUnit": "Temperature unit",
-    "dateFormat": "Date format",
+    "title": "सेटिंग्स",
+    "language": "भाषा",
+    "languageChangedRestart": "भाषा बदल दी गई है। लेआउट दिशा लागू करने के लिए ऐप पुनः प्रारंभ करें।",
+    "appearance": "रूप-रंग",
+    "nightMode": "नाइट मोड",
+    "nightModeSubtitle": "स्मूद थीम ट्रांजिशन।",
+    "unitsFormatting": "इकाइयाँ और फ़ॉर्मेटिंग",
+    "weightUnit": "वज़न इकाई",
+    "temperatureUnit": "तापमान इकाई",
+    "dateFormat": "तारीख़ फ़ॉर्मेट",
     "languageLabels": {
-      "en": "English",
-      "zh": "Chinese (Simplified)",
-      "es": "Spanish",
-      "hi": "Hindi",
-      "ar": "Arabic"
+      "en": "अंग्रेज़ी",
+      "zh": "चीनी (सरलीकृत)",
+      "es": "स्पेनिश",
+      "hi": "हिंदी",
+      "ar": "अरबी"
     }
   },
   "tabs": {
-    "dashboard": "Dashboard",
-    "inventory": "Inventory",
-    "sales": "Sales",
-    "expenses": "Expenses",
-    "reports": "Reports",
-    "compliance": "Compliance",
-    "settings": "Settings"
+    "dashboard": "डैशबोर्ड",
+    "inventory": "इन्वेंटरी",
+    "sales": "बिक्री",
+    "expenses": "खर्च",
+    "reports": "रिपोर्ट",
+    "compliance": "अनुपालन",
+    "settings": "सेटिंग्स"
   },
   "dashboard": {
     "title": "Dashboard",

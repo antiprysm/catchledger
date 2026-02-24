@@ -22,32 +22,32 @@
     "goHome": "Go to home screen"
   },
   "settings": {
-    "title": "Settings",
-    "language": "Language",
-    "languageChangedRestart": "Language changed. Please restart the app to apply layout direction.",
-    "appearance": "Appearance",
-    "nightMode": "Night mode",
-    "nightModeSubtitle": "Smooth theme transition.",
-    "unitsFormatting": "Units & Formatting",
-    "weightUnit": "Weight unit",
-    "temperatureUnit": "Temperature unit",
-    "dateFormat": "Date format",
+    "title": "设置",
+    "language": "语言",
+    "languageChangedRestart": "语言已更改。请重启应用以应用布局方向。",
+    "appearance": "外观",
+    "nightMode": "夜间模式",
+    "nightModeSubtitle": "平滑主题切换。",
+    "unitsFormatting": "单位与格式",
+    "weightUnit": "重量单位",
+    "temperatureUnit": "温度单位",
+    "dateFormat": "日期格式",
     "languageLabels": {
-      "en": "English",
-      "zh": "Chinese (Simplified)",
-      "es": "Spanish",
-      "hi": "Hindi",
-      "ar": "Arabic"
+      "en": "英语",
+      "zh": "简体中文",
+      "es": "西班牙语",
+      "hi": "印地语",
+      "ar": "阿拉伯语"
     }
   },
   "tabs": {
-    "dashboard": "Dashboard",
-    "inventory": "Inventory",
-    "sales": "Sales",
-    "expenses": "Expenses",
-    "reports": "Reports",
-    "compliance": "Compliance",
-    "settings": "Settings"
+    "dashboard": "仪表盘",
+    "inventory": "库存",
+    "sales": "销售",
+    "expenses": "支出",
+    "reports": "报表",
+    "compliance": "合规",
+    "settings": "设置"
   },
   "dashboard": {
     "title": "Dashboard",
