@@ -1,50 +1,33 @@
 {
   "settings": {
-    "title": "Configuración",
-    "language": "Idioma",
-    "languageChangedRestart": "Idioma cambiado. Reinicia la app para aplicar la dirección del diseño.",
-    "appearance": "Apariencia",
-    "nightMode": "Modo nocturno",
-    "nightModeSubtitle": "Transición de tema suave.",
-    "unitsFormatting": "Unidades y formato",
-    "weightUnit": "Unidad de peso",
-    "temperatureUnit": "Unidad de temperatura",
-    "dateFormat": "Formato de fecha",
+    "title": "Settings",
+    "language": "Language",
+    "languageChangedRestart": "Language changed. Please restart the app to apply layout direction.",
     "languageLabels": {
-      "en": "Inglés",
-      "zh": "Chino (simplificado)",
-      "es": "Español",
+      "en": "English",
+      "zh": "Chinese (Simplified)",
+      "es": "Spanish",
       "hi": "Hindi",
-      "ar": "Árabe"
+      "ar": "Arabic"
     }
   },
-  "tabs": {
-    "dashboard": "Inicio",
-    "inventory": "Inventario",
-    "sales": "Ventas",
-    "expenses": "Gastos",
-    "reports": "Reportes",
-    "compliance": "Cumplimiento",
-    "settings": "Configuración"
-  },
   "sales": {
-    "title": "Ventas",
-    "newSale": "Nueva venta",
-    "empty": "Aún no hay ventas. Crea una en \"Nueva venta\".",
-    "last30Days": "Últimos 30 días: ${{amount}}",
-    "inspectionOff": "Modo de inspección desactivado"
+    "title": "Sales",
+    "newSale": "New Sale",
+    "empty": "No sales yet. Create one in \"New Sale\".",
+    "last30Days": "Last 30 days: ${{amount}}"
   },
   "inventory": {
-    "title": "Inventario",
-    "add": "Agregar inventario"
+    "title": "Inventory",
+    "add": "Add Inventory"
   },
   "reports": {
-    "title": "Reportes"
+    "title": "Reports"
   },
   "compliance": {
-    "title": "Cumplimiento",
-    "today": "Hoy",
-    "week": "Semana",
-    "range": "Rango"
+    "title": "Compliance",
+    "today": "Today",
+    "week": "Week",
+    "range": "Range"
   }
 }

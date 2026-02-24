@@ -1,50 +1,33 @@
 {
   "settings": {
-    "title": "الإعدادات",
-    "language": "اللغة",
-    "languageChangedRestart": "تم تغيير اللغة. يرجى إعادة تشغيل التطبيق لتطبيق اتجاه التخطيط.",
-    "appearance": "المظهر",
-    "nightMode": "الوضع الليلي",
-    "nightModeSubtitle": "انتقال سلس للمظهر.",
-    "unitsFormatting": "الوحدات والتنسيق",
-    "weightUnit": "وحدة الوزن",
-    "temperatureUnit": "وحدة الحرارة",
-    "dateFormat": "تنسيق التاريخ",
+    "title": "Settings",
+    "language": "Language",
+    "languageChangedRestart": "Language changed. Please restart the app to apply layout direction.",
     "languageLabels": {
-      "en": "الإنجليزية",
-      "zh": "الصينية المبسطة",
-      "es": "الإسبانية",
-      "hi": "الهندية",
-      "ar": "العربية"
+      "en": "English",
+      "zh": "Chinese (Simplified)",
+      "es": "Spanish",
+      "hi": "Hindi",
+      "ar": "Arabic"
     }
   },
-  "tabs": {
-    "dashboard": "لوحة التحكم",
-    "inventory": "المخزون",
-    "sales": "المبيعات",
-    "expenses": "المصروفات",
-    "reports": "التقارير",
-    "compliance": "الامتثال",
-    "settings": "الإعدادات"
-  },
   "sales": {
-    "title": "المبيعات",
-    "newSale": "عملية بيع جديدة",
-    "empty": "لا توجد مبيعات بعد. أنشئ واحدة من \"عملية بيع جديدة\".",
-    "last30Days": "آخر 30 يومًا: ${{amount}}",
-    "inspectionOff": "تم إيقاف وضع التفتيش"
+    "title": "Sales",
+    "newSale": "New Sale",
+    "empty": "No sales yet. Create one in \"New Sale\".",
+    "last30Days": "Last 30 days: ${{amount}}"
   },
   "inventory": {
-    "title": "المخزون",
-    "add": "إضافة مخزون"
+    "title": "Inventory",
+    "add": "Add Inventory"
   },
   "reports": {
-    "title": "التقارير"
+    "title": "Reports"
   },
   "compliance": {
-    "title": "الامتثال",
-    "today": "اليوم",
-    "week": "الأسبوع",
-    "range": "النطاق"
+    "title": "Compliance",
+    "today": "Today",
+    "week": "Week",
+    "range": "Range"
   }
 }

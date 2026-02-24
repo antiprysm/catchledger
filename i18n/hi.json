@@ -1,50 +1,33 @@
 {
   "settings": {
-    "title": "सेटिंग्स",
-    "language": "भाषा",
-    "languageChangedRestart": "भाषा बदल गई है। लेआउट दिशा लागू करने के लिए ऐप पुनः प्रारंभ करें।",
-    "appearance": "दिखावट",
-    "nightMode": "नाइट मोड",
-    "nightModeSubtitle": "स्मूद थीम ट्रांज़िशन।",
-    "unitsFormatting": "यूनिट्स और फॉर्मैटिंग",
-    "weightUnit": "वज़न इकाई",
-    "temperatureUnit": "तापमान इकाई",
-    "dateFormat": "तारीख प्रारूप",
+    "title": "Settings",
+    "language": "Language",
+    "languageChangedRestart": "Language changed. Please restart the app to apply layout direction.",
     "languageLabels": {
-      "en": "अंग्रेज़ी",
-      "zh": "चीनी (सरलीकृत)",
-      "es": "स्पेनिश",
-      "hi": "हिंदी",
-      "ar": "अरबी"
+      "en": "English",
+      "zh": "Chinese (Simplified)",
+      "es": "Spanish",
+      "hi": "Hindi",
+      "ar": "Arabic"
     }
   },
-  "tabs": {
-    "dashboard": "डैशबोर्ड",
-    "inventory": "इन्वेंटरी",
-    "sales": "बिक्री",
-    "expenses": "खर्च",
-    "reports": "रिपोर्ट",
-    "compliance": "अनुपालन",
-    "settings": "सेटिंग्स"
-  },
   "sales": {
-    "title": "बिक्री",
-    "newSale": "नई बिक्री",
-    "empty": "अभी तक कोई बिक्री नहीं। \"नई बिक्री\" में बनाएं।",
-    "last30Days": "पिछले 30 दिन: ${{amount}}",
-    "inspectionOff": "निरीक्षण मोड बंद"
+    "title": "Sales",
+    "newSale": "New Sale",
+    "empty": "No sales yet. Create one in \"New Sale\".",
+    "last30Days": "Last 30 days: ${{amount}}"
   },
   "inventory": {
-    "title": "इन्वेंटरी",
-    "add": "इन्वेंटरी जोड़ें"
+    "title": "Inventory",
+    "add": "Add Inventory"
   },
   "reports": {
-    "title": "रिपोर्ट"
+    "title": "Reports"
   },
   "compliance": {
-    "title": "अनुपालन",
-    "today": "आज",
-    "week": "सप्ताह",
-    "range": "रेंज"
+    "title": "Compliance",
+    "today": "Today",
+    "week": "Week",
+    "range": "Range"
   }
 }

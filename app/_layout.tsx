@@ -1,5 +1,4 @@
 import "@/i18n";
-import i18n, { ensureI18nInitialized } from "@/i18n";
 import { ThemeProvider as AppThemeProvider, ThemeContext } from "@/theme/ThemeProvider";
 import { loadAppSettings } from "@/utils/appSettings";
 import { runNotificationChecks } from "@/utils/notifications";
