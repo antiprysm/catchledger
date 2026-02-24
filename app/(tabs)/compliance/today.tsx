@@ -29,11 +29,9 @@ export default function ComplianceToday() {
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [inventory, setInventory] = useState<InventoryItem[]>([]);
   const [profile, setProfile] = useState<LicenseProfile | null>(null);
-
-  // NOTE: you already have STORAGE_KEYS.INSPECTION_MODE — prefer using that.
-  const INSPECTION_MODE_KEY = STORAGE_KEYS.INSPECTION_MODE;
-
   const [inspectionMode, setInspectionMode] = useState(false);
+
+  const INSPECTION_MODE_KEY = STORAGE_KEYS.INSPECTION_MODE;
 
   useFocusEffect(
     useCallback(() => {
@@ -110,14 +108,11 @@ export default function ComplianceToday() {
   }, [todaySales, todayExpenses]);
 
   return (
-    <ScrollView
-      style={{ flex: 1, backgroundColor: colors.bg }}
-      contentContainerStyle={styles.container}
-    >
+    <ScrollView style={{ flex: 1, backgroundColor: colors.bg }} contentContainerStyle={styles.container}>
       {inspectionMode ? (
         <View style={styles.bannerWrap}>
           <View style={styles.banner}>
-            <Text style={styles.bannerText}>INSPECTION MODE — READ ONLY</Text>
+            <Text style={styles.bannerText}>{t("compliance.inspectionReadOnly")}</Text>
           </View>
 
           <Pressable
@@ -125,33 +120,29 @@ export default function ComplianceToday() {
             onPress={async () => {
               await saveJSON(STORAGE_KEYS.INSPECTION_MODE, false);
               setInspectionMode(false);
-              Alert.alert("Inspection mode off");
+              Alert.alert(t("compliance.inspectionOff"));
             }}
           >
-            <Text style={styles.exitText}>Exit Inspection Mode</Text>
+            <Text style={styles.exitText}>{t("compliance.exitInspectionMode")}</Text>
           </Pressable>
         </View>
       ) : null}
 
       <View style={styles.headerRow}>
-        <View>
+        <View style={styles.headerMain}>
           <Text style={[styles.h1, { color: colors.text }]}>{t("compliance.today")}</Text>
-          <Text style={[styles.sub, { color: colors.muted }]}>
-            Inspection-ready summary (offline).
-          </Text>
+          <Text style={[styles.sub, { color: colors.muted }]}>{t("compliance.todaySubtitle")}</Text>
         </View>
 
         <Pressable style={styles.btn} onPress={load}>
-          <Text style={styles.btnText}>Refresh</Text>
+          <Text style={styles.btnText}>{t("common.refresh")}</Text>
         </Pressable>
       </View>
 
-      <View style={[styles.toggleRow, { borderColor: colors.cardBorder, backgroundColor: colors.cardBg }]}>
+      <View style={[styles.toggleRow, { borderColor: colors.cardBorder, backgroundColor: colors.cardBg }]}> 
         <View style={{ flex: 1 }}>
-          <Text style={[styles.toggleTitle, { color: colors.text }]}>Inspection Mode</Text>
-          <Text style={[styles.toggleSub, { color: colors.muted }]}>
-            Hides business metrics. Shows only license + harvest + sales logs.
-          </Text>
+          <Text style={[styles.toggleTitle, { color: colors.text }]}>{t("compliance.inspectionMode")}</Text>
+          <Text style={[styles.toggleSub, { color: colors.muted }]}>{t("compliance.inspectionModeToggleSubtitle")}</Text>
         </View>
 
         <Switch
@@ -162,155 +153,91 @@ export default function ComplianceToday() {
         />
       </View>
 
-      <View style={[styles.profileCard, { borderColor: colors.cardBorder, backgroundColor: colors.cardBg }]}>
+      <View style={[styles.profileCard, { borderColor: colors.cardBorder, backgroundColor: colors.cardBg }]}> 
         {profile ? (
           <>
-            <Text style={[styles.profileTitle, { color: colors.text }]}>
-              {profile.dbaName ? profile.dbaName : profile.legalName}
-            </Text>
-
+            <Text style={[styles.profileTitle, { color: colors.text }]}>{profile.dbaName ? profile.dbaName : profile.legalName}</Text>
             <Text style={[styles.profileLine, { color: colors.muted }]}>
-              {profile.state} Aquatic Life Distributor License:{" "}
-              <Text style={[styles.bold, { color: colors.text }]}>{profile.licenseNumber}</Text>
+              {t("compliance.aquaticLifeDistributorLicense", { state: profile.state })} <Text style={[styles.bold, { color: colors.text }]}>{profile.licenseNumber}</Text>
             </Text>
-
-            <Text style={[styles.profileLine, { color: colors.muted }]}>
-              Legal: {profile.legalName}
-              {profile.vehiclePlate ? ` • Plate: ${profile.vehiclePlate}` : ""}
+            <Text style={[styles.profileLine, { color: colors.muted }]}> 
+              {t("compliance.legalValue", { value: profile.legalName })}
+              {profile.vehiclePlate ? ` • ${t("compliance.plateValue", { value: profile.vehiclePlate })}` : ""}
             </Text>
-
-            <Text style={[styles.profileLine, { color: colors.muted }]}>
+            <Text style={[styles.profileLine, { color: colors.muted }]}> 
               {profile.phone ? profile.phone : ""}
               {profile.phone && profile.email ? " • " : ""}
               {profile.email ? profile.email : ""}
             </Text>
-
-            {profile.homeBaseCity ? (
-              <Text style={[styles.profileLine, { color: colors.muted }]}>
-                Home base: {profile.homeBaseCity}
-              </Text>
-            ) : null}
-
-            <Text style={[styles.profileUpdated, { color: colors.muted }]}>
-              Updated: {new Date(profile.updatedAt).toLocaleString()}
-            </Text>
+            {profile.homeBaseCity ? <Text style={[styles.profileLine, { color: colors.muted }]}>{t("compliance.homeBaseValue", { value: profile.homeBaseCity })}</Text> : null}
+            <Text style={[styles.profileUpdated, { color: colors.muted }]}>{t("compliance.updatedValue", { value: new Date(profile.updatedAt).toLocaleString() })}</Text>
           </>
         ) : (
           <>
-            <Text style={[styles.profileTitle, { color: colors.text }]}>License profile not set</Text>
-            <Text style={[styles.profileLine, { color: colors.muted }]}>
-              Go to Compliance → License Profile to configure.
-            </Text>
+            <Text style={[styles.profileTitle, { color: colors.text }]}>{t("compliance.licenseProfileNotSet")}</Text>
+            <Text style={[styles.profileLine, { color: colors.muted }]}>{t("compliance.goToLicenseProfileToConfigure")}</Text>
           </>
         )}
       </View>
 
-      {!inspectionMode ? (
-        <>
-          <View style={[styles.card, { borderColor: colors.cardBorder, backgroundColor: colors.cardBg }]}>
-            <Text style={[styles.label, { color: colors.muted }]}>Revenue</Text>
-            <Text style={[styles.value, { color: colors.text }]}>${summary.revenue.toFixed(2)}</Text>
-            <Text style={[styles.small, { color: colors.muted }]}>{summary.saleCount} sale(s)</Text>
-          </View>
+      <View style={[styles.card, { borderColor: colors.cardBorder, backgroundColor: colors.cardBg }]}> 
+        <Text style={[styles.label, { color: colors.text }]}>{t("compliance.todaysSummary")}</Text>
+        <Text style={[styles.small, { color: colors.muted }]}>{t("compliance.salesCount")}: {summary.saleCount}</Text>
+        <Text style={[styles.small, { color: colors.muted }]}>{t("compliance.expensesToday")}: {summary.expenseCount}</Text>
+        <Text style={[styles.value, { color: colors.text }]}>{t("compliance.revenue")}: ${summary.revenue.toFixed(2)}</Text>
+        <Text style={[styles.value, { color: colors.text }]}>{t("compliance.expenses")}: ${summary.exp.toFixed(2)}</Text>
+        <Text style={[styles.value, { color: colors.text }]}>{t("compliance.net")}: ${summary.net.toFixed(2)}</Text>
+      </View>
 
-          <View style={[styles.card, { borderColor: colors.cardBorder, backgroundColor: colors.cardBg }]}>
-            <Text style={[styles.label, { color: colors.muted }]}>Expenses</Text>
-            <Text style={[styles.value, { color: colors.text }]}>${summary.exp.toFixed(2)}</Text>
-            <Text style={[styles.small, { color: colors.muted }]}>{summary.expenseCount} expense(s)</Text>
-          </View>
-
-          <View style={[styles.card, { borderColor: colors.cardBorder, backgroundColor: colors.cardBg }]}>
-            <Text style={[styles.label, { color: colors.muted }]}>Net</Text>
-            <Text style={[styles.value, { color: summary.net < 0 ? "#c62828" : colors.text }]}>
-              ${summary.net.toFixed(2)}
-            </Text>
-            <Text style={[styles.small, { color: colors.muted }]}>Revenue − Expenses</Text>
-          </View>
-        </>
-      ) : null}
-
-      <Text style={[styles.sectionTitle, { color: colors.text }]}>Harvest log (today)</Text>
-
+      <Text style={[styles.sectionTitle, { color: colors.text }]}>{t("compliance.todaysHarvest")}</Text>
       {todayHarvest.length === 0 ? (
-        <Text style={[styles.muted, { color: colors.muted }]}>No harvest logged today.</Text>
+        <Text style={[styles.muted, { color: colors.muted }]}>{t("compliance.noHarvestToday")}</Text>
       ) : (
         todayHarvest.map((i) => (
-          <View
-            key={i.id}
-            style={[styles.harvestCard, { borderColor: colors.cardBorder, backgroundColor: colors.cardBg }]}
-          >
+          <View key={i.id} style={[styles.harvestCard, { borderColor: colors.cardBorder, backgroundColor: colors.cardBg }]}> 
             <View style={styles.rowBetween}>
               <Text style={[styles.harvestTitle, { color: colors.text }]}>{i.speciesName}</Text>
-              <Text style={[styles.harvestQty, { color: colors.text }]}>
-                {typeof i.quantity === "number" ? `${i.quantity} ${i.unit}` : `— ${i.unit}`}
-              </Text>
+              <Text style={[styles.harvestQty, { color: colors.text }]}>{typeof i.quantity === "number" ? `${i.quantity} ${i.unit}` : `— ${i.unit}`}</Text>
             </View>
 
-            <Text style={[styles.muted, { color: colors.muted }]}>
-              {i.catchLocation ? `Location: ${i.catchLocation}` : "Location: —"}
-            </Text>
-
-            <Text style={[styles.muted, { color: colors.muted }]}>
-              {i.caughtAt ? `Caught: ${fmtWhen(i.caughtAt)}` : "Caught: —"}
-            </Text>
-
-            {i.catchMethod ? (
-              <Text style={[styles.muted, { color: colors.muted }]}>Method: {i.catchMethod}</Text>
-            ) : null}
+            <Text style={[styles.muted, { color: colors.muted }]}>{i.catchLocation ? t("compliance.locationValue", { value: i.catchLocation }) : t("compliance.locationEmpty")}</Text>
+            <Text style={[styles.muted, { color: colors.muted }]}>{i.caughtAt ? t("compliance.caughtValue", { value: fmtWhen(i.caughtAt) }) : t("compliance.caughtEmpty")}</Text>
+            {i.catchMethod ? <Text style={[styles.muted, { color: colors.muted }]}>{t("compliance.methodValue", { value: i.catchMethod })}</Text> : null}
           </View>
         ))
       )}
 
-      <Text style={[styles.sectionTitle, { marginTop: 10, color: colors.text }]}>Today’s sales</Text>
+      <Text style={[styles.sectionTitle, { marginTop: 10, color: colors.text }]}>{t("compliance.todaysSales")}</Text>
 
       {todaySales.length === 0 ? (
-        <Text style={[styles.muted, { color: colors.muted }]}>No sales logged today.</Text>
+        <Text style={[styles.muted, { color: colors.muted }]}>{t("compliance.noSalesToday")}</Text>
       ) : (
         todaySales.map((s) => (
-          <View
-            key={s.id}
-            style={[styles.saleCard, { borderColor: colors.cardBorder, backgroundColor: colors.cardBg }]}
-          >
+          <View key={s.id} style={[styles.saleCard, { borderColor: colors.cardBorder, backgroundColor: colors.cardBg }]}> 
             <View style={styles.rowBetween}>
-              <Text style={[styles.saleTitle, { color: colors.text }]}>
-                {(s.buyerName || "Unknown buyer") + " "}
-                <Text style={[styles.mutedInline, { color: colors.muted }]}>({s.buyerType || "OTHER"})</Text>
+              <Text style={[styles.saleTitle, { color: colors.text }]}> 
+                {(s.buyerName || t("compliance.unknownBuyer")) + " "}
+                <Text style={[styles.mutedInline, { color: colors.muted }]}>({s.buyerType || t("compliance.other")})</Text>
               </Text>
               <Text style={[styles.money, { color: colors.text }]}>${Number(s.total || 0).toFixed(2)}</Text>
             </View>
 
             <Text style={[styles.muted, { color: colors.muted }]}>{fmtWhen(s.occurredAt)}</Text>
 
-            {s.buyerContact ? (
-              <Text style={[styles.muted, { color: colors.muted }]}>Contact: {s.buyerContact}</Text>
-            ) : null}
+            {s.buyerContact ? <Text style={[styles.muted, { color: colors.muted }]}>{t("compliance.contactValue", { value: s.buyerContact })}</Text> : null}
 
-            <Text style={[styles.muted, { color: colors.muted }]}>
-              Payment: {s.paymentMethod}
+            <Text style={[styles.muted, { color: colors.muted }]}> 
+              {t("compliance.paymentValue", { value: s.paymentMethod })}
               {s.paymentNote ? ` • ${s.paymentNote}` : ""}
             </Text>
 
             <View style={{ marginTop: 8, gap: 6 }}>
               {s.lines.map((ln) => (
-                <View
-                  key={`${s.id}-${ln.itemId}`}
-                  style={[styles.lineBox, { borderColor: colors.cardBorder, backgroundColor: colors.bg }]}
-                >
-                  <Text style={[styles.lineItem, { color: colors.text }]}>
-                    • {ln.speciesName}: {ln.quantity} {ln.unit} @ ${Number(ln.unitPrice).toFixed(2)}
-                  </Text>
-
-                  <Text style={[styles.lineMeta, { color: colors.muted }]}>
-                    {ln.originCatchLocation ? `Origin: ${ln.originCatchLocation}` : "Origin: —"}
-                  </Text>
-
-                  <Text style={[styles.lineMeta, { color: colors.muted }]}>
-                    {ln.originCaughtAt ? `Caught: ${fmtWhen(ln.originCaughtAt)}` : "Caught: —"}
-                  </Text>
-
-                  {ln.originCatchMethod ? (
-                    <Text style={[styles.lineMeta, { color: colors.muted }]}>Method: {ln.originCatchMethod}</Text>
-                  ) : null}
+                <View key={`${s.id}-${ln.itemId}`} style={[styles.lineBox, { borderColor: colors.cardBorder, backgroundColor: colors.bg }]}> 
+                  <Text style={[styles.lineItem, { color: colors.text }]}>• {ln.speciesName}: {ln.quantity} {ln.unit} {t("compliance.atPrice", { price: Number(ln.unitPrice).toFixed(2) })}</Text>
+                  <Text style={[styles.lineMeta, { color: colors.muted }]}>{ln.originCatchLocation ? t("compliance.originValue", { value: ln.originCatchLocation }) : t("compliance.originEmpty")}</Text>
+                  <Text style={[styles.lineMeta, { color: colors.muted }]}>{ln.originCaughtAt ? t("compliance.caughtValue", { value: fmtWhen(ln.originCaughtAt) }) : t("compliance.caughtEmpty")}</Text>
+                  {ln.originCatchMethod ? <Text style={[styles.lineMeta, { color: colors.muted }]}>{t("compliance.methodValue", { value: ln.originCatchMethod })}</Text> : null}
                 </View>
               ))}
             </View>
@@ -318,9 +245,7 @@ export default function ComplianceToday() {
         ))
       )}
 
-      <Text style={[styles.note, { color: colors.muted }]}>
-        Next: add buyer license # (optional) + harvest log section + inspection export.
-      </Text>
+      <Text style={[styles.note, { color: colors.muted }]}>{t("compliance.nextNote")}</Text>
     </ScrollView>
   );
 }
@@ -328,7 +253,8 @@ export default function ComplianceToday() {
 const styles = StyleSheet.create({
   container: { padding: 16, gap: 12, paddingBottom: 40 },
 
-  headerRow: { flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
+  headerRow: { flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start", gap: 10 },
+  headerMain: { flex: 1, minWidth: 0 },
   h1: { fontSize: 20, fontWeight: "900" },
   sub: { marginTop: 2 },
 
@@ -337,8 +263,7 @@ const styles = StyleSheet.create({
   value: { fontSize: 20, fontWeight: "900" },
   small: {},
 
-  // keep black button
-  btn: { backgroundColor: "#111", paddingVertical: 10, paddingHorizontal: 12, borderRadius: 12 },
+  btn: { backgroundColor: "#111", paddingVertical: 10, paddingHorizontal: 12, borderRadius: 12, alignSelf: "flex-start" },
   btnText: { color: "white", fontWeight: "900" },
 
   sectionTitle: { fontWeight: "900", marginTop: 6 },
