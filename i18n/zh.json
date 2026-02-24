@@ -5,7 +5,8 @@
     "delete": "删除",
     "unknown": "未知",
     "yes": "是",
-    "no": "否"
+    "no": "否",
+    "cannotBeUndone": "此操作无法撤销。"
   },
   "lock": {
     "title": "应用已锁定",
@@ -217,7 +218,11 @@
       "HOME": "家庭",
       "DOCK": "码头",
       "OTHER": "其他"
-    }
+    },
+    "deleteSaleTitle": "删除销售记录？",
+    "savedTitle": "已保存",
+    "saleUpdatedMessage": "销售记录已更新。",
+    "saveFailedTitle": "保存失败"
   },
   "inventory": {
     "title": "库存",
@@ -268,7 +273,8 @@
       "FRESH": "新鲜",
       "FROZEN": "冷冻",
       "THAWED": "解冻"
-    }
+    },
+    "deleteItemTitle": "删除条目？"
   },
   "expenses": {
     "title": "支出",
@@ -296,7 +302,8 @@
       "FEES": "费用",
       "PACKAGING": "包装",
       "OTHER": "其他"
-    }
+    },
+    "deleteExpenseTitle": "删除支出？"
   },
   "reports": {
     "title": "报表",

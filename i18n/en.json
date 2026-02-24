@@ -5,7 +5,8 @@
     "delete": "Delete",
     "unknown": "Unknown",
     "yes": "Yes",
-    "no": "No"
+    "no": "No",
+    "cannotBeUndone": "This cannot be undone."
   },
   "lock": {
     "title": "CatchLedger Locked",
@@ -217,7 +218,11 @@
       "HOME": "Home",
       "DOCK": "Dock",
       "OTHER": "Other"
-    }
+    },
+    "deleteSaleTitle": "Delete sale?",
+    "savedTitle": "Saved",
+    "saleUpdatedMessage": "Sale updated.",
+    "saveFailedTitle": "Save failed"
   },
   "inventory": {
     "title": "Inventory",
@@ -268,7 +273,8 @@
       "FRESH": "Fresh",
       "FROZEN": "Frozen",
       "THAWED": "Thawed"
-    }
+    },
+    "deleteItemTitle": "Delete item?"
   },
   "expenses": {
     "title": "Expenses",
@@ -296,7 +302,8 @@
       "FEES": "Fees",
       "PACKAGING": "Packaging",
       "OTHER": "Other"
-    }
+    },
+    "deleteExpenseTitle": "Delete expense?"
   },
   "reports": {
     "title": "Reports",

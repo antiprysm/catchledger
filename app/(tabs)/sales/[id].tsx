@@ -1,5 +1,6 @@
 import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
 import { useCallback, useContext, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   Alert,
   Keyboard,
@@ -35,6 +36,7 @@ export default function SaleDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
 
   const { colors, mode } = useContext(ThemeContext);
+  const { t } = useTranslation();
 
   const [sale, setSale] = useState<Sale | null>(null);
   const [inspectionMode, setInspectionMode] = useState(false);
@@ -97,10 +99,10 @@ export default function SaleDetailScreen() {
   }, [sale, linesTotal]);
 
   const confirmDelete = useCallback(() => {
-    Alert.alert("Delete sale?", "This cannot be undone.", [
-      { text: "Cancel", style: "cancel" },
+    Alert.alert(t("sales.deleteSaleTitle"), t("common.cannotBeUndone"), [
+            { text: t("common.cancel"), style: "cancel" },
       {
-        text: "Delete",
+        text: t("common.delete"),
         style: "destructive",
         onPress: async () => {
           const sales = await loadJSON<Sale[]>(STORAGE_KEYS.SALES, []);
@@ -120,7 +122,7 @@ export default function SaleDetailScreen() {
 
     const trimmedBuyer = buyerName.trim();
     if (!trimmedBuyer) {
-      Alert.alert("Buyer required", "Buyer name is required for compliance records.");
+      Alert.alert(t("sales.buyerRequiredTitle"), t("sales.buyerRequiredMessage"));
       return;
     }
 
@@ -150,9 +152,9 @@ export default function SaleDetailScreen() {
       await initNotifications().catch(() => undefined);
       setSale(updated);
 
-      Alert.alert("Saved", "Sale updated.");
+      Alert.alert(t("sales.savedTitle"), t("sales.saleUpdatedMessage"));
     } catch (e: any) {
-      Alert.alert("Save failed", e?.message ?? "Unknown error");
+      Alert.alert(t("sales.saveFailedTitle"), e?.message ?? t("reports.unknownError"));
     } finally {
       setBusy(false);
     }
@@ -210,7 +212,7 @@ export default function SaleDetailScreen() {
                 onPress={async () => {
                   await saveJSON(STORAGE_KEYS.INSPECTION_MODE, false);
                   setInspectionMode(false);
-                  Alert.alert("Inspection mode off");
+                  Alert.alert(t("compliance.inspectionOff"));
                 }}
               >
                 <Text style={styles.exitText}>Exit Inspection Mode</Text>

@@ -2,6 +2,7 @@ import { ThemeContext } from "@/theme/ThemeProvider";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { router, useLocalSearchParams } from "expo-router";
 import { useContext, useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   Alert,
   Keyboard,
@@ -33,6 +34,7 @@ const CATS: ExpenseCategory[] = [
 
 export default function EditExpenseScreen() {
   const { colors } = useContext(ThemeContext);
+  const { t } = useTranslation();
   const { id } = useLocalSearchParams<{ id: string }>();
 
   const [loaded, setLoaded] = useState<Expense | null>(null);
@@ -66,7 +68,7 @@ export default function EditExpenseScreen() {
     if (!loaded) return;
 
     if (!Number.isFinite(parsedAmount) || parsedAmount <= 0) {
-      Alert.alert("Invalid amount", "Enter a positive expense amount.");
+      Alert.alert(t("expenses.invalidAmountTitle"), t("expenses.invalidAmountMessage"));
       return;
     }
 
@@ -92,10 +94,10 @@ export default function EditExpenseScreen() {
   async function onDelete() {
     if (!loaded) return;
 
-    Alert.alert("Delete expense?", "This cannot be undone.", [
-      { text: "Cancel", style: "cancel" },
+    Alert.alert(t("expenses.deleteExpenseTitle"), t("common.cannotBeUndone"), [
+            { text: t("common.cancel"), style: "cancel" },
       {
-        text: "Delete",
+        text: t("common.delete"),
         style: "destructive",
         onPress: async () => {
           const list = await loadJSON<Expense[]>(STORAGE_KEYS.EXPENSES, []);

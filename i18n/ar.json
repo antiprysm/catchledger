@@ -5,7 +5,8 @@
     "delete": "حذف",
     "unknown": "غير معروف",
     "yes": "نعم",
-    "no": "لا"
+    "no": "لا",
+    "cannotBeUndone": "لا يمكن التراجع عن هذا الإجراء."
   },
   "lock": {
     "title": "CatchLedger مقفل",
@@ -217,7 +218,11 @@
       "HOME": "منزل",
       "DOCK": "رصيف",
       "OTHER": "أخرى"
-    }
+    },
+    "deleteSaleTitle": "حذف عملية البيع؟",
+    "savedTitle": "تم الحفظ",
+    "saleUpdatedMessage": "تم تحديث عملية البيع.",
+    "saveFailedTitle": "فشل الحفظ"
   },
   "inventory": {
     "title": "المخزون",
@@ -268,7 +273,8 @@
       "FRESH": "طازج",
       "FROZEN": "مجمّد",
       "THAWED": "مذاب"
-    }
+    },
+    "deleteItemTitle": "حذف العنصر؟"
   },
   "expenses": {
     "title": "المصروفات",
@@ -296,7 +302,8 @@
       "FEES": "رسوم",
       "PACKAGING": "تغليف",
       "OTHER": "أخرى"
-    }
+    },
+    "deleteExpenseTitle": "حذف المصروف؟"
   },
   "reports": {
     "title": "التقارير",

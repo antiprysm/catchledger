@@ -5,7 +5,8 @@
     "delete": "हटाएँ",
     "unknown": "अज्ञात",
     "yes": "हाँ",
-    "no": "नहीं"
+    "no": "नहीं",
+    "cannotBeUndone": "इसे वापस नहीं किया जा सकता।"
   },
   "lock": {
     "title": "CatchLedger लॉक है",
@@ -217,7 +218,11 @@
       "HOME": "घर",
       "DOCK": "डॉक",
       "OTHER": "अन्य"
-    }
+    },
+    "deleteSaleTitle": "बिक्री हटाएँ?",
+    "savedTitle": "सहेजा गया",
+    "saleUpdatedMessage": "बिक्री अपडेट हो गई।",
+    "saveFailedTitle": "सहेजना विफल"
   },
   "inventory": {
     "title": "इन्वेंटरी",
@@ -268,7 +273,8 @@
       "FRESH": "ताज़ा",
       "FROZEN": "जमा हुआ",
       "THAWED": "पिघला हुआ"
-    }
+    },
+    "deleteItemTitle": "आइटम हटाएँ?"
   },
   "expenses": {
     "title": "खर्च",
@@ -296,7 +302,8 @@
       "FEES": "शुल्क",
       "PACKAGING": "पैकेजिंग",
       "OTHER": "अन्य"
-    }
+    },
+    "deleteExpenseTitle": "खर्च हटाएँ?"
   },
   "reports": {
     "title": "रिपोर्ट",

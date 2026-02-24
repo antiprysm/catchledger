@@ -5,7 +5,8 @@
     "delete": "Eliminar",
     "unknown": "Desconocido",
     "yes": "Sí",
-    "no": "No"
+    "no": "No",
+    "cannotBeUndone": "Esto no se puede deshacer."
   },
   "lock": {
     "title": "CatchLedger bloqueado",
@@ -217,7 +218,11 @@
       "HOME": "Casa",
       "DOCK": "Muelle",
       "OTHER": "Otro"
-    }
+    },
+    "deleteSaleTitle": "¿Eliminar venta?",
+    "savedTitle": "Guardado",
+    "saleUpdatedMessage": "Venta actualizada.",
+    "saveFailedTitle": "Error al guardar"
   },
   "inventory": {
     "title": "Inventario",
@@ -268,7 +273,8 @@
       "FRESH": "Fresco",
       "FROZEN": "Congelado",
       "THAWED": "Descongelado"
-    }
+    },
+    "deleteItemTitle": "¿Eliminar artículo?"
   },
   "expenses": {
     "title": "Gastos",
@@ -296,7 +302,8 @@
       "FEES": "Tarifas",
       "PACKAGING": "Empaque",
       "OTHER": "Otro"
-    }
+    },
+    "deleteExpenseTitle": "¿Eliminar gasto?"
   },
   "reports": {
     "title": "Informes",
