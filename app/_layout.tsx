@@ -7,6 +7,7 @@ import { DarkTheme, DefaultTheme, ThemeProvider as NavThemeProvider } from "@rea
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import React from "react";
+import { I18nextProvider } from "react-i18next";
 import { AppState, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import "react-native-reanimated";
 
@@ -145,9 +146,11 @@ export default function RootLayout() {
   if (!ready) return null;
 
   return (
-    <AppThemeProvider>
-      <NavThemeWrapper />
-    </AppThemeProvider>
+    <I18nextProvider i18n={i18n}>
+      <AppThemeProvider>
+        <NavThemeWrapper />
+      </AppThemeProvider>
+    </I18nextProvider>
   );
 }
 
