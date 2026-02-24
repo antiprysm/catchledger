@@ -170,17 +170,17 @@ export default function SettingsScreen() {
       <Card colors={colors} title="Appearance">
         <ToggleRow
           colors={colors}
-          title="Night mode"
-          subtitle="Smooth theme transition."
+          title={t("settings.nightMode")}
+          subtitle={t("settings.nightModeSubtitle")}
           value={mode === "DARK"}
           onValueChange={toggle}
           />
           </Card>
     
-          <Card colors={colors} title="Units & Formatting">
-            <ChoiceGroup colors={colors} label="Weight unit" value={settings.weightUnit} options={WEIGHT_UNITS} onChange={(value) => updateSettings({ weightUnit: value })} />
-            <ChoiceGroup colors={colors} label="Temperature unit" value={settings.temperatureUnit} options={TEMP_UNITS} onChange={(value) => updateSettings({ temperatureUnit: value })} />
-            <ChoiceGroup colors={colors} label="Date format" value={settings.dateFormat} options={DATE_FORMATS} onChange={(value) => updateSettings({ dateFormat: value })} />
+          <Card colors={colors} title={t("settings.unitsFormatting")}>
+            <ChoiceGroup colors={colors} label={t("settings.weightUnit")} value={settings.weightUnit} options={WEIGHT_UNITS} onChange={(value) => updateSettings({ weightUnit: value })} />
+            <ChoiceGroup colors={colors} label={t("settings.temperatureUnit")} value={settings.temperatureUnit} options={TEMP_UNITS} onChange={(value) => updateSettings({ temperatureUnit: value })} />
+            <ChoiceGroup colors={colors} label={t("settings.dateFormat")} value={settings.dateFormat} options={DATE_FORMATS} onChange={(value) => updateSettings({ dateFormat: value })} />
           </Card>
     
           <Card colors={colors} title="Company Profile">
