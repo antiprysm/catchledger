@@ -92,11 +92,15 @@ export default function SettingsScreen() {
   }, []);
 
   const updateLanguage = useCallback(async (language: SupportedLanguage) => {
-    setSettings((prev) => {
-      const next = { ...prev, language };
-      void saveAppSettings(next);
-      return next;
+    const nextSettings = await new Promise<AppSettings>((resolve) => {
+      setSettings((prev) => {
+        const next = { ...prev, language };
+        resolve(next);
+        return next;
+      });
     });
+
+    await saveAppSettings(nextSettings);
 
     const { shouldShowRtlRestartPrompt } = await applyLanguage(language);
 
