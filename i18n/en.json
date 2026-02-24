@@ -314,6 +314,17 @@
     "goToLicenseProfileToConfigure": "Go to Compliance → License Profile to configure.",
     "salesCount": "Sales",
     "revenue": "Revenue",
-    "harvestEntries": "Harvest entries"
+    "harvestEntries": "Harvest entries",
+    "todaySubtitle": "Inspection-ready summary (offline).",
+    "inspectionModeToggleSubtitle": "Hides business metrics. Shows only license + harvest + sales logs.",
+    "todaysSummary": "Today's summary",
+    "expensesToday": "Expenses today",
+    "expenses": "Expenses",
+    "net": "Net",
+    "todaysHarvest": "Today's harvest",
+    "noHarvestToday": "No harvest logged today.",
+    "todaysSales": "Today's sales",
+    "noSalesToday": "No sales logged today.",
+    "nextNote": "Next: add buyer license # (optional) + harvest log section + inspection export."
   }
 }

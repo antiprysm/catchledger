@@ -314,6 +314,17 @@
     "goToLicenseProfileToConfigure": "Ve a Cumplimiento → Perfil de licencia para configurar.",
     "salesCount": "Ventas",
     "revenue": "Ingresos",
-    "harvestEntries": "Entradas de captura"
+    "harvestEntries": "Entradas de captura",
+    "todaySubtitle": "Resumen listo para inspección (sin conexión).",
+    "inspectionModeToggleSubtitle": "Oculta métricas del negocio. Muestra solo licencia + captura + ventas.",
+    "todaysSummary": "Resumen de hoy",
+    "expensesToday": "Gastos de hoy",
+    "expenses": "Gastos",
+    "net": "Neto",
+    "todaysHarvest": "Captura de hoy",
+    "noHarvestToday": "No hay capturas registradas hoy.",
+    "todaysSales": "Ventas de hoy",
+    "noSalesToday": "No hay ventas registradas hoy.",
+    "nextNote": "Siguiente: agregar # de licencia del comprador (opcional) + sección de captura + exportación de inspección."
   }
 }

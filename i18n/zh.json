@@ -314,6 +314,17 @@
     "goToLicenseProfileToConfigure": "前往 合规 → 许可证资料 进行设置。",
     "salesCount": "销售",
     "revenue": "收入",
-    "harvestEntries": "捕捞条目"
+    "harvestEntries": "捕捞条目",
+    "todaySubtitle": "可用于检查的今日汇总（离线）。",
+    "inspectionModeToggleSubtitle": "隐藏业务指标。仅显示许可证 + 捕捞 + 销售日志。",
+    "todaysSummary": "今日汇总",
+    "expensesToday": "今日支出",
+    "expenses": "支出",
+    "net": "净额",
+    "todaysHarvest": "今日捕捞",
+    "noHarvestToday": "今天没有捕捞记录。",
+    "todaysSales": "今日销售",
+    "noSalesToday": "今天没有销售记录。",
+    "nextNote": "下一步：添加买家许可证号（可选）+ 捕捞日志部分 + 检查导出。"
   }
 }

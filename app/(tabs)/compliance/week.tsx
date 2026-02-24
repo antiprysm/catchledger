@@ -240,7 +240,7 @@ export default function ComplianceWeek() {
       ) : null}
 
       <View style={styles.headerRow}>
-        <View>
+        <View style={styles.headerMain}>
           <Text style={[styles.h1, { color: colors.text }]}>{t("compliance.inspectionLast7Days")}</Text>
           <Text style={[styles.sub, { color: colors.muted }]}>{t("compliance.licenseHarvestSalesLog")}</Text>
         </View>
@@ -409,11 +409,12 @@ export default function ComplianceWeek() {
 const styles = StyleSheet.create({
   container: { padding: 16, gap: 12, paddingBottom: 40 },
 
-  headerRow: { flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
+  headerRow: { flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start", gap: 10 },
+  headerMain: { flex: 1, minWidth: 0 },
   h1: { fontSize: 20, fontWeight: "900" },
   sub: { marginTop: 2 },
 
-  refreshBtn: { borderWidth: 1, borderRadius: 12, paddingVertical: 8, paddingHorizontal: 12 },
+  refreshBtn: { borderWidth: 1, borderRadius: 12, paddingVertical: 8, paddingHorizontal: 12, alignSelf: "flex-start" },
   refreshText: { fontWeight: "900" },
 
   profileCard: { borderWidth: 1, borderRadius: 14, padding: 12, gap: 4 },

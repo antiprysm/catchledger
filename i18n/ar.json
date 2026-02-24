@@ -314,6 +314,17 @@
     "goToLicenseProfileToConfigure": "اذهب إلى الامتثال ← ملف الترخيص للإعداد.",
     "salesCount": "المبيعات",
     "revenue": "الإيرادات",
-    "harvestEntries": "إدخالات الحصاد"
+    "harvestEntries": "إدخالات الحصاد",
+    "todaySubtitle": "ملخص جاهز للتفتيش (بدون اتصال).",
+    "inspectionModeToggleSubtitle": "يخفي مؤشرات الأعمال. يعرض فقط الترخيص + الحصاد + سجلات المبيعات.",
+    "todaysSummary": "ملخص اليوم",
+    "expensesToday": "مصروفات اليوم",
+    "expenses": "المصروفات",
+    "net": "الصافي",
+    "todaysHarvest": "حصاد اليوم",
+    "noHarvestToday": "لا يوجد حصاد مسجل اليوم.",
+    "todaysSales": "مبيعات اليوم",
+    "noSalesToday": "لا توجد مبيعات مسجلة اليوم.",
+    "nextNote": "التالي: إضافة رقم ترخيص المشتري (اختياري) + قسم سجل الحصاد + تصدير التفتيش."
   }
 }
