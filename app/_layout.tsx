@@ -4,7 +4,7 @@ import { ThemeProvider as AppThemeProvider, ThemeContext } from "@/theme/ThemePr
 import { loadAppSettings } from "@/utils/appSettings";
 import { runNotificationChecks } from "@/utils/notifications";
 import { getPasscode, unlockWithBiometric } from "@/utils/security";
-import { DarkTheme, DefaultTheme, ThemeProvider as NavThemeProvider } from "@react-navigation/native";
+import { ThemeProvider as NavThemeProvider } from "@react-navigation/native";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import React from "react";
