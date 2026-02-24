@@ -1,0 +1,50 @@
+{
+  "settings": {
+    "title": "الإعدادات",
+    "language": "اللغة",
+    "languageChangedRestart": "تم تغيير اللغة. يرجى إعادة تشغيل التطبيق لتطبيق اتجاه التخطيط.",
+    "appearance": "المظهر",
+    "nightMode": "الوضع الليلي",
+    "nightModeSubtitle": "انتقال سلس للمظهر.",
+    "unitsFormatting": "الوحدات والتنسيق",
+    "weightUnit": "وحدة الوزن",
+    "temperatureUnit": "وحدة الحرارة",
+    "dateFormat": "تنسيق التاريخ",
+    "languageLabels": {
+      "en": "الإنجليزية",
+      "zh": "الصينية المبسطة",
+      "es": "الإسبانية",
+      "hi": "الهندية",
+      "ar": "العربية"
+    }
+  },
+  "tabs": {
+    "dashboard": "لوحة التحكم",
+    "inventory": "المخزون",
+    "sales": "المبيعات",
+    "expenses": "المصروفات",
+    "reports": "التقارير",
+    "compliance": "الامتثال",
+    "settings": "الإعدادات"
+  },
+  "sales": {
+    "title": "المبيعات",
+    "newSale": "عملية بيع جديدة",
+    "empty": "لا توجد مبيعات بعد. أنشئ واحدة من \"عملية بيع جديدة\".",
+    "last30Days": "آخر 30 يومًا: ${{amount}}",
+    "inspectionOff": "تم إيقاف وضع التفتيش"
+  },
+  "inventory": {
+    "title": "المخزون",
+    "add": "إضافة مخزون"
+  },
+  "reports": {
+    "title": "التقارير"
+  },
+  "compliance": {
+    "title": "الامتثال",
+    "today": "اليوم",
+    "week": "الأسبوع",
+    "range": "النطاق"
+  }
+}

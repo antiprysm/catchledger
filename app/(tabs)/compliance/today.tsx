@@ -1,6 +1,7 @@
 import { ThemeContext } from "@/theme/ThemeProvider";
 import { useFocusEffect } from "expo-router";
 import { useCallback, useContext, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Alert, Pressable, ScrollView, StyleSheet, Switch, Text, View } from "react-native";
 
 import { STORAGE_KEYS } from "@/constants/storageKeys";
@@ -22,6 +23,7 @@ function fmtWhen(iso: string) {
 
 export default function ComplianceToday() {
   const { colors, mode } = useContext(ThemeContext);
+  const { t } = useTranslation();
 
   const [sales, setSales] = useState<Sale[]>([]);
   const [expenses, setExpenses] = useState<Expense[]>([]);
@@ -133,7 +135,7 @@ export default function ComplianceToday() {
 
       <View style={styles.headerRow}>
         <View>
-          <Text style={[styles.h1, { color: colors.text }]}>Compliance — Today</Text>
+          <Text style={[styles.h1, { color: colors.text }]}>{t("compliance.today")}</Text>
           <Text style={[styles.sub, { color: colors.muted }]}>
             Inspection-ready summary (offline).
           </Text>
