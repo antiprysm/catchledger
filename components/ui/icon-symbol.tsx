@@ -18,10 +18,10 @@ const MAPPING = {
   'ferry.fill': 'directions-boat',
   'fish.fill': 'set-meal',
   'dollarsign.circle.fill': 'paid',
-  'anchor.fill': 'anchor',
+  'anchor.fill': 'account-balance-wallet',
   'scroll.fill': 'description',
-  'lighthouse.fill': 'wb-incandescent',
-  'compass.fill': 'explore',
+  'lighthouse.fill': 'verified-user',
+  'compass.fill': 'settings',
   'paperplane.fill': 'send',
   'chevron.left.forwardslash.chevron.right': 'code',
   'chevron.right': 'chevron-right',
@@ -48,6 +48,6 @@ export function IconSymbol({
 }
 
 // Tab mappings: Dashboard=ferry.fill->directions-boat, Inventory=fish.fill->set-meal,
-// Sales=dollarsign.circle.fill->paid, Expenses=anchor.fill->anchor,
-// Reports=scroll.fill->description, Compliance=lighthouse.fill->wb-incandescent,
-// Settings=compass.fill->explore.
+// Sales=dollarsign.circle.fill->paid, Expenses=anchor.fill->account-balance-wallet,
+// Reports=scroll.fill->description, Compliance=lighthouse.fill->verified-user,
+// Settings=compass.fill->settings.
