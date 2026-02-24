@@ -54,7 +54,7 @@ export default function SalesLogScreen() {
       {inspectionMode ? (
         <View style={styles.bannerWrap}>
           <View style={styles.banner}>
-            <Text style={styles.bannerText}>INSPECTION MODE — READ ONLY</Text>
+            <Text style={styles.bannerText}>{t("compliance.inspectionReadOnly")}</Text>
           </View>
 
           <Pressable
@@ -65,7 +65,7 @@ export default function SalesLogScreen() {
               Alert.alert(t("sales.inspectionOff"));
             }}
           >
-            <Text style={styles.exitText}>Exit Inspection Mode</Text>
+            <Text style={styles.exitText}>{t("compliance.exitInspectionMode")}</Text>
           </Pressable>
         </View>
       ) : null}
@@ -88,8 +88,8 @@ export default function SalesLogScreen() {
 
       {(lowCount > 0 || expiringCount > 0) ? (
         <View style={[styles.noticeCard, { borderColor: colors.cardBorder, backgroundColor: colors.cardBg }]}>
-          {lowCount > 0 ? <Text style={[styles.noticeText, { color: colors.text }]}>Low inventory items: {lowCount}</Text> : null}
-          {expiringCount > 0 ? <Text style={[styles.noticeText, { color: colors.text }]}>Expiring lots soon: {expiringCount}</Text> : null}
+          {lowCount > 0 ? <Text style={[styles.noticeText, { color: colors.text }]}>{t("sales.lowInventoryItems", { count: lowCount })}</Text> : null}
+          {expiringCount > 0 ? <Text style={[styles.noticeText, { color: colors.text }]}>{t("sales.expiringLotsSoon", { count: expiringCount })}</Text> : null}
         </View>
       ) : null}
 
@@ -129,17 +129,17 @@ export default function SalesLogScreen() {
                   {item.buyerName}
                 </Text>
               ) : null}
-              {item.invoiceNumber ? <Text style={[styles.meta2, { color: colors.muted }]}>Invoice: {item.invoiceNumber}</Text> : null}
+              {item.invoiceNumber ? <Text style={[styles.meta2, { color: colors.muted }]}>{t("sales.invoiceValue", { value: item.invoiceNumber })}</Text> : null}
             </View>
 
             <View style={{ alignItems: "flex-end" }}>
               <Text style={[styles.meta2, { color: colors.muted }]}>
-                {item.paymentMethod}
+                {t(`sales.paymentMethods.${item.paymentMethod}`)}
               </Text>
 
               {item.buyerType ? (
                 <Text style={[styles.buyerType, { color: colors.muted }]}>
-                  {item.buyerType}
+                  {t(`sales.buyerTypes.${item.buyerType}`)}
                 </Text>
               ) : null}
             </View>
