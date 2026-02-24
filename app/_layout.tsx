@@ -7,7 +7,7 @@ import { DarkTheme, DefaultTheme, ThemeProvider as NavThemeProvider } from "@rea
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import React from "react";
-import { I18nextProvider } from "react-i18next";
+import { I18nextProvider, useTranslation } from "react-i18next";
 import { AppState, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import "react-native-reanimated";
 
@@ -16,6 +16,7 @@ export const unstable_settings = {
 };
 
 function NavThemeWrapper() {
+  const { t } = useTranslation();
   const { mode, colors } = React.useContext(ThemeContext);
   const [locked, setLocked] = React.useState(false);
   const [passcodeInput, setPasscodeInput] = React.useState("");
@@ -60,11 +61,11 @@ function NavThemeWrapper() {
   async function unlockByPasscode() {
     const saved = await getPasscode();
     if (!saved) {
-      setLockError("Set a passcode in Settings > Security first.");
+      setLockError(t("lock.errors.setPasscode"));
       return;
     }
     if (saved !== passcodeInput.trim()) {
-      setLockError("Incorrect passcode.");
+      setLockError(t("lock.errors.incorrectPasscode"));
       return;
     }
     setPasscodeInput("");
@@ -79,29 +80,29 @@ function NavThemeWrapper() {
       setLockError("");
       setLocked(false);
     } else {
-      setLockError("Biometric unlock failed.");
+      setLockError(t("lock.errors.biometricFailed"));
     }
   }
 
   if (locked) {
     return (
       <View style={[styles.lockWrap, { backgroundColor: colors.bg }]}> 
-        <Text style={[styles.lockTitle, { color: colors.text }]}>CatchLedger Locked</Text>
+        <Text style={[styles.lockTitle, { color: colors.text }]}>{t("lock.title")}</Text>
         <TextInput
           value={passcodeInput}
           onChangeText={setPasscodeInput}
-          placeholder="Enter passcode"
+          placeholder={t("lock.enterPasscode")}
           placeholderTextColor={colors.muted}
           secureTextEntry
           keyboardType="number-pad"
           style={[styles.lockInput, { color: colors.text, borderColor: colors.cardBorder }]}
         />
         <Pressable style={styles.lockBtn} onPress={unlockByPasscode}>
-          <Text style={styles.lockBtnText}>Unlock</Text>
+          <Text style={styles.lockBtnText}>{t("lock.unlock")}</Text>
         </Pressable>
         {(settingsRef.current?.biometricsEnabled ?? false) ? (
           <Pressable style={[styles.lockBtn, { backgroundColor: "#3b3b3b" }]} onPress={unlockByBiometric}>
-            <Text style={styles.lockBtnText}>Unlock with FaceID / TouchID</Text>
+            <Text style={styles.lockBtnText}>{t("lock.unlockBiometric")}</Text>
           </Pressable>
         ) : null}
         {!!lockError && <Text style={[styles.lockErr, { color: "#d32f2f" }]}>{lockError}</Text>}
@@ -121,7 +122,7 @@ function NavThemeWrapper() {
       >
         <Stack.Screen name="(auth)" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: "modal", title: "Modal" }} />
+        <Stack.Screen name="modal" options={{ presentation: "modal", title: t("modal.title") }} />
       </Stack>
 
       <StatusBar style={mode === "DARK" ? "light" : "dark"} />

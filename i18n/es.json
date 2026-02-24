@@ -1,50 +1,114 @@
 {
+  "common": {
+    "refresh": "Refresh",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "unknown": "Unknown"
+  },
+  "lock": {
+    "title": "CatchLedger Locked",
+    "enterPasscode": "Enter passcode",
+    "unlock": "Unlock",
+    "unlockBiometric": "Unlock with FaceID / TouchID",
+    "errors": {
+      "setPasscode": "Set a passcode in Settings > Security first.",
+      "incorrectPasscode": "Incorrect passcode.",
+      "biometricFailed": "Biometric unlock failed."
+    }
+  },
+  "modal": {
+    "title": "Modal",
+    "bodyTitle": "This is a modal",
+    "goHome": "Go to home screen"
+  },
   "settings": {
-    "title": "Configuración",
-    "language": "Idioma",
-    "languageChangedRestart": "Idioma cambiado. Reinicia la app para aplicar la dirección del diseño.",
-    "appearance": "Apariencia",
-    "nightMode": "Modo nocturno",
-    "nightModeSubtitle": "Transición de tema suave.",
-    "unitsFormatting": "Unidades y formato",
-    "weightUnit": "Unidad de peso",
-    "temperatureUnit": "Unidad de temperatura",
-    "dateFormat": "Formato de fecha",
+    "title": "Settings",
+    "language": "Language",
+    "languageChangedRestart": "Language changed. Please restart the app to apply layout direction.",
+    "appearance": "Appearance",
+    "nightMode": "Night mode",
+    "nightModeSubtitle": "Smooth theme transition.",
+    "unitsFormatting": "Units & Formatting",
+    "weightUnit": "Weight unit",
+    "temperatureUnit": "Temperature unit",
+    "dateFormat": "Date format",
     "languageLabels": {
-      "en": "Inglés",
-      "zh": "Chino (simplificado)",
-      "es": "Español",
+      "en": "English",
+      "zh": "Chinese (Simplified)",
+      "es": "Spanish",
       "hi": "Hindi",
-      "ar": "Árabe"
+      "ar": "Arabic"
     }
   },
   "tabs": {
-    "dashboard": "Inicio",
-    "inventory": "Inventario",
-    "sales": "Ventas",
-    "expenses": "Gastos",
-    "reports": "Reportes",
-    "compliance": "Cumplimiento",
-    "settings": "Configuración"
+    "dashboard": "Dashboard",
+    "inventory": "Inventory",
+    "sales": "Sales",
+    "expenses": "Expenses",
+    "reports": "Reports",
+    "compliance": "Compliance",
+    "settings": "Settings"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "today": "Today",
+    "last7Days": "Last 7 days",
+    "thisMonth": "This month",
+    "updated": "Updated {{time}}",
+    "lowInventoryItems": "Low inventory items: {{count}}",
+    "expiringLotsSoon": "Expiring lots soon: {{count}}",
+    "totals": "Totals",
+    "allTimeRevenue": "All time revenue",
+    "allTimeExpenses": "All time expenses",
+    "allTimeNet": "All time net",
+    "salesCount_one": "{{count}} sale",
+    "salesCount_other": "{{count}} sales",
+    "expensesCount_one": "{{count}} expense",
+    "expensesCount_other": "{{count}} expenses",
+    "revenueMinusExpenses": "Revenue − Expenses",
+    "thisPeriod": "This period",
+    "topSpeciesLast30": "Top species (last 30 days)",
+    "noSalesYet": "No sales yet.",
+    "revenue": "Revenue",
+    "expenses": "Expenses",
+    "net": "Net"
   },
   "sales": {
-    "title": "Ventas",
-    "newSale": "Nueva venta",
-    "empty": "Aún no hay ventas. Crea una en \"Nueva venta\".",
-    "last30Days": "Últimos 30 días: ${{amount}}",
-    "inspectionOff": "Modo de inspección desactivado"
+    "title": "Sales",
+    "newSale": "New Sale",
+    "editSale": "Edit Sale",
+    "empty": "No sales yet. Create one in \"New Sale\".",
+    "last30Days": "Last 30 days: ${{amount}}",
+    "inspectionOff": "Inspection mode off"
   },
   "inventory": {
-    "title": "Inventario",
-    "add": "Agregar inventario"
+    "title": "Inventory",
+    "add": "Add Inventory",
+    "addFish": "Add Fish",
+    "editFish": "Edit Fish",
+    "tapToViewEdit": "Tap an item to view or edit.",
+    "empty": "No inventory yet. Tap “Add Fish”.",
+    "qty": "• Qty {{qty}}",
+    "expired": "Expired"
+  },
+  "expenses": {
+    "title": "Expenses",
+    "addExpense": "Add Expense",
+    "editExpense": "Edit Expense"
   },
   "reports": {
-    "title": "Reportes"
+    "title": "Reports"
   },
   "compliance": {
-    "title": "Cumplimiento",
-    "today": "Hoy",
-    "week": "Semana",
-    "range": "Rango"
+    "title": "Compliance",
+    "today": "Today",
+    "week": "Week",
+    "range": "Range",
+    "dateRange": "Date Range",
+    "licenseProfile": "License Profile",
+    "inspectionControls": "Inspection Controls",
+    "last7Days": "Last 7 Days",
+    "inspectionReadOnly": "INSPECTION MODE — READ ONLY",
+    "exitInspectionMode": "Exit Inspection Mode"
   }
 }
