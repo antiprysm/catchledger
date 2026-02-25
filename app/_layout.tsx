@@ -27,13 +27,40 @@ function NavThemeWrapper() {
   const [lockError, setLockError] = React.useState("");
   const settingsRef = React.useRef<any>(null);
   const backgroundAt = React.useRef<number | null>(null);
+  const lastActivityAt = React.useRef<number>(Date.now());
+  const lockedRef = React.useRef(false);
+
+  const markUserActivity = React.useCallback(() => {
+    if (!locked) lastActivityAt.current = Date.now();
+  }, [locked]);
+
+  const lockApp = React.useCallback(() => {
+    lockedRef.current = true;
+    setLocked(true);
+    setPasscodeInput("");
+  }, []);
+
+  React.useEffect(() => {
+    lockedRef.current = locked;
+  }, [locked]);
 
   React.useEffect(() => {
     loadAppSettings().then((settings) => {
       settingsRef.current = settings;
-      if (settings.passcodeLockEnabled) setLocked(true);
+      if (settings.passcodeLockEnabled) lockApp();
     });
     runNotificationChecks();
+
+    const sessionTimeoutPoll = setInterval(async () => {
+      const settings = settingsRef.current ?? (await loadAppSettings());
+      settingsRef.current = settings;
+      if (!settings.passcodeLockEnabled || lockedRef.current) return;
+
+      const idleMinutes = (Date.now() - lastActivityAt.current) / 60000;
+      if (idleMinutes >= settings.sessionTimeoutMinutes) {
+        lockApp();
+      }
+    }, 15000);
 
     const sub = AppState.addEventListener("change", async (state) => {
       const settings = settingsRef.current ?? (await loadAppSettings());
@@ -49,18 +76,23 @@ function NavThemeWrapper() {
         runNotificationChecks();
         const bg = backgroundAt.current;
         if (!bg) {
-          setLocked(true);
+          lockApp();
           return;
         }
+
+        lastActivityAt.current = Date.now();
         const mins = (Date.now() - bg) / 60000;
-        if (mins >= settings.autoLockTimerMinutes || mins >= settings.sessionTimeoutMinutes) {
-          setLocked(true);
+        if (mins >= settings.autoLockTimerMinutes) {
+          lockApp();
         }
       }
     });
 
-    return () => sub.remove();
-  }, []);
+    return () => {
+      sub.remove();
+      clearInterval(sessionTimeoutPoll);
+    };
+  }, [lockApp]);
 
   async function unlockByPasscode() {
     const saved = await getPasscode();
@@ -74,7 +106,9 @@ function NavThemeWrapper() {
     }
     setPasscodeInput("");
     setLockError("");
+    lockedRef.current = false;
     setLocked(false);
+    lastActivityAt.current = Date.now();
   }
 
   async function unlockByBiometric() {
@@ -82,7 +116,9 @@ function NavThemeWrapper() {
     if (ok) {
       setPasscodeInput("");
       setLockError("");
+      lockedRef.current = false;
       setLocked(false);
+      lastActivityAt.current = Date.now();
     } else {
       setLockError(t("lock.errors.biometricFailed"));
     }
@@ -139,22 +175,24 @@ function NavThemeWrapper() {
   }
 
   return (
-    <NavThemeProvider value={navTheme}>
-      <Stack
-        screenOptions={{
-          contentStyle: { backgroundColor: colors.bg },
-          headerStyle: { backgroundColor: colors.surface },
-          headerTintColor: colors.text,
-          headerShadowVisible: false,
-        }}
-      >
-        <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: "modal", title: t("modal.title") }} />
-      </Stack>
+    <View style={{ flex: 1 }} onTouchStart={markUserActivity} onTouchMove={markUserActivity}>
+      <NavThemeProvider value={navTheme}>
+        <Stack
+          screenOptions={{
+            contentStyle: { backgroundColor: colors.bg },
+            headerStyle: { backgroundColor: colors.surface },
+            headerTintColor: colors.text,
+            headerShadowVisible: false,
+          }}
+        >
+          <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="modal" options={{ presentation: "modal", title: t("modal.title") }} />
+        </Stack>
 
-      <StatusBar style={mode === "DARK" ? "light" : "dark"} />
-    </NavThemeProvider>
+        <StatusBar style={mode === "DARK" ? "light" : "dark"} />
+      </NavThemeProvider>
+    </View>
   );
 }
 
