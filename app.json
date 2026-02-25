@@ -17,16 +17,16 @@
       }
     },
     "android": {
+      "package": "com.hambungle.catchledger",
       "adaptiveIcon": {
         "backgroundColor": "#0B2E4F",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
         "backgroundImage": "./assets/images/android-icon-background.png",
-        "monochromeImage": "./assets/images/android-icon-monochrome.png",
-        "package": "com.hambungle.catchledger"
+        "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
+      "icon": "./assets/images/androidicon.png",
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false,
-      "package": "com.hambungle.catchledger"
+      "predictiveBackGestureEnabled": false
     },
     "web": {
       "output": "static",
