@@ -2,6 +2,7 @@ import i18n, { applyLanguage, type SupportedLanguage } from "@/i18n";
 import { ThemeContext } from "@/theme/ThemeProvider";
 import { DEFAULT_APP_SETTINGS, type AppSettings } from "@/types/settings";
 import { exportFullBackup, restoreFullBackup } from "@/utils/backup";
+import { ensureBiometricToken, getPasscode, setPasscode as persistPasscode } from "@/utils/security";
 
 import { loadAppSettings, saveAppSettings } from "@/utils/appSettings";
 import Constants from "expo-constants";
@@ -31,11 +32,19 @@ export default function SettingsScreen() {
   const { colors, mode, toggle } = useContext(ThemeContext);
   const { t } = useTranslation();
   const [settings, setSettings] = useState<AppSettings>(DEFAULT_APP_SETTINGS);
-  const [loaded, setLoaded] = useState(false);
+  const [hasSavedPasscode, setHasSavedPasscode] = useState(false);
+  const [editingPasscode, setEditingPasscode] = useState(false);
+  const [newPasscode, setNewPasscode] = useState("");
+  const [confirmPasscode, setConfirmPasscode] = useState("");
+
+  const sanitizePasscode = useCallback((value: string) => value.replace(/\D/g, ""), []);
 
   useEffect(() => {
-    loadAppSettings().then((stored) => setSettings(stored))
-      .finally(() => setLoaded(true));
+    Promise.all([loadAppSettings(), getPasscode()])
+      .then(([stored, storedPasscode]) => {
+        setSettings(stored);
+        setHasSavedPasscode(Boolean(storedPasscode));
+      });
   }, []);
 
   const appVersion = useMemo(() => Constants.expoConfig?.version ?? "dev", []);
@@ -84,6 +93,58 @@ export default function SettingsScreen() {
       return next;
     });
   }, []);
+
+  const savePasscode = useCallback(async () => {
+    const normalizedPasscode = sanitizePasscode(newPasscode);
+    const normalizedConfirm = sanitizePasscode(confirmPasscode);
+
+    if (normalizedPasscode.length < 4) {
+      Alert.alert(t("settings.passcodeRequiredTitle"), t("settings.passcodeLengthError"));
+      return;
+    }
+
+    if (normalizedPasscode !== normalizedConfirm) {
+      Alert.alert(t("settings.passcodeRequiredTitle"), t("settings.passcodeMismatchError"));
+      return;
+    }
+
+    await persistPasscode(normalizedPasscode);
+    setHasSavedPasscode(true);
+    setEditingPasscode(false);
+    setNewPasscode("");
+    setConfirmPasscode("");
+
+    if (!settings.passcodeLockEnabled) {
+      await updateSettings({ passcodeLockEnabled: true });
+    }
+
+    Alert.alert(t("settings.success"), t("settings.passcodeSaved"));
+  }, [confirmPasscode, newPasscode, sanitizePasscode, settings.passcodeLockEnabled, t, updateSettings]);
+
+  const togglePasscodeLock = useCallback(async (nextValue: boolean) => {
+    if (!nextValue) {
+      await updateSettings({ passcodeLockEnabled: false });
+      return;
+    }
+
+    const storedPasscode = await getPasscode();
+    if (!storedPasscode) {
+      setHasSavedPasscode(false);
+      setEditingPasscode(true);
+      Alert.alert(t("settings.passcodeRequiredTitle"), t("settings.passcodeRequiredBody"));
+      return;
+    }
+
+    setHasSavedPasscode(true);
+    await updateSettings({ passcodeLockEnabled: true });
+  }, [t, updateSettings]);
+
+  const toggleBiometrics = useCallback(async (nextValue: boolean) => {
+    if (nextValue) {
+      await ensureBiometricToken();
+    }
+    await updateSettings({ biometricsEnabled: nextValue });
+  }, [updateSettings]);
 
   const updateLanguage = useCallback(async (language: SupportedLanguage) => {
     const nextSettings = await new Promise<AppSettings>((resolve) => {
@@ -240,8 +301,48 @@ export default function SettingsScreen() {
           </Card>
     
           <Card colors={colors} title={t("settings.security")}>
-            <ToggleRow colors={colors} title={t("settings.passcodeLock")} value={settings.passcodeLockEnabled} onValueChange={(passcodeLockEnabled) => updateSettings({ passcodeLockEnabled })} />
-            <ToggleRow colors={colors} title={t("settings.faceIdTouchId")} value={settings.biometricsEnabled} onValueChange={(biometricsEnabled) => updateSettings({ biometricsEnabled })} />
+            <ToggleRow colors={colors} title={t("settings.passcodeLock")} value={settings.passcodeLockEnabled} onValueChange={(passcodeLockEnabled) => void togglePasscodeLock(passcodeLockEnabled)} />
+            {!hasSavedPasscode ? (
+              <Text style={[styles.metaText, { color: colors.muted }]}>{t("settings.noPasscodeSet")}</Text>
+            ) : null}
+
+            {editingPasscode || !hasSavedPasscode ? (
+              <View style={styles.passcodeEditor}>
+                <InputRow
+                  colors={colors}
+                  label={t("settings.newPasscode")}
+                  value={newPasscode}
+                  onChangeText={(value) => setNewPasscode(sanitizePasscode(value))}
+                  keyboardType="number-pad"
+                  secureTextEntry
+                />
+                <InputRow
+                  colors={colors}
+                  label={t("settings.confirmPasscode")}
+                  value={confirmPasscode}
+                  onChangeText={(value) => setConfirmPasscode(sanitizePasscode(value))}
+                  keyboardType="number-pad"
+                  secureTextEntry
+                />
+                <Pressable style={styles.btn} onPress={() => void savePasscode()}>
+                  <Text style={styles.btnText}>{hasSavedPasscode ? t("settings.updatePasscode") : t("settings.setPasscode")}</Text>
+                </Pressable>
+                {hasSavedPasscode ? (
+                  <Pressable style={styles.secondaryBtn} onPress={() => {
+                    setEditingPasscode(false);
+                    setNewPasscode("");
+                    setConfirmPasscode("");
+                  }}>
+                    <Text style={styles.secondaryBtnText}>{t("common.cancel")}</Text>
+                  </Pressable>
+                ) : null}
+              </View>
+            ) : (
+              <Pressable style={styles.secondaryBtn} onPress={() => setEditingPasscode(true)}>
+                <Text style={styles.secondaryBtnText}>{t("settings.changePasscode")}</Text>
+              </Pressable>
+            )}
+            <ToggleRow colors={colors} title={t("settings.faceIdTouchId")} value={settings.biometricsEnabled} onValueChange={(biometricsEnabled) => void toggleBiometrics(biometricsEnabled)} />
             <ChoiceGroup colors={colors} label={t("settings.autoLockTimer")} value={settings.autoLockTimerMinutes} options={autoLockTimers} onChange={(autoLockTimerMinutes) => updateSettings({ autoLockTimerMinutes })} />
             <ChoiceGroup colors={colors} label={t("settings.sessionTimeout")} value={settings.sessionTimeoutMinutes} options={sessionTimeoutTimers} onChange={(sessionTimeoutMinutes) => updateSettings({ sessionTimeoutMinutes })} />
           </Card>
@@ -277,14 +378,14 @@ export default function SettingsScreen() {
         </View>
       );
     }
-    function InputRow({ colors, label, value, onChangeText, keyboardType }: { colors: any; label: string; value: string; onChangeText: (v: string) => void; keyboardType?: "default" | "phone-pad" | "email-address" }) {
-      return (
-        <View style={styles.inputWrap}>
-          <Text style={[styles.inputLabel, { color: colors.text }]}>{label}</Text>
-          <TextInput value={value} onChangeText={onChangeText} keyboardType={keyboardType} placeholder={label} placeholderTextColor={colors.muted} style={[styles.input, { borderColor: colors.cardBorder, color: colors.text }]} />
-        </View>
-      );
-    }
+function InputRow({ colors, label, value, onChangeText, keyboardType, secureTextEntry }: { colors: any; label: string; value: string; onChangeText: (v: string) => void; keyboardType?: "default" | "phone-pad" | "email-address" | "number-pad"; secureTextEntry?: boolean }) {
+  return (
+    <View style={styles.inputWrap}>
+      <Text style={[styles.inputLabel, { color: colors.text }]}>{label}</Text>
+      <TextInput value={value} onChangeText={onChangeText} keyboardType={keyboardType} secureTextEntry={secureTextEntry} placeholder={label} placeholderTextColor={colors.muted} style={[styles.input, { borderColor: colors.cardBorder, color: colors.text }]} />
+    </View>
+  );
+}
     function ChoiceGroup<T extends string | number>({ colors, label, value, options, onChange }: { colors: any; label: string; value: T; options: Choice<T>[]; onChange: (value: T) => void }) {
       return (
         <View style={styles.choiceWrap}>
@@ -333,6 +434,7 @@ export default function SettingsScreen() {
   choiceRow: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
   choiceChip: { borderWidth: 1, borderRadius: 999, paddingHorizontal: 10, paddingVertical: 7 },
   choiceText: { fontWeight: "700", fontSize: 12 },
+  passcodeEditor: { gap: 8 },
 
   btn: { backgroundColor: "#111", padding: 12, borderRadius: 12, alignItems: "center" },
   secondaryBtn: { backgroundColor: "#3b3b3b", padding: 12, borderRadius: 12, alignItems: "center" },

@@ -45,9 +45,9 @@ function NavThemeWrapper() {
   }, [locked]);
 
   React.useEffect(() => {
-    loadAppSettings().then((settings) => {
+    Promise.all([loadAppSettings(), getPasscode()]).then(([settings, storedPasscode]) => {
       settingsRef.current = settings;
-      if (settings.passcodeLockEnabled) lockApp();
+      if (settings.passcodeLockEnabled && storedPasscode) lockApp();
     });
     runNotificationChecks();
 
@@ -55,6 +55,9 @@ function NavThemeWrapper() {
       const settings = await loadAppSettings();
       settingsRef.current = settings;
       if (!settings.passcodeLockEnabled || lockedRef.current) return;
+
+      const storedPasscode = await getPasscode();
+      if (!storedPasscode) return;
 
       const idleMinutes = (Date.now() - lastActivityAt.current) / 60000;
       if (idleMinutes >= settings.sessionTimeoutMinutes) {
@@ -66,6 +69,9 @@ function NavThemeWrapper() {
       const settings = await loadAppSettings();
       settingsRef.current = settings;
       if (!settings.passcodeLockEnabled) return;
+
+      const storedPasscode = await getPasscode();
+      if (!storedPasscode) return;
 
       if (state === "background" || state === "inactive") {
         backgroundAt.current = Date.now();
@@ -98,11 +104,12 @@ function NavThemeWrapper() {
 
   async function unlockByPasscode() {
     const saved = await getPasscode();
+    const enteredPasscode = passcodeInput.replace(/\D/g, "");
     if (!saved) {
       setLockError(t("lock.errors.setPasscode"));
       return;
     }
-    if (saved !== passcodeInput.trim()) {
+    if (saved !== enteredPasscode) {
       setLockError(t("lock.errors.incorrectPasscode"));
       return;
     }
@@ -150,7 +157,7 @@ function NavThemeWrapper() {
         <Text style={[styles.lockTitle, { color: colors.text }]}>{t("lock.title")}</Text>
         <TextInput
           value={passcodeInput}
-          onChangeText={setPasscodeInput}
+          onChangeText={(value) => setPasscodeInput(value.replace(/\D/g, ""))}
           placeholder={t("lock.enterPasscode")}
           placeholderTextColor={colors.muted}
           secureTextEntry
