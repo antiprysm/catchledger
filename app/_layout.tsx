@@ -52,7 +52,7 @@ function NavThemeWrapper() {
     runNotificationChecks();
 
     const sessionTimeoutPoll = setInterval(async () => {
-      const settings = settingsRef.current ?? (await loadAppSettings());
+      const settings = await loadAppSettings();
       settingsRef.current = settings;
       if (!settings.passcodeLockEnabled || lockedRef.current) return;
 
@@ -63,7 +63,7 @@ function NavThemeWrapper() {
     }, 15000);
 
     const sub = AppState.addEventListener("change", async (state) => {
-      const settings = settingsRef.current ?? (await loadAppSettings());
+      const settings = await loadAppSettings();
       settingsRef.current = settings;
       if (!settings.passcodeLockEnabled) return;
 
@@ -76,12 +76,14 @@ function NavThemeWrapper() {
         runNotificationChecks();
         const bg = backgroundAt.current;
         if (!bg) {
-          lockApp();
+          lastActivityAt.current = Date.now();
           return;
         }
 
-        lastActivityAt.current = Date.now();
         const mins = (Date.now() - bg) / 60000;
+        backgroundAt.current = null;
+        lastActivityAt.current = Date.now();
+        
         if (mins >= settings.autoLockTimerMinutes) {
           lockApp();
         }

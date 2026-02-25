@@ -55,7 +55,7 @@ export default function TabLayout() {
           title: t("tabs.expenses"),
           headerShown: false,
           tabBarIcon: ({ color }) => (
-            <IconSymbol name="receipt.fill" color={color} size={24} />
+            <IconSymbol name="doc.text.fill" color={color} size={24} />
           ),
         }}
       />
