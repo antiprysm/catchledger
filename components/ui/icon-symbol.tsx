@@ -1,11 +1,10 @@
 // Fallback for using MaterialIcons on Android and web.
 
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import { SymbolWeight, SymbolViewProps } from 'expo-symbols';
+import { SymbolViewProps, SymbolWeight } from 'expo-symbols';
 import { ComponentProps } from 'react';
 import { OpaqueColorValue, type StyleProp, type TextStyle } from 'react-native';
 
-type IconMapping = Record<SymbolViewProps['name'], ComponentProps<typeof MaterialIcons>['name']>;
 type IconSymbolName = keyof typeof MAPPING;
 
 /**
@@ -13,19 +12,28 @@ type IconSymbolName = keyof typeof MAPPING;
  * - see Material Icons in the [Icons Directory](https://icons.expo.fyi).
  * - see SF Symbols in the [SF Symbols](https://developer.apple.com/sf-symbols/) app.
  */
-const MAPPING = {
-  'house.fill': 'home',
-  'ferry.fill': 'directions-boat',
-  'fish.fill': 'set-meal',
-  'dollarsign.circle.fill': 'paid',
-  'anchor.fill': 'anchor',
-  'scroll.fill': 'description',
-  'lighthouse.fill': 'wb-incandescent',
-  'compass.fill': 'explore',
-  'paperplane.fill': 'send',
-  'chevron.left.forwardslash.chevron.right': 'code',
-  'chevron.right': 'chevron-right',
-} as IconMapping;
+type MaterialIconName = ComponentProps<typeof MaterialIcons>["name"];
+type SFSymbolName = SymbolViewProps["name"];
+
+// ✅ IMPORTANT: Partial so you don't have to map every possible SF symbol
+type IconMapping = Partial<Record<SFSymbolName, MaterialIconName>>;
+
+const MAPPING: IconMapping = {
+  "house.fill": "home",
+  "ferry.fill": "directions-boat",
+  "fish.fill": "set-meal",
+  "dollarsign.circle.fill": "paid",
+
+  // ✅ your Android-friendly replacements
+  "doc.text.fill": "receipt-long",     // expenses
+  "checkmark.shield.fill": "security", // compliance
+  "gearshape.fill": "settings",        // settings
+
+  "scroll.fill": "description",
+  "paperplane.fill": "send",
+  "chevron.left.forwardslash.chevron.right": "code",
+  "chevron.right": "chevron-right",
+};
 
 /**
  * An icon component that uses native SF Symbols on iOS, and Material Icons on Android and web.
