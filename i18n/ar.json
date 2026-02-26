@@ -6,7 +6,9 @@
     "unknown": "غير معروف",
     "yes": "نعم",
     "no": "لا",
-    "cannotBeUndone": "لا يمكن التراجع عن هذا الإجراء."
+    "cannotBeUndone": "لا يمكن التراجع عن هذا الإجراء.",
+    "loading": "جارٍ التحميل...",
+    "back": "رجوع"
   },
   "lock": {
     "title": "CatchLedger مقفل",
@@ -233,7 +235,28 @@
     "deleteSaleTitle": "حذف عملية البيع؟",
     "savedTitle": "تم الحفظ",
     "saleUpdatedMessage": "تم تحديث عملية البيع.",
-    "saveFailedTitle": "فشل الحفظ"
+    "saveFailedTitle": "فشل الحفظ",
+    "inspectionReadOnlyBanner": "وضع التفتيش — للقراءة فقط",
+    "exitInspectionMode": "إنهاء وضع التفتيش",
+    "buyer": "المشتري",
+    "unknownBuyer": "مشتري غير معروف",
+    "buyerLicenseInline": "ترخيص/هوية المشتري: {{value}}",
+    "sale": "البيع",
+    "occurredValue": "تم في: {{value}}",
+    "locationValue": "الموقع: {{value}}",
+    "paymentValue": "الدفع: {{value}}",
+    "paymentNoteOptional": "ملاحظة الدفع (اختياري)",
+    "totalValue": "الإجمالي: ${{value}}",
+    "saveChanges": "حفظ التغييرات",
+    "saving": "جارٍ الحفظ...",
+    "lineItems": "عناصر البيع",
+    "batchValue": "الدفعة: {{value}}",
+    "originValue": "المصدر: {{value}}",
+    "caughtValue": "وقت الصيد: {{value}}",
+    "methodValue": "الطريقة: {{value}}",
+    "deleteSale": "حذف البيع",
+    "saleNotFound": "لم يتم العثور على البيع",
+    "saleNotFoundMessage": "قد يكون هذا البيع قد حُذف أو تم مسح التخزين المحلي."
   },
   "inventory": {
     "title": "المخزون",

@@ -6,7 +6,9 @@
     "unknown": "Unknown",
     "yes": "Yes",
     "no": "No",
-    "cannotBeUndone": "This cannot be undone."
+    "cannotBeUndone": "This cannot be undone.",
+    "loading": "Loading...",
+    "back": "Back"
   },
   "lock": {
     "title": "CatchLedger Locked",
@@ -233,7 +235,28 @@
     "deleteSaleTitle": "Delete sale?",
     "savedTitle": "Saved",
     "saleUpdatedMessage": "Sale updated.",
-    "saveFailedTitle": "Save failed"
+    "saveFailedTitle": "Save failed",
+    "inspectionReadOnlyBanner": "INSPECTION MODE — READ ONLY",
+    "exitInspectionMode": "Exit Inspection Mode",
+    "buyer": "Buyer",
+    "unknownBuyer": "Unknown buyer",
+    "buyerLicenseInline": "Buyer License/ID: {{value}}",
+    "sale": "Sale",
+    "occurredValue": "Occurred: {{value}}",
+    "locationValue": "Location: {{value}}",
+    "paymentValue": "Payment: {{value}}",
+    "paymentNoteOptional": "Payment note (optional)",
+    "totalValue": "Total: ${{value}}",
+    "saveChanges": "Save Changes",
+    "saving": "Saving...",
+    "lineItems": "Line items",
+    "batchValue": "Batch: {{value}}",
+    "originValue": "Origin: {{value}}",
+    "caughtValue": "Caught: {{value}}",
+    "methodValue": "Method: {{value}}",
+    "deleteSale": "Delete Sale",
+    "saleNotFound": "Sale not found",
+    "saleNotFoundMessage": "This sale may have been deleted, or your local storage was cleared."
   },
   "inventory": {
     "title": "Inventory",
