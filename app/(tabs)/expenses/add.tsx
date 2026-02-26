@@ -1,5 +1,8 @@
 import { ThemeContext } from "@/theme/ThemeProvider";
-import DateTimePicker from "@react-native-community/datetimepicker";
+import DateTimePicker, {
+  DateTimePickerAndroid,
+  DateTimePickerEvent,
+} from "@react-native-community/datetimepicker";
 import { router } from "expo-router";
 import { useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -46,6 +49,36 @@ export default function AddExpenseScreen() {
 
   const [occurredAt, setOccurredAt] = useState<Date>(new Date());
   const [showPicker, setShowPicker] = useState(false);
+
+  function onIOSPickerChange(_: DateTimePickerEvent, date?: Date) {
+    if (date) setOccurredAt(date);
+  }
+
+  function openAndroidDateTimePicker() {
+    Keyboard.dismiss();
+
+    DateTimePickerAndroid.open({
+      value: occurredAt,
+      mode: "date",
+      is24Hour: false,
+      onChange: (dateEvent, selectedDate) => {
+        if (dateEvent.type !== "set" || !selectedDate) return;
+
+        DateTimePickerAndroid.open({
+          value: selectedDate,
+          mode: "time",
+          is24Hour: false,
+          onChange: (timeEvent, selectedTime) => {
+            if (timeEvent.type !== "set" || !selectedTime) return;
+
+            const next = new Date(selectedDate);
+            next.setHours(selectedTime.getHours(), selectedTime.getMinutes(), 0, 0);
+            setOccurredAt(next);
+          },
+        });
+      },
+    });
+  }
 
   async function onSave() {
     const amt = Number(amount);
@@ -123,7 +156,14 @@ export default function AddExpenseScreen() {
 
           <Text style={[styles.label, { color: colors.text }]}>{t("expenses.dateTime")}</Text>
           <Pressable
-            onPress={() => setShowPicker(true)}
+            onPress={() => {
+              if (Platform.OS === "android") {
+                openAndroidDateTimePicker();
+                return;
+              }
+
+              setShowPicker(true);
+            }}
             style={[
               styles.pickerBtn,
               { borderColor: colors.cardBorder, backgroundColor: colors.cardBg },
@@ -173,11 +213,8 @@ export default function AddExpenseScreen() {
               <DateTimePicker
                 value={occurredAt}
                 mode="datetime"
-                display={Platform.OS === "ios" ? "spinner" : "default"}
-                onChange={(_, date) => {
-                  if (Platform.OS !== "ios") setShowPicker(false);
-                  if (date) setOccurredAt(date);
-                }}
+                display="spinner"
+                onChange={onIOSPickerChange}
               />
 
               {Platform.OS === "ios" && (

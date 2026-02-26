@@ -1,4 +1,7 @@
-import DateTimePicker from "@react-native-community/datetimepicker";
+import DateTimePicker, {
+  DateTimePickerAndroid,
+  DateTimePickerEvent,
+} from "@react-native-community/datetimepicker";
 import { router } from "expo-router";
 import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -49,6 +52,36 @@ export default function AddInventoryScreen() {
   const [caughtAt, setCaughtAt] = useState<Date | null>(new Date());
   const [showPicker, setShowPicker] = useState(false);
   const [dateFormat, setDateFormat] = useState<"MM/DD/YYYY" | "DD/MM/YYYY">("MM/DD/YYYY");
+
+  function onIOSPickerChange(_: DateTimePickerEvent, date?: Date) {
+    if (date) setCaughtAt(date);
+  }
+
+  function openAndroidDateTimePicker() {
+    Keyboard.dismiss();
+
+    DateTimePickerAndroid.open({
+      value: caughtAt ?? new Date(),
+      mode: "date",
+      is24Hour: false,
+      onChange: (dateEvent, selectedDate) => {
+        if (dateEvent.type !== "set" || !selectedDate) return;
+
+        DateTimePickerAndroid.open({
+          value: selectedDate,
+          mode: "time",
+          is24Hour: false,
+          onChange: (timeEvent, selectedTime) => {
+            if (timeEvent.type !== "set" || !selectedTime) return;
+
+            const next = new Date(selectedDate);
+            next.setHours(selectedTime.getHours(), selectedTime.getMinutes(), 0, 0);
+            setCaughtAt(next);
+          },
+        });
+      },
+    });
+  }
 
   useEffect(() => {
     loadAppSettings().then((s) => {
@@ -263,7 +296,14 @@ export default function AddInventoryScreen() {
 
           <Text style={[styles.label, { color: colors.text }]}>{t("inventory.caughtTime")}</Text>
           <Pressable
-            onPress={() => setShowPicker(true)}
+            onPress={() => {
+              if (Platform.OS === "android") {
+                openAndroidDateTimePicker();
+                return;
+              }
+
+              setShowPicker(true);
+            }}
             style={[
               styles.pickerBtn,
               { borderColor: colors.cardBorder, backgroundColor: colors.cardBg },
@@ -301,11 +341,8 @@ export default function AddInventoryScreen() {
               <DateTimePicker
                 value={caughtAt ?? new Date()}
                 mode="datetime"
-                display={Platform.OS === "ios" ? "spinner" : "default"}
-                onChange={(_, date) => {
-                  if (Platform.OS !== "ios") setShowPicker(false);
-                  if (date) setCaughtAt(date);
-                }}
+                display="spinner"
+                onChange={onIOSPickerChange}
               />
 
               {Platform.OS === "ios" && (
