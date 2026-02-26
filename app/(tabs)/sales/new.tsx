@@ -63,18 +63,17 @@ export default function NewSaleScreen() {
   const [saleLocationNote, setSaleLocationNote] = useState("");
   const [settings, setSettings] = useState<AppSettings>(DEFAULT_APP_SETTINGS);
 
-  const resetForm = useCallback((appSettings?: AppSettings) => {
-    const active = appSettings ?? settings;
+  const resetForm = useCallback((appSettings: AppSettings) => {
     setLines([]);
-    setPaymentMethod(active.defaultPaymentMethod === "Cash" ? "CASH" : active.defaultPaymentMethod === "Card" ? "CARD" : active.defaultPaymentMethod === "Check" ? "CHECK" : "BANK_TRANSFER");
+    setPaymentMethod(appSettings.defaultPaymentMethod === "Cash" ? "CASH" : appSettings.defaultPaymentMethod === "Card" ? "CARD" : appSettings.defaultPaymentMethod === "Check" ? "CHECK" : "BANK_TRANSFER");
     setPaymentNote("");
     setBuyerName("");
-    setBuyerType(active.defaultBuyerType === "Restaurant" ? "RESTAURANT" : active.defaultBuyerType === "Retail" ? "MARKET" : "OTHER");
+    setBuyerType(appSettings.defaultBuyerType === "Restaurant" ? "RESTAURANT" : appSettings.defaultBuyerType === "Retail" ? "MARKET" : "OTHER");
     setBuyerContact("");
     setBuyerLicenseId("");
     setSaleLocationType("TRUCK");
     setSaleLocationNote("");
-  }, [settings]);
+  }, []);
 
   const loadAll = useCallback(() => {
     let mounted = true;
@@ -104,7 +103,7 @@ export default function NewSaleScreen() {
     return () => {
       mounted = false;
     };
-  }, [resetForm]);
+  }, [resetForm, t]);
 
   useFocusEffect(loadAll);
 
@@ -234,7 +233,7 @@ export default function NewSaleScreen() {
     const existingSales = await loadJSON<Sale[]>(STORAGE_KEYS.SALES, []);
     await saveJSON(STORAGE_KEYS.SALES, [sale, ...existingSales]);
 
-    resetForm();
+    resetForm(settings);
     await initNotifications().catch(() => undefined);
     router.replace("/(tabs)/sales");
   }
