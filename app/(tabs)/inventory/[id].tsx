@@ -130,7 +130,7 @@ export default function EditInventoryScreen() {
   if (!item) {
     return (
       <View style={[styles.loading, { backgroundColor: colors.bg }]}>
-        <Text style={{ color: colors.text }}>Loading...</Text>
+        <Text style={{ color: colors.text }}>{t("common.loading")}</Text>
       </View>
     );
   }
@@ -147,13 +147,13 @@ export default function EditInventoryScreen() {
         keyboardDismissMode="on-drag"
       >
         <Pressable onPress={Keyboard.dismiss} style={{ gap: 10 }}>
-          <Text style={[styles.title, { color: colors.text }]}>Edit Fish</Text>
+          <Text style={[styles.title, { color: colors.text }]}>{t("inventory.editFish")}</Text>
 
-          <Text style={[styles.label, { color: colors.text }]}>Species</Text>
+          <Text style={[styles.label, { color: colors.text }]}>{t("inventory.species")}</Text>
           <TextInput
             value={speciesName}
             onChangeText={setSpeciesName}
-            placeholder="Lake Trout"
+            placeholder={t("inventory.speciesPlaceholder")}
             placeholderTextColor={colors.muted}
             style={[
               styles.input,
@@ -165,9 +165,9 @@ export default function EditInventoryScreen() {
             ]}
           />
 
-          <Text style={[styles.label, { color: colors.text }]}>Unit</Text>
+          <Text style={[styles.label, { color: colors.text }]}>{t("inventory.unit")}</Text>
           <View style={styles.row}>
-            {(["lb", "fish", "dozen"] as UnitType[]).map((u) => {
+            {(["lb", "kg", "fish", "dozen"] as UnitType[]).map((u) => {
               const on = unit === u;
               return (
                 <Pressable
@@ -179,18 +179,18 @@ export default function EditInventoryScreen() {
                     on && { backgroundColor: colors.primary, borderColor: colors.primary },
                   ]}
                 >
-                  <Text style={[{ color: colors.text }, on && styles.chipTextOn]}>{u}</Text>
+                  <Text style={[{ color: colors.text }, on && styles.chipTextOn]}>{t(`inventory.units.${u}`)}</Text>
                 </Pressable>
               );
             })}
           </View>
 
-          <Text style={[styles.label, { color: colors.text }]}>Price per unit</Text>
+          <Text style={[styles.label, { color: colors.text }]}>{t("inventory.pricePerUnit")}</Text>
           <TextInput
             value={pricePerUnit}
             onChangeText={setPricePerUnit}
             keyboardType="decimal-pad"
-            placeholder="12.00"
+            placeholder={t("inventory.pricePerUnitPlaceholder")}
             placeholderTextColor={colors.muted}
             style={[
               styles.input,
@@ -202,12 +202,12 @@ export default function EditInventoryScreen() {
             ]}
           />
 
-          <Text style={[styles.label, { color: colors.text }]}>Quantity</Text>
+          <Text style={[styles.label, { color: colors.text }]}>{t("inventory.quantityOptional")}</Text>
           <TextInput
             value={quantity}
             onChangeText={setQuantity}
             keyboardType="number-pad"
-            placeholder="10"
+            placeholder={t("inventory.quantityPlaceholder")}
             placeholderTextColor={colors.muted}
             style={[
               styles.input,
@@ -219,7 +219,7 @@ export default function EditInventoryScreen() {
             ]}
           />
 
-          <Text style={[styles.label, { color: colors.text }]}>Quality</Text>
+          <Text style={[styles.label, { color: colors.text }]}>{t("inventory.qualityLabel")}</Text>
           <View style={styles.row}>
             {(["LIVE", "FRESH", "FROZEN", "THAWED"] as QualityStatus[]).map((q) => {
               const on = quality === q;
@@ -233,17 +233,17 @@ export default function EditInventoryScreen() {
                     on && { backgroundColor: colors.primary, borderColor: colors.primary },
                   ]}
                 >
-                  <Text style={[{ color: colors.text }, on && styles.chipTextOn]}>{q}</Text>
+                  <Text style={[{ color: colors.text }, on && styles.chipTextOn]}>{t(`inventory.quality.${q}`)}</Text>
                 </Pressable>
               );
             })}
           </View>
 
-          <Text style={[styles.label, { color: colors.text }]}>Catch location (water body)</Text>
+          <Text style={[styles.label, { color: colors.text }]}>{t("inventory.catchLocation")}</Text>
           <TextInput
             value={catchLocation}
             onChangeText={setCatchLocation}
-            placeholder="Lake Michigan — Waukegan Harbor"
+            placeholder={t("inventory.catchLocationPlaceholder")}
             placeholderTextColor={colors.muted}
             style={[
               styles.input,
@@ -255,11 +255,11 @@ export default function EditInventoryScreen() {
             ]}
           />
 
-          <Text style={[styles.label, { color: colors.text }]}>Catch method (optional)</Text>
+          <Text style={[styles.label, { color: colors.text }]}>{t("inventory.catchMethodOptional")}</Text>
           <TextInput
             value={catchMethod}
             onChangeText={setCatchMethod}
-            placeholder="Rod & reel / Net / Trap"
+            placeholder={t("inventory.catchMethodPlaceholder")}
             placeholderTextColor={colors.muted}
             style={[
               styles.input,
@@ -271,7 +271,7 @@ export default function EditInventoryScreen() {
             ]}
           />
 
-          <Text style={[styles.label, { color: colors.text }]}>Caught time</Text>
+          <Text style={[styles.label, { color: colors.text }]}>{t("inventory.caughtTime")}</Text>
           <Pressable
             onPress={() => setShowPicker(true)}
             style={[
@@ -280,21 +280,21 @@ export default function EditInventoryScreen() {
             ]}
           >
             <Text style={{ color: colors.text }}>
-              {caughtAt ? caughtAt.toLocaleString() : "Not set"}
+              {caughtAt ? caughtAt.toLocaleString() : t("inventory.notSet")}
             </Text>
             <Text style={{ color: colors.muted }}>
-              Best before: {bestBeforeHours}h
+              {t("inventory.bestBeforeHours", { hours: bestBeforeHours })}
             </Text>
           </Pressable>
 
           {/* keep black */}
           <Pressable onPress={onSave} style={styles.saveBtn}>
-            <Text style={styles.saveBtnText}>Save Changes</Text>
+            <Text style={styles.saveBtnText}>{t("inventory.save")}</Text>
           </Pressable>
 
           {/* keep red */}
           <Pressable onPress={onDelete} style={styles.deleteBtn}>
-            <Text style={styles.deleteBtnText}>Delete</Text>
+            <Text style={styles.deleteBtnText}>{t("common.delete")}</Text>
           </Pressable>
         </Pressable>
 
@@ -312,7 +312,7 @@ export default function EditInventoryScreen() {
               ]}
               onPress={() => {}}
             >
-              <Text style={[styles.pickerTitle, { color: colors.text }]}>Caught time</Text>
+              <Text style={[styles.pickerTitle, { color: colors.text }]}>{t("inventory.caughtTime")}</Text>
 
               <DateTimePicker
                 value={caughtAt ?? new Date()}
@@ -326,7 +326,7 @@ export default function EditInventoryScreen() {
 
               {Platform.OS === "ios" && (
                 <Pressable style={styles.doneBtn} onPress={() => setShowPicker(false)}>
-                  <Text style={styles.doneBtnText}>Done</Text>
+                  <Text style={styles.doneBtnText}>{t("inventory.done")}</Text>
                 </Pressable>
               )}
             </Pressable>

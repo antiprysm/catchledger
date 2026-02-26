@@ -6,7 +6,9 @@
     "unknown": "अज्ञात",
     "yes": "हाँ",
     "no": "नहीं",
-    "cannotBeUndone": "इसे वापस नहीं किया जा सकता।"
+    "cannotBeUndone": "इसे वापस नहीं किया जा सकता।",
+    "loading": "लोड हो रहा है...",
+    "back": "वापस"
   },
   "lock": {
     "title": "CatchLedger लॉक है",
@@ -233,7 +235,28 @@
     "deleteSaleTitle": "बिक्री हटाएँ?",
     "savedTitle": "सहेजा गया",
     "saleUpdatedMessage": "बिक्री अपडेट हो गई।",
-    "saveFailedTitle": "सहेजना विफल"
+    "saveFailedTitle": "सहेजना विफल",
+    "inspectionReadOnlyBanner": "निरीक्षण मोड — केवल पढ़ने के लिए",
+    "exitInspectionMode": "निरीक्षण मोड से बाहर निकलें",
+    "buyer": "खरीदार",
+    "unknownBuyer": "अज्ञात खरीदार",
+    "buyerLicenseInline": "खरीदार लाइसेंस/आईडी: {{value}}",
+    "sale": "बिक्री",
+    "occurredValue": "समय: {{value}}",
+    "locationValue": "स्थान: {{value}}",
+    "paymentValue": "भुगतान: {{value}}",
+    "paymentNoteOptional": "भुगतान नोट (वैकल्पिक)",
+    "totalValue": "कुल: ${{value}}",
+    "saveChanges": "परिवर्तन सहेजें",
+    "saving": "सहेजा जा रहा है...",
+    "lineItems": "लाइन आइटम",
+    "batchValue": "बैच: {{value}}",
+    "originValue": "स्रोत: {{value}}",
+    "caughtValue": "पकड़े जाने का समय: {{value}}",
+    "methodValue": "विधि: {{value}}",
+    "deleteSale": "बिक्री हटाएं",
+    "saleNotFound": "बिक्री नहीं मिली",
+    "saleNotFoundMessage": "यह बिक्री हटाई जा चुकी हो सकती है, या आपका स्थानीय स्टोरेज साफ़ किया गया हो।"
   },
   "inventory": {
     "title": "इन्वेंटरी",

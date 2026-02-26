@@ -177,13 +177,13 @@ export default function SaleDetailScreen() {
   if (!sale) {
     return (
       <View style={[styles.container, { backgroundColor: colors.bg, flex: 1, justifyContent: "center" }]}>
-        <Text style={[styles.h2, { color: colors.text }]}>Sale not found</Text>
+        <Text style={[styles.h2, { color: colors.text }]}>{t("sales.saleNotFound")}</Text>
         <Text style={[styles.muted, { color: colors.muted, marginTop: 6 }]}>
-          This sale may have been deleted, or your local storage was cleared.
+          {t("sales.saleNotFoundMessage")}
         </Text>
 
         <Pressable style={[styles.backBtn, { backgroundColor: "#111" }]} onPress={() => router.back()}>
-          <Text style={styles.backBtnText}>Back</Text>
+          <Text style={styles.backBtnText}>{t("common.back")}</Text>
         </Pressable>
       </View>
     );
@@ -204,7 +204,7 @@ export default function SaleDetailScreen() {
           {inspectionMode ? (
             <View style={styles.bannerWrap}>
               <View style={styles.banner}>
-                <Text style={styles.bannerText}>INSPECTION MODE — READ ONLY</Text>
+                <Text style={styles.bannerText}>{t("sales.inspectionReadOnlyBanner")}</Text>
               </View>
 
               <Pressable
@@ -215,73 +215,73 @@ export default function SaleDetailScreen() {
                   Alert.alert(t("compliance.inspectionOff"));
                 }}
               >
-                <Text style={styles.exitText}>Exit Inspection Mode</Text>
+                <Text style={styles.exitText}>{t("sales.exitInspectionMode")}</Text>
               </Pressable>
             </View>
           ) : null}
 
           <View style={[styles.card, { borderColor: colors.cardBorder, backgroundColor: colors.cardBg }]}>
-            <Text style={[styles.h2, { color: colors.text }]}>Buyer</Text>
+            <Text style={[styles.h2, { color: colors.text }]}>{t("sales.buyer")}</Text>
 
             {inspectionMode ? (
               <>
                 <Text style={[styles.bigValue, { color: colors.text }]}>
-                  {sale.buyerName || "Unknown buyer"}
+                  {sale.buyerName || t("sales.unknownBuyer")}
                 </Text>
                 <Text style={[styles.muted, { color: colors.muted }]}>
-                  {sale.buyerType || "OTHER"}
+                  {sale.buyerType ? t(`sales.buyerTypes.${sale.buyerType}`) : t("sales.buyerTypes.OTHER")}
                   {sale.buyerContact ? ` • ${sale.buyerContact}` : ""}
                 </Text>
                 {sale.buyerLicenseId ? (
                   <Text style={[styles.muted, { color: colors.muted }]}>
-                    Buyer License/ID: {sale.buyerLicenseId}
+                    {t("sales.buyerLicenseInline", { value: sale.buyerLicenseId })}
                   </Text>
                 ) : null}
               </>
             ) : (
               <>
-                <Text style={[styles.label, { color: colors.text }]}>Buyer name</Text>
+                <Text style={[styles.label, { color: colors.text }]}>{t("sales.buyerName")}</Text>
                 <TextInput
                   value={buyerName}
                   onChangeText={setBuyerName}
-                  placeholder="Joe’s Fish House"
+                  placeholder={t("sales.buyerNamePlaceholder")}
                   placeholderTextColor={colors.muted}
                   style={[styles.input, { borderColor: colors.cardBorder, color: colors.text, backgroundColor: colors.cardBg }]}
                 />
 
-                <Text style={[styles.label, { color: colors.text }]}>Buyer type</Text>
+                <Text style={[styles.label, { color: colors.text }]}>{t("sales.buyerType")}</Text>
                 <View style={styles.rowWrap}>
-                  {BUYER_TYPES.map((t) => (
+                  {BUYER_TYPES.map((buyerTypeOption) => (
                     <Pressable
-                      key={t}
-                      onPress={() => setBuyerType(t)}
+                      key={buyerTypeOption}
+                      onPress={() => setBuyerType(buyerTypeOption)}
                       style={[
                         styles.chip,
                         { borderColor: colors.cardBorder, backgroundColor: colors.cardBg },
-                        buyerType === t && { backgroundColor: colors.primary, borderColor: colors.primary },
+                        buyerType === buyerTypeOption && { backgroundColor: colors.primary, borderColor: colors.primary },
                       ]}
                     >
-                      <Text style={buyerType === t ? styles.chipTextOn : [styles.chipText, { color: colors.text }]}>
-                        {t}
+                      <Text style={buyerType === buyerTypeOption ? styles.chipTextOn : [styles.chipText, { color: colors.text }]}>
+                        {t(`sales.buyerTypes.${buyerTypeOption}`)}
                       </Text>
                     </Pressable>
                   ))}
                 </View>
 
-                <Text style={[styles.label, { color: colors.text }]}>Buyer contact (optional)</Text>
+                <Text style={[styles.label, { color: colors.text }]}>{t("sales.buyerContactOptional")}</Text>
                 <TextInput
                   value={buyerContact}
                   onChangeText={setBuyerContact}
-                  placeholder="phone or email"
+                  placeholder={t("sales.buyerContactPlaceholder")}
                   placeholderTextColor={colors.muted}
                   style={[styles.input, { borderColor: colors.cardBorder, color: colors.text, backgroundColor: colors.cardBg }]}
                 />
 
-                <Text style={[styles.label, { color: colors.text }]}>Buyer license / business ID (optional)</Text>
+                <Text style={[styles.label, { color: colors.text }]}>{t("sales.buyerLicenseOptional")}</Text>
                 <TextInput
                   value={buyerLicenseId}
                   onChangeText={setBuyerLicenseId}
-                  placeholder="License # / permit # / EIN"
+                  placeholder={t("sales.buyerLicensePlaceholder")}
                   placeholderTextColor={colors.muted}
                   style={[styles.input, { borderColor: colors.cardBorder, color: colors.text, backgroundColor: colors.cardBg }]}
                 />
@@ -290,48 +290,48 @@ export default function SaleDetailScreen() {
 
             <View style={[styles.hr, { backgroundColor: colors.cardBorder, opacity: mode === "DARK" ? 0.55 : 0.7 }]} />
 
-            <Text style={[styles.h2, { color: colors.text }]}>Sale</Text>
+            <Text style={[styles.h2, { color: colors.text }]}>{t("sales.sale")}</Text>
             <Text style={[styles.muted, { color: colors.muted }]}>
-              Occurred: {formatDateTime(sale.occurredAt, dateFormat)}
+              {t("sales.occurredValue", { value: formatDateTime(sale.occurredAt, dateFormat) })}
             </Text>
 
             {inspectionMode ? (
               <Text style={[styles.muted, { color: colors.muted }]}>
-                Location: {sale.saleLocationType || "—"}
+                {t("sales.locationValue", { value: sale.saleLocationType ? t(`sales.saleLocationTypes.${sale.saleLocationType}`) : "—" })}
                 {sale.saleLocationNote ? ` • ${sale.saleLocationNote}` : ""}
               </Text>
             ) : (
               <>
-                <Text style={[styles.label, { color: colors.text }]}>Sale location</Text>
+                <Text style={[styles.label, { color: colors.text }]}>{t("sales.saleLocation")}</Text>
                 <View style={styles.rowWrap}>
-                  {SALE_LOCATION_TYPES.map((t) => (
+                  {SALE_LOCATION_TYPES.map((saleLocationTypeOption) => (
                     <Pressable
-                      key={t}
-                      onPress={() => setSaleLocationType(t)}
+                      key={saleLocationTypeOption}
+                      onPress={() => setSaleLocationType(saleLocationTypeOption)}
                       style={[
                         styles.chip,
                         { borderColor: colors.cardBorder, backgroundColor: colors.cardBg },
-                        saleLocationType === t && { backgroundColor: colors.primary, borderColor: colors.primary },
+                        saleLocationType === saleLocationTypeOption && { backgroundColor: colors.primary, borderColor: colors.primary },
                       ]}
                     >
                       <Text
                         style={
-                          saleLocationType === t
+                          saleLocationType === saleLocationTypeOption
                             ? styles.chipTextOn
                             : [styles.chipText, { color: colors.text }]
                         }
                       >
-                        {t}
+                        {t(`sales.saleLocationTypes.${saleLocationTypeOption}`)}
                       </Text>
                     </Pressable>
                   ))}
                 </View>
 
-                <Text style={[styles.label, { color: colors.text }]}>Sale location note (optional)</Text>
+                <Text style={[styles.label, { color: colors.text }]}>{t("sales.saleLocationNoteOptional")}</Text>
                 <TextInput
                   value={saleLocationNote}
                   onChangeText={setSaleLocationNote}
-                  placeholder='e.g. "Busse Lake parking lot"'
+                  placeholder={t("sales.saleLocationNotePlaceholder")}
                   placeholderTextColor={colors.muted}
                   style={[styles.input, { borderColor: colors.cardBorder, color: colors.text, backgroundColor: colors.cardBg }]}
                 />
@@ -340,11 +340,11 @@ export default function SaleDetailScreen() {
 
             <View style={[styles.hr, { backgroundColor: colors.cardBorder, opacity: mode === "DARK" ? 0.55 : 0.7 }]} />
 
-            <Text style={[styles.h2, { color: colors.text }]}>Payment</Text>
+            <Text style={[styles.h2, { color: colors.text }]}>{t("sales.payment")}</Text>
 
             {inspectionMode ? (
               <Text style={[styles.muted, { color: colors.muted }]}>
-                Payment: {sale.paymentMethod}
+                {t("sales.paymentValue", { value: t(`sales.paymentMethods.${sale.paymentMethod}`) })}
                 {sale.paymentNote ? ` • ${sale.paymentNote}` : ""}
               </Text>
             ) : (
@@ -367,17 +367,17 @@ export default function SaleDetailScreen() {
                             : [styles.chipText, { color: colors.text }]
                         }
                       >
-                        {m}
+                        {t(`sales.paymentMethods.${m}`)}
                       </Text>
                     </Pressable>
                   ))}
                 </View>
 
-                <Text style={[styles.label, { color: colors.text }]}>Payment note (optional)</Text>
+                <Text style={[styles.label, { color: colors.text }]}>{t("sales.paymentNoteOptional")}</Text>
                 <TextInput
                   value={paymentNote}
                   onChangeText={setPaymentNote}
-                  placeholder="CashApp $handle, PayPal ref, etc."
+                  placeholder={t("sales.paymentNotePlaceholder")}
                   placeholderTextColor={colors.muted}
                   style={[styles.input, { borderColor: colors.cardBorder, color: colors.text, backgroundColor: colors.cardBg }]}
                 />
@@ -385,7 +385,7 @@ export default function SaleDetailScreen() {
             )}
 
             <Text style={[styles.total, { color: colors.text }]}>
-              Total: ${Number(computedTotal || 0).toFixed(2)}
+              {t("sales.totalValue", { value: Number(computedTotal || 0).toFixed(2) })}
             </Text>
 
             {!inspectionMode ? (
@@ -394,12 +394,12 @@ export default function SaleDetailScreen() {
                 onPress={saveEdits}
                 disabled={busy}
               >
-                <Text style={styles.saveText}>{busy ? "Saving..." : "Save Changes"}</Text>
+                <Text style={styles.saveText}>{busy ? t("sales.saving") : t("sales.saveChanges")}</Text>
               </Pressable>
             ) : null}
           </View>
 
-          <Text style={[styles.sectionTitle, { color: colors.text }]}>Line items</Text>
+          <Text style={[styles.sectionTitle, { color: colors.text }]}>{t("sales.lineItems")}</Text>
 
           {sale.lines.map((ln, idx) => (
             <View
@@ -410,24 +410,24 @@ export default function SaleDetailScreen() {
                 {ln.speciesName} — {ln.quantity} {ln.unit}
               </Text>
               <Text style={[styles.muted, { color: colors.muted }]}>
-                ${Number(ln.unitPrice).toFixed(2)} / {ln.unit} • Subtotal ${Number(ln.subtotal).toFixed(2)}
+                ${Number(ln.unitPrice).toFixed(2)} / {ln.unit} • {t("sales.subtotal")} ${Number(ln.subtotal).toFixed(2)}
               </Text>
 
               <View style={{ marginTop: 8 }}>
                 {(ln as any).originBatchId ? (
                   <Text style={[styles.muted, { color: colors.muted }]}>
-                    Batch: {(ln as any).originBatchId}
+                    {t("sales.batchValue", { value: (ln as any).originBatchId })}
                   </Text>
                 ) : null}
                 <Text style={[styles.muted, { color: colors.muted }]}>
-                  Origin: {ln.originCatchLocation || "—"}
+                  {t("sales.originValue", { value: ln.originCatchLocation || "—" })}
                 </Text>
                 <Text style={[styles.muted, { color: colors.muted }]}>
-                  Caught: {ln.originCaughtAt ? fmtWhen(ln.originCaughtAt) : "—"}
+                  {t("sales.caughtValue", { value: ln.originCaughtAt ? fmtWhen(ln.originCaughtAt) : "—" })}
                 </Text>
                 {ln.originCatchMethod ? (
                   <Text style={[styles.muted, { color: colors.muted }]}>
-                    Method: {ln.originCatchMethod}
+                    {t("sales.methodValue", { value: ln.originCatchMethod })}
                   </Text>
                 ) : null}
               </View>
@@ -436,7 +436,7 @@ export default function SaleDetailScreen() {
 
           {!inspectionMode ? (
             <Pressable style={styles.deleteBtn} onPress={confirmDelete}>
-              <Text style={styles.deleteText}>Delete Sale</Text>
+              <Text style={styles.deleteText}>{t("sales.deleteSale")}</Text>
             </Pressable>
           ) : null}
 

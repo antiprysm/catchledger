@@ -6,7 +6,9 @@
     "unknown": "未知",
     "yes": "是",
     "no": "否",
-    "cannotBeUndone": "此操作无法撤销。"
+    "cannotBeUndone": "此操作无法撤销。",
+    "loading": "加载中...",
+    "back": "返回"
   },
   "lock": {
     "title": "应用已锁定",
@@ -233,7 +235,28 @@
     "deleteSaleTitle": "删除销售记录？",
     "savedTitle": "已保存",
     "saleUpdatedMessage": "销售记录已更新。",
-    "saveFailedTitle": "保存失败"
+    "saveFailedTitle": "保存失败",
+    "inspectionReadOnlyBanner": "检查模式——只读",
+    "exitInspectionMode": "退出检查模式",
+    "buyer": "买家",
+    "unknownBuyer": "未知买家",
+    "buyerLicenseInline": "买家许可证/ID：{{value}}",
+    "sale": "销售",
+    "occurredValue": "发生时间：{{value}}",
+    "locationValue": "地点：{{value}}",
+    "paymentValue": "付款：{{value}}",
+    "paymentNoteOptional": "付款备注（可选）",
+    "totalValue": "总计：${{value}}",
+    "saveChanges": "保存更改",
+    "saving": "保存中...",
+    "lineItems": "销售明细",
+    "batchValue": "批次：{{value}}",
+    "originValue": "来源：{{value}}",
+    "caughtValue": "捕获时间：{{value}}",
+    "methodValue": "方式：{{value}}",
+    "deleteSale": "删除销售",
+    "saleNotFound": "未找到销售记录",
+    "saleNotFoundMessage": "此销售记录可能已被删除，或本地存储已被清除。"
   },
   "inventory": {
     "title": "库存",

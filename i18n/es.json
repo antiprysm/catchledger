@@ -6,7 +6,9 @@
     "unknown": "Desconocido",
     "yes": "Sí",
     "no": "No",
-    "cannotBeUndone": "Esto no se puede deshacer."
+    "cannotBeUndone": "Esto no se puede deshacer.",
+    "loading": "Cargando...",
+    "back": "Volver"
   },
   "lock": {
     "title": "CatchLedger bloqueado",
@@ -233,7 +235,28 @@
     "deleteSaleTitle": "¿Eliminar venta?",
     "savedTitle": "Guardado",
     "saleUpdatedMessage": "Venta actualizada.",
-    "saveFailedTitle": "Error al guardar"
+    "saveFailedTitle": "Error al guardar",
+    "inspectionReadOnlyBanner": "MODO DE INSPECCIÓN — SOLO LECTURA",
+    "exitInspectionMode": "Salir del modo de inspección",
+    "buyer": "Comprador",
+    "unknownBuyer": "Comprador desconocido",
+    "buyerLicenseInline": "Licencia/ID del comprador: {{value}}",
+    "sale": "Venta",
+    "occurredValue": "Ocurrió: {{value}}",
+    "locationValue": "Ubicación: {{value}}",
+    "paymentValue": "Pago: {{value}}",
+    "paymentNoteOptional": "Nota de pago (opcional)",
+    "totalValue": "Total: ${{value}}",
+    "saveChanges": "Guardar cambios",
+    "saving": "Guardando...",
+    "lineItems": "Partidas",
+    "batchValue": "Lote: {{value}}",
+    "originValue": "Origen: {{value}}",
+    "caughtValue": "Capturado: {{value}}",
+    "methodValue": "Método: {{value}}",
+    "deleteSale": "Eliminar venta",
+    "saleNotFound": "Venta no encontrada",
+    "saleNotFoundMessage": "Esta venta puede haber sido eliminada o el almacenamiento local fue limpiado."
   },
   "inventory": {
     "title": "Inventario",

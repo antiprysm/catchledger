@@ -112,7 +112,7 @@ export default function EditExpenseScreen() {
   if (!loaded) {
     return (
       <View style={[styles.loading, { backgroundColor: colors.bg }]}>
-        <Text style={{ color: colors.text }}>Loading...</Text>
+        <Text style={{ color: colors.text }}>{t("common.loading")}</Text>
       </View>
     );
   }
@@ -129,14 +129,14 @@ export default function EditExpenseScreen() {
         keyboardDismissMode="on-drag"
       >
         <Pressable onPress={Keyboard.dismiss} style={{ gap: 10 }}>
-          <Text style={[styles.title, { color: colors.text }]}>Edit Expense</Text>
+          <Text style={[styles.title, { color: colors.text }]}>{t("expenses.editExpense")}</Text>
 
-          <Text style={[styles.label, { color: colors.text }]}>Amount</Text>
+          <Text style={[styles.label, { color: colors.text }]}>{t("expenses.amount")}</Text>
           <TextInput
             value={amount}
             onChangeText={setAmount}
             keyboardType="decimal-pad"
-            placeholder="25.00"
+            placeholder={t("expenses.amountPlaceholder")}
             placeholderTextColor={colors.muted}
             style={[
               styles.input,
@@ -144,7 +144,7 @@ export default function EditExpenseScreen() {
             ]}
           />
 
-          <Text style={[styles.label, { color: colors.text }]}>Category</Text>
+          <Text style={[styles.label, { color: colors.text }]}>{t("expenses.category")}</Text>
           <View style={styles.rowWrap}>
             {CATS.map((c) => {
               const on = category === c;
@@ -159,14 +159,14 @@ export default function EditExpenseScreen() {
                   ]}
                 >
                   <Text style={[{ color: colors.text }, on && styles.chipTextOn]}>
-                    {c}
+                    {t(`expenses.categories.${c}`)}
                   </Text>
                 </Pressable>
               );
             })}
           </View>
 
-          <Text style={[styles.label, { color: colors.text }]}>Date/time</Text>
+          <Text style={[styles.label, { color: colors.text }]}>{t("expenses.dateTime")}</Text>
           <Pressable
             onPress={() => setShowPicker(true)}
             style={[
@@ -177,11 +177,11 @@ export default function EditExpenseScreen() {
             <Text style={{ color: colors.text }}>{occurredAt.toLocaleString()}</Text>
           </Pressable>
 
-          <Text style={[styles.label, { color: colors.text }]}>Note (optional)</Text>
+          <Text style={[styles.label, { color: colors.text }]}>{t("expenses.noteOptional")}</Text>
           <TextInput
             value={note}
             onChangeText={setNote}
-            placeholder="Gas station, dock fee, etc."
+            placeholder={t("expenses.notePlaceholder")}
             placeholderTextColor={colors.muted}
             style={[
               styles.input,
@@ -191,12 +191,12 @@ export default function EditExpenseScreen() {
 
           {/* keep black */}
           <Pressable onPress={onSave} style={styles.saveBtn}>
-            <Text style={styles.saveBtnText}>Save Changes</Text>
+            <Text style={styles.saveBtnText}>{t("expenses.saveExpense")}</Text>
           </Pressable>
 
           {/* keep red */}
           <Pressable onPress={onDelete} style={styles.deleteBtn}>
-            <Text style={styles.deleteBtnText}>Delete</Text>
+            <Text style={styles.deleteBtnText}>{t("common.delete")}</Text>
           </Pressable>
         </Pressable>
 
@@ -214,7 +214,7 @@ export default function EditExpenseScreen() {
               ]}
               onPress={() => {}}
             >
-              <Text style={[styles.pickerTitle, { color: colors.text }]}>Expense date</Text>
+              <Text style={[styles.pickerTitle, { color: colors.text }]}>{t("expenses.expenseDate")}</Text>
 
               <DateTimePicker
                 value={occurredAt}
@@ -228,7 +228,7 @@ export default function EditExpenseScreen() {
 
               {Platform.OS === "ios" && (
                 <Pressable style={styles.doneBtn} onPress={() => setShowPicker(false)}>
-                  <Text style={styles.doneBtnText}>Done</Text>
+                  <Text style={styles.doneBtnText}>{t("expenses.done")}</Text>
                 </Pressable>
               )}
             </Pressable>
