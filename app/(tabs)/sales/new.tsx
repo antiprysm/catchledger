@@ -17,10 +17,10 @@ import {
 } from "react-native";
 
 import { STORAGE_KEYS } from "@/constants/storageKeys";
-import { applyDateFormat, loadAppSettings, weightUnitLabel } from "@/utils/appSettings";
-import { DEFAULT_APP_SETTINGS, type AppSettings } from "@/types/settings";
 import { InventoryItem } from "@/types/inventory";
 import { BuyerType, PaymentMethod, Sale, SaleLine } from "@/types/sales";
+import { DEFAULT_APP_SETTINGS, type AppSettings } from "@/types/settings";
+import { applyDateFormat, loadAppSettings, weightUnitLabel } from "@/utils/appSettings";
 import { initNotifications } from "@/utils/notifications";
 import { loadJSON, saveJSON } from "@/utils/storage";
 
@@ -63,50 +63,68 @@ export default function NewSaleScreen() {
   const [saleLocationNote, setSaleLocationNote] = useState("");
   const [settings, setSettings] = useState<AppSettings>(DEFAULT_APP_SETTINGS);
 
-  const resetForm = useCallback((appSettings?: AppSettings) => {
-    const active = appSettings ?? settings;
+  const [isReady, setIsReady] = useState(false);
+
+  const resetForm = useCallback((active: AppSettings) => {
     setLines([]);
-    setPaymentMethod(active.defaultPaymentMethod === "Cash" ? "CASH" : active.defaultPaymentMethod === "Card" ? "CARD" : active.defaultPaymentMethod === "Check" ? "CHECK" : "BANK_TRANSFER");
+    setPaymentMethod(
+      active.defaultPaymentMethod === "Cash" ? "CASH"
+      : active.defaultPaymentMethod === "Card" ? "CARD"
+      : active.defaultPaymentMethod === "Check" ? "CHECK"
+      : "BANK_TRANSFER"
+    );
     setPaymentNote("");
     setBuyerName("");
-    setBuyerType(active.defaultBuyerType === "Restaurant" ? "RESTAURANT" : active.defaultBuyerType === "Retail" ? "MARKET" : "OTHER");
+    setBuyerType(
+      active.defaultBuyerType === "Restaurant" ? "RESTAURANT"
+      : active.defaultBuyerType === "Retail" ? "MARKET"
+      : "OTHER"
+    );
     setBuyerContact("");
     setBuyerLicenseId("");
     setSaleLocationType("TRUCK");
     setSaleLocationNote("");
-  }, [settings]);
+  }, []);
 
   const loadAll = useCallback(() => {
     let mounted = true;
-
+    setIsReady(false);
+  
     Promise.all([
       loadJSON<InventoryItem[]>(STORAGE_KEYS.INVENTORY, []),
       loadJSON<boolean>(STORAGE_KEYS.INSPECTION_MODE, false),
       loadAppSettings(),
     ]).then(([inv, mode, appSettings]) => {
       if (!mounted) return;
-
+  
       setInventory(inv);
       setInspectionMode(!!mode);
       setSettings(appSettings);
-
+  
       if (mode) {
-        Alert.alert(
-          t("sales.inspectionModeTitle"),
-          t("sales.inspectionModeDisabledMessage")
-        );
+        Alert.alert(t("sales.inspectionModeTitle"), t("sales.inspectionModeDisabledMessage"));
         router.replace("/(tabs)/sales");
-      } else {
-        resetForm(appSettings);
+        return;
       }
+  
+      resetForm(appSettings);
+      setIsReady(true);
     });
-
+  
     return () => {
       mounted = false;
     };
-  }, [resetForm]);
+  }, [resetForm, t, router]);
 
   useFocusEffect(loadAll);
+
+  if (!isReady) {
+    return (
+      <View style={{ flex: 1, backgroundColor: colors.bg, alignItems: "center", justifyContent: "center" }}>
+        <Text style={{ color: colors.muted, fontWeight: "800" }}>{t("common.loading")}</Text>
+      </View>
+    );
+  }
 
   const total = useMemo(() => lines.reduce((sum, l) => sum + l.subtotal, 0), [lines]);
 
@@ -233,8 +251,12 @@ export default function NewSaleScreen() {
 
     const existingSales = await loadJSON<Sale[]>(STORAGE_KEYS.SALES, []);
     await saveJSON(STORAGE_KEYS.SALES, [sale, ...existingSales]);
-
-    resetForm();
+    console.log("[new-sale] resetForm called", {
+      t: Date.now(),
+      reason: "FOCUS_EFFECT" // label each call site
+    });
+    console.log("[new-sale] render", Date.now());
+    resetForm(settings);
     await initNotifications().catch(() => undefined);
     router.replace("/(tabs)/sales");
   }
