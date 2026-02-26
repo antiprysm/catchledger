@@ -349,9 +349,9 @@ export default function SettingsScreen() {
     
           <Card colors={colors} title={t("settings.aboutLegal")}>
             <Text style={[styles.metaText, { color: colors.text }]}>{t("settings.appVersion", { version: appVersion })}</Text>
-            <Pressable onPress={() => Linking.openURL("https://example.com/privacy")}><Text style={[styles.link, { color: colors.primary }]}>{t("settings.privacyPolicy")}</Text></Pressable>
-            <Pressable onPress={() => Linking.openURL("https://example.com/terms")}><Text style={[styles.link, { color: colors.primary }]}>{t("settings.terms")}</Text></Pressable>
-            <Pressable onPress={() => Linking.openURL("mailto:support@catchledger.app")}><Text style={[styles.link, { color: colors.primary }]}>{t("settings.contactSupport")}</Text></Pressable>
+            <Pressable onPress={() => Linking.openURL("https://hambungle.com/privacy/?app=catchledger#catchledger")}><Text style={[styles.link, { color: colors.primary }]}>{t("settings.privacyPolicy")}</Text></Pressable>
+            <Pressable onPress={() => Linking.openURL("https://hambungle.com/terms/")}><Text style={[styles.link, { color: colors.primary }]}>{t("settings.terms")}</Text></Pressable>
+            <Pressable onPress={() => Linking.openURL("hello@hambungle.com")}><Text style={[styles.link, { color: colors.primary }]}>{t("settings.contactSupport")}</Text></Pressable>
             {!!settings.lastSyncedAt && <Text style={[styles.metaText, { color: colors.muted }]}>{t("settings.lastSynced", { time: new Date(settings.lastSyncedAt).toLocaleString() })}</Text>}
           </Card>
         </ScrollView>
