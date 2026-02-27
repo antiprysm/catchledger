@@ -2,7 +2,7 @@
   "expo": {
     "name": "CatchLedger",
     "slug": "catchledger",
-    "version": "1.0.5",
+    "version": "1.0.6",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "catchledger",
@@ -27,7 +27,7 @@
       "icon": "./assets/images/androidicon.png",
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
-      "versionCode": 5
+      "versionCode": 6
     },
     "web": {
       "output": "static",

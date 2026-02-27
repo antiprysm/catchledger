@@ -351,7 +351,7 @@ export default function SettingsScreen() {
             <Text style={[styles.metaText, { color: colors.text }]}>{t("settings.appVersion", { version: appVersion })}</Text>
             <Pressable onPress={() => Linking.openURL("https://hambungle.com/privacy/?app=catchledger#catchledger")}><Text style={[styles.link, { color: colors.primary }]}>{t("settings.privacyPolicy")}</Text></Pressable>
             <Pressable onPress={() => Linking.openURL("https://hambungle.com/terms/")}><Text style={[styles.link, { color: colors.primary }]}>{t("settings.terms")}</Text></Pressable>
-            <Pressable onPress={() => Linking.openURL("hello@hambungle.com")}><Text style={[styles.link, { color: colors.primary }]}>{t("settings.contactSupport")}</Text></Pressable>
+            <Pressable onPress={() => Linking.openURL("mailto:hello@hambungle.com")}><Text style={[styles.link, { color: colors.primary }]}>{t("settings.contactSupport")}</Text></Pressable>
             {!!settings.lastSyncedAt && <Text style={[styles.metaText, { color: colors.muted }]}>{t("settings.lastSynced", { time: new Date(settings.lastSyncedAt).toLocaleString() })}</Text>}
           </Card>
         </ScrollView>
