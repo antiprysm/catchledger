@@ -47,7 +47,12 @@ export default function SettingsScreen() {
   useEffect(() => {
     Promise.all([loadAppSettings(), getPasscode()])
       .then(([stored, storedPasscode]) => {
-        setSettings(stored);
+        const activeLanguage = i18n.language.split("-")[0] as SupportedLanguage;
+        const normalizedSettings = stored.language === activeLanguage
+          ? stored
+          : { ...stored, language: activeLanguage };
+
+        setSettings(normalizedSettings);
         setHasSavedPasscode(Boolean(storedPasscode));
       });
   }, []);
