@@ -1,9 +1,9 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Redirect } from "expo-router";
 import { useEffect, useState } from "react";
-import { I18nManager } from "react-native";
+import { View } from "react-native";
 
-import i18n from "@/i18n";
+import { applyLanguage, ensureI18nInitialized, type SupportedLanguage } from "@/i18n";
 import { getInitialLanguage } from "@/utils/getInitialLanguage";
 import { getSavedLanguage, saveLanguage } from "@/utils/languageStorage";
 
@@ -14,22 +14,15 @@ export default function Index() {
 
   useEffect(() => {
     async function initializeApp() {
+      await ensureI18nInitialized();
+
       const savedLanguage = await getSavedLanguage();
 
       if (savedLanguage) {
-        await i18n.changeLanguage(savedLanguage);
+        await applyLanguage(savedLanguage as SupportedLanguage);
       } else {
-        const detectedLanguage = getInitialLanguage();
-
-        if (detectedLanguage === "ar") {
-          I18nManager.allowRTL(true);
-          I18nManager.forceRTL(true);
-        } else {
-          I18nManager.allowRTL(false);
-          I18nManager.forceRTL(false);
-        }
-
-        await i18n.changeLanguage(detectedLanguage);
+        const detectedLanguage = getInitialLanguage() as SupportedLanguage;
+        await applyLanguage(detectedLanguage);
         await saveLanguage(detectedLanguage);
       }
 
@@ -40,7 +33,9 @@ export default function Index() {
     initializeApp();
   }, []);
 
-  if (!target) return null;
+  if (!target) {
+    return <View style={{ flex: 1, backgroundColor: "#FFFFFF" }} />;
+  }
 
   return <Redirect href={target as any} />;
 }

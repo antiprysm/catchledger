@@ -1,6 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
     Animated,
     Easing,
@@ -30,31 +31,30 @@ export default function OnboardingScreen() {
   const isSmallPhone = height < 760;
   const insets = useSafeAreaInsets();
   const listRef = useRef<FlatList<Slide>>(null);
+  const { t } = useTranslation();
 
   const slides = useMemo<Slide[]>(
     () => [
       {
         key: "s1",
-        title: "Track Your Catch Sales",
-        description:
-          "Add your fish to inventory and keep clean records of what you sell.",
+        title: t("onboarding.s1Title"),
+        description: t("onboarding.s1Description"),
         image: require("../assets/onboarding/01.png"),
       },
       {
         key: "s2",
-        title: "Add Inventory → Record Sales",
-        description: "Log your catch, then record each sale in seconds.",
+        title: t("onboarding.s2Title"),
+        description: t("onboarding.s2Description"),
         image: require("../assets/onboarding/02.png"),
       },
       {
         key: "s3",
-        title: "Works Offline",
-        description:
-          "No signal? No problem. Your entries save on-device and are ready when you need them.",
+        title: t("onboarding.s3Title"),
+        description: t("onboarding.s3Description"),
         image: require("../assets/onboarding/03.png"),
       },
     ],
-    []
+    [t]
   );
 
   const [index, setIndex] = useState(0);
@@ -250,7 +250,7 @@ export default function OnboardingScreen() {
 
           {!isLast ? (
             <Pressable style={styles.skipBtn} onPress={finish}>
-              <Text style={styles.skipText}>Skip</Text>
+              <Text style={styles.skipText}>{t("common.skip")}</Text>
             </Pressable>
           ) : (
             <View style={styles.skipPlaceholder} />
@@ -264,7 +264,7 @@ export default function OnboardingScreen() {
         </View>
 
         <Text style={styles.stepText}>
-          {index + 1} of {slides.length}
+            {t("onboarding.stepCounter", { current: index + 1, total: slides.length })}
         </Text>
       </View>
 
@@ -307,13 +307,8 @@ export default function OnboardingScreen() {
             onPress={() => scrollTo(Math.max(index - 1, 0))}
             disabled={index === 0}
           >
-            <Text
-              style={[
-                styles.btnSecondaryText,
-                index === 0 && styles.btnDisabledText,
-              ]}
-            >
-              Back
+            <Text style={styles.btnSecondaryText}>
+                {t("common.back")}
             </Text>
           </Pressable>
 
@@ -322,7 +317,7 @@ export default function OnboardingScreen() {
             onPress={() => (isLast ? finish() : scrollTo(index + 1))}
           >
             <Text style={styles.btnPrimaryText}>
-              {isLast ? "Get Started" : "Next"}
+                {isLast ? t("onboarding.getStarted") : t("common.next")}
             </Text>
           </Pressable>
         </View>
