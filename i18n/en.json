@@ -8,7 +8,19 @@
     "no": "No",
     "cannotBeUndone": "This cannot be undone.",
     "loading": "Loading...",
-    "back": "Back"
+    "back": "Back",
+    "skip": "Skip",
+    "next": "Next"
+  },
+  "onboarding": {
+    "s1Title": "Track Your Catch Sales",
+    "s1Description": "Add your fish to inventory and keep clean records of what you sell.",
+    "s2Title": "Add Inventory → Record Sales",
+    "s2Description": "Log your catch, then record each sale in seconds.",
+    "s3Title": "Works Offline",
+    "s3Description": "No signal? No problem. Your entries save on-device and are ready when you need them.",
+    "getStarted": "Get Started",
+    "stepCounter": "{{current}} of {{total}}"
   },
   "lock": {
     "title": "CatchLedger Locked",

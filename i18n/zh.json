@@ -8,7 +8,19 @@
     "no": "否",
     "cannotBeUndone": "此操作无法撤销。",
     "loading": "加载中...",
-    "back": "返回"
+    "back": "返回",
+    "skip": "跳过",
+    "next": "下一步"
+  },
+  "onboarding": {
+    "s1Title": "跟踪你的渔获销售",
+    "s1Description": "将鱼货添加到库存中，并清晰记录你的销售情况。",
+    "s2Title": "添加库存 → 记录销售",
+    "s2Description": "先记录你的渔获，然后在几秒内登记每一笔销售。",
+    "s3Title": "离线也能使用",
+    "s3Description": "没有信号？没问题。你的记录会保存在设备上，随时可用。",
+    "getStarted": "开始使用",
+    "stepCounter": "第 {{current}} / {{total}} 步"
   },
   "lock": {
     "title": "应用已锁定",

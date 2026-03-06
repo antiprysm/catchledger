@@ -5,6 +5,7 @@ import { View } from "react-native";
 
 import { applyLanguage, ensureI18nInitialized, type SupportedLanguage } from "@/i18n";
 import { getInitialLanguage } from "@/utils/getInitialLanguage";
+import { loadAppSettings, saveAppSettings } from "@/utils/appSettings";
 import { getSavedLanguage, saveLanguage } from "@/utils/languageStorage";
 
 const ONBOARDING_KEY = "catchledger_onboarding_done_v1";
@@ -24,6 +25,8 @@ export default function Index() {
         const detectedLanguage = getInitialLanguage() as SupportedLanguage;
         await applyLanguage(detectedLanguage);
         await saveLanguage(detectedLanguage);
+        const settings = await loadAppSettings();
+        await saveAppSettings({ ...settings, language: detectedLanguage });
       }
 
       const done = await AsyncStorage.getItem(ONBOARDING_KEY);
