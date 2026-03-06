@@ -254,7 +254,7 @@ export default function SettingsScreen() {
             value={themeSwitchValue}
             onValueChange={(isDark) => {
               setThemeSwitchValue(isDark);
-              void setMode(isDark ? "DARK" : "LIGHT");
+              setMode(isDark ? "DARK" : "LIGHT");
             }}
           />
           </Card>
