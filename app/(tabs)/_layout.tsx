@@ -80,7 +80,6 @@ export default function TabLayout() {
         name="settings"
         options={{
           title: t("tabs.settings"),
-          headerShown: false,
           tabBarIcon: ({ color }) => (
             <IconSymbol name="gearshape.fill" color={color} size={24} />
           ),

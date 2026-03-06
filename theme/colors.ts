@@ -34,19 +34,39 @@ export const nauticalNight = {
   tabInactive: "#8198AF",
 } as const;
 
-// Backward-compatible aliases for existing usage.
-export const LightColors = {
+export const LightColors: AppColors = {
   ...nauticalDay,
   muted: nauticalDay.mutedText,
   cardBorder: nauticalDay.border,
   cardBg: nauticalDay.surface,
-} as const;
+};
 
-export const DarkColors = {
+export const DarkColors: AppColors = {
   ...nauticalNight,
   muted: nauticalNight.mutedText,
   cardBorder: nauticalNight.border,
   cardBg: nauticalNight.surface,
-} as const;
+};
 
-export type AppColors = typeof LightColors;
+export type AppColors = {
+  bg: string;
+  surface: string;
+  surface2: string;
+  text: string;
+  mutedText: string;
+  primary: string;
+  primaryMuted: string;
+  border: string;
+  danger: string;
+  success: string;
+  warning: string;
+  shadow: string;
+  tabBarBg: string;
+  tabActive: string;
+  tabInactive: string;
+
+  // aliases used elsewhere
+  muted: string;
+  cardBorder: string;
+  cardBg: string;
+};

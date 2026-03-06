@@ -29,7 +29,12 @@ const LANGUAGES: Choice<AppSettings["language"]>[] = [
 ];
 
 export default function SettingsScreen() {
-  const { colors, mode, toggle } = useContext(ThemeContext);
+  const { colors, mode, setMode } = useContext(ThemeContext);
+  const [themeSwitchValue, setThemeSwitchValue] = useState(mode === "DARK");
+
+  useEffect(() => {
+    setThemeSwitchValue(mode === "DARK");
+  }, [mode]);
   const { t } = useTranslation();
   const [settings, setSettings] = useState<AppSettings>(DEFAULT_APP_SETTINGS);
   const [hasSavedPasscode, setHasSavedPasscode] = useState(false);
@@ -243,11 +248,14 @@ export default function SettingsScreen() {
 
       <Card colors={colors} title={t("settings.appearance")}>
         <ToggleRow
-          colors={colors}
-          title={t("settings.nightMode")}
-          subtitle={t("settings.nightModeSubtitle")}
-          value={mode === "DARK"}
-          onValueChange={toggle}
+            colors={colors}
+            title={t("settings.nightMode")}
+            subtitle={t("settings.nightModeSubtitle")}
+            value={themeSwitchValue}
+            onValueChange={(isDark) => {
+              setThemeSwitchValue(isDark);
+              void setMode(isDark ? "DARK" : "LIGHT");
+            }}
           />
           </Card>
     
