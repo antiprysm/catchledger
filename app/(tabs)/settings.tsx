@@ -1,10 +1,10 @@
 import i18n, { applyLanguage, type SupportedLanguage } from "@/i18n";
 import { ThemeContext } from "@/theme/ThemeProvider";
 import { DEFAULT_APP_SETTINGS, type AppSettings } from "@/types/settings";
-import { exportFullBackup, restoreFullBackup } from "@/utils/backup";
-import { ensureBiometricToken, getPasscode, setPasscode as persistPasscode } from "@/utils/security";
-
 import { loadAppSettings, saveAppSettings } from "@/utils/appSettings";
+import { exportFullBackup, restoreFullBackup } from "@/utils/backup";
+import { saveLanguage } from "@/utils/languageStorage";
+import { ensureBiometricToken, getPasscode, setPasscode as persistPasscode } from "@/utils/security";
 import Constants from "expo-constants";
 import * as DocumentPicker from "expo-document-picker";
 import { Image } from "expo-image";
@@ -164,11 +164,12 @@ export default function SettingsScreen() {
         return next;
       });
     });
-
+  
     await saveAppSettings(nextSettings);
-
+    await saveLanguage(language);
+  
     const { shouldShowRtlRestartPrompt } = await applyLanguage(language);
-
+  
     if (shouldShowRtlRestartPrompt) {
       Alert.alert(t("settings.language"), t("settings.languageChangedRestart"));
     }
