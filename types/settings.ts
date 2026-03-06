@@ -65,10 +65,10 @@ export const DEFAULT_APP_SETTINGS: AppSettings = {
   autoSync: true,
   lastSyncedAt: "",
 
-  deliveryReminders: true,
-  paymentReminders: true,
-  lowInventoryAlerts: true,
-  expiringProductAlerts: true,
+  deliveryReminders: false,
+  paymentReminders: false,
+  lowInventoryAlerts: false,
+  expiringProductAlerts: false,
 
   defaultBuyerType: "Wholesale",
   defaultPaymentMethod: "Cash",
