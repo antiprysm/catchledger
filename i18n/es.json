@@ -8,7 +8,19 @@
     "no": "No",
     "cannotBeUndone": "Esto no se puede deshacer.",
     "loading": "Cargando...",
-    "back": "Volver"
+    "back": "Volver",
+    "skip": "Saltar",
+    "next": "Siguiente"
+  },
+  "onboarding": {
+    "s1Title": "Lleva el control de tus ventas de pesca",
+    "s1Description": "Agrega tu pescado al inventario y mantén registros claros de lo que vendes.",
+    "s2Title": "Agregar inventario → Registrar ventas",
+    "s2Description": "Registra tu captura y luego anota cada venta en segundos.",
+    "s3Title": "Funciona sin conexión",
+    "s3Description": "¿Sin señal? No hay problema. Tus registros se guardan en el dispositivo y estarán listos cuando los necesites.",
+    "getStarted": "Comenzar",
+    "stepCounter": "{{current}} de {{total}}"
   },
   "lock": {
     "title": "CatchLedger bloqueado",
