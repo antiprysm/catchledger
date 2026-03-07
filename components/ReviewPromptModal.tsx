@@ -1,4 +1,5 @@
 import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
+import { useTranslation } from "react-i18next";
 
 type ReviewPromptModalProps = {
   visible: boolean;
@@ -17,6 +18,8 @@ export default function ReviewPromptModal({
   onReportBug,
   onClose,
 }: ReviewPromptModalProps) {
+  const { t } = useTranslation();
+
   return (
     <Modal
       visible={visible}
@@ -26,26 +29,26 @@ export default function ReviewPromptModal({
     >
       <View style={styles.backdrop}>
         <View style={styles.card}>
-          <Text style={styles.title}>How’s CatchLedger working for you?</Text>
+          <Text style={styles.title}>{t("reviewPrompt.title")}</Text>
 
           <Pressable style={styles.primaryButton} onPress={onLove}>
-            <Text style={styles.primaryButtonText}>Loving it</Text>
+            <Text style={styles.primaryButtonText}>{t("reviewPrompt.love")}</Text>
           </Pressable>
 
           <Pressable style={styles.secondaryButton} onPress={onOkay}>
-            <Text style={styles.secondaryButtonText}>It’s okay</Text>
+            <Text style={styles.secondaryButtonText}>{t("reviewPrompt.okay")}</Text>
           </Pressable>
 
           <Pressable style={styles.secondaryButton} onPress={onNotForMe}>
-            <Text style={styles.secondaryButtonText}>Not for me right now</Text>
+            <Text style={styles.secondaryButtonText}>{t("reviewPrompt.notForMe")}</Text>
           </Pressable>
 
           <Pressable style={styles.linkButton} onPress={onReportBug}>
-            <Text style={styles.linkButtonText}>Report a bug</Text>
+            <Text style={styles.linkButtonText}>{t("reviewPrompt.reportBug")}</Text>
           </Pressable>
 
           <Pressable style={styles.closeButton} onPress={onClose}>
-            <Text style={styles.closeButtonText}>Not now</Text>
+            <Text style={styles.closeButtonText}>{t("reviewPrompt.notNow")}</Text>
           </Pressable>
         </View>
       </View>

@@ -520,5 +520,13 @@
     "licenseForState": "{{state}} के लिए लाइसेंस",
     "nothingToExportTitle": "निर्यात हेतु कुछ नहीं",
     "sharingNotAvailable": "इस डिवाइस पर शेयरिंग उपलब्ध नहीं है।"
+  },
+  "reviewPrompt": {
+    "title": "CatchLedger आपके लिए कैसा काम कर रहा है?",
+    "love": "बहुत पसंद आ रहा है",
+    "okay": "ठीक है",
+    "notForMe": "अभी मेरे लिए नहीं है",
+    "reportBug": "बग की रिपोर्ट करें",
+    "notNow": "अभी नहीं"
   }
 }
