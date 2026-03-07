@@ -1,17 +1,12 @@
-import {
-    Modal,
-    Pressable,
-    StyleSheet,
-    Text,
-    View,
-} from "react-native";
+import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
+import * as Linking from "expo-linking";
 
 type ReviewPromptModalProps = {
   visible: boolean;
-  onLove: () => void | Promise<void>;
-  onOkay: () => void | Promise<void>;
-  onNotForMe: () => void | Promise<void>;
-  onReportBug: () => void | Promise<void>;
+  onLove: () => void;
+  onOkay: () => void;
+  onNotForMe: () => void;
+  onReportBug: () => void;
   onClose: () => void;
 };
 
@@ -23,37 +18,69 @@ export default function ReviewPromptModal({
   onReportBug,
   onClose,
 }: ReviewPromptModalProps) {
+  const handleLove = () => {
+    void Linking.openURL(
+      "https://hambungle.com/feedback?source=catchledger&type=general",
+    );
+    onLove();
+  };
+
+  const handleOkay = () => {
+    void Linking.openURL(
+      "https://hambungle.com/feedback?source=catchledger&type=improvement",
+    );
+    onOkay();
+  };
+
+  const handleNotForMe = () => {
+    void Linking.openURL(
+      "https://hambungle.com/feedback?source=catchledger&type=improvement",
+    );
+    onNotForMe();
+  };
+
+  const handleReportBug = () => {
+    void Linking.openURL(
+      "https://hambungle.com/feedback?source=catchledger&type=bug",
+    );
+    onReportBug();
+  };
+
+  const handleClose = () => {
+    void Linking.openURL(
+      "https://hambungle.com/feedback?source=catchledger&type=general",
+    );
+    onClose();
+  };
+
   return (
     <Modal
       visible={visible}
       transparent
       animationType="fade"
-      onRequestClose={onClose}
+      onRequestClose={handleClose}
     >
       <View style={styles.backdrop}>
         <View style={styles.card}>
           <Text style={styles.title}>How’s CatchLedger working for you?</Text>
-          <Text style={styles.subtitle}>
-            Your feedback helps us improve the app for everyone.
-          </Text>
 
-          <Pressable style={styles.primaryButton} onPress={onLove}>
+          <Pressable style={styles.primaryButton} onPress={handleLove}>
             <Text style={styles.primaryButtonText}>Loving it</Text>
           </Pressable>
 
-          <Pressable style={styles.secondaryButton} onPress={onOkay}>
+          <Pressable style={styles.secondaryButton} onPress={handleOkay}>
             <Text style={styles.secondaryButtonText}>It’s okay</Text>
           </Pressable>
 
-          <Pressable style={styles.secondaryButton} onPress={onNotForMe}>
+          <Pressable style={styles.secondaryButton} onPress={handleNotForMe}>
             <Text style={styles.secondaryButtonText}>Not for me right now</Text>
           </Pressable>
 
-          <Pressable style={styles.linkButton} onPress={onReportBug}>
+          <Pressable style={styles.linkButton} onPress={handleReportBug}>
             <Text style={styles.linkButtonText}>Report a bug</Text>
           </Pressable>
 
-          <Pressable style={styles.closeButton} onPress={onClose}>
+          <Pressable style={styles.closeButton} onPress={handleClose}>
             <Text style={styles.closeButtonText}>Not now</Text>
           </Pressable>
         </View>
@@ -65,66 +92,59 @@ export default function ReviewPromptModal({
 const styles = StyleSheet.create({
   backdrop: {
     flex: 1,
-    backgroundColor: "rgba(0,0,0,0.45)",
-    justifyContent: "center",
     alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.45)",
     padding: 24,
   },
   card: {
     width: "100%",
     maxWidth: 420,
-    backgroundColor: "#FFFFFF",
     borderRadius: 18,
+    backgroundColor: "#FFFFFF",
     padding: 20,
   },
   title: {
+    marginBottom: 16,
+    textAlign: "center",
     fontSize: 20,
     fontWeight: "700",
     color: "#111827",
-    marginBottom: 8,
-    textAlign: "center",
-  },
-  subtitle: {
-    fontSize: 14,
-    lineHeight: 20,
-    color: "#4B5563",
-    marginBottom: 18,
-    textAlign: "center",
   },
   primaryButton: {
+    marginBottom: 10,
     minHeight: 48,
+    alignItems: "center",
+    justifyContent: "center",
     borderRadius: 12,
     backgroundColor: "#0F766E",
-    alignItems: "center",
-    justifyContent: "center",
     paddingHorizontal: 16,
-    marginBottom: 10,
   },
   primaryButtonText: {
-    color: "#FFFFFF",
     fontSize: 16,
     fontWeight: "600",
+    color: "#FFFFFF",
   },
   secondaryButton: {
+    marginBottom: 10,
     minHeight: 48,
-    borderRadius: 12,
-    backgroundColor: "#F3F4F6",
     alignItems: "center",
     justifyContent: "center",
+    borderRadius: 12,
+    backgroundColor: "#F3F4F6",
     paddingHorizontal: 16,
-    marginBottom: 10,
   },
   secondaryButtonText: {
-    color: "#111827",
     fontSize: 16,
     fontWeight: "600",
+    color: "#111827",
   },
   linkButton: {
+    marginTop: 2,
+    marginBottom: 4,
     alignItems: "center",
     justifyContent: "center",
     paddingVertical: 10,
-    marginTop: 2,
-    marginBottom: 4,
   },
   linkButtonText: {
     fontSize: 14,
@@ -132,10 +152,10 @@ const styles = StyleSheet.create({
     color: "#0F766E",
   },
   closeButton: {
+    marginTop: 4,
     alignItems: "center",
     justifyContent: "center",
     paddingVertical: 10,
-    marginTop: 4,
   },
   closeButtonText: {
     fontSize: 14,
