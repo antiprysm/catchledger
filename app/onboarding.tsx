@@ -3,17 +3,17 @@ import { router } from "expo-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
-    Animated,
-    Easing,
-    FlatList,
-    NativeScrollEvent,
-    NativeSyntheticEvent,
-    Pressable,
-    StatusBar,
-    StyleSheet,
-    Text,
-    useWindowDimensions,
-    View
+  Animated,
+  Easing,
+  FlatList,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
+  Pressable,
+  StatusBar,
+  StyleSheet,
+  Text,
+  useWindowDimensions,
+  View
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -400,7 +400,7 @@ const styles = StyleSheet.create({
   slide: {
     flex: 1,
     alignItems: "center",
-    paddingTop: 4,
+    justifyContent: "center",
   },
 
   textSection: {

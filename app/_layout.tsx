@@ -1,4 +1,7 @@
+import ReviewPromptModal from "@/components/ReviewPromptModal";
+import { useReviewPrompt } from "@/hooks/useReviewPrompt";
 import i18n, { applyLanguage, ensureI18nInitialized } from "@/i18n";
+import { ReviewPromptProvider } from "@/providers/ReviewPromptProvider";
 import { ThemeProvider as AppThemeProvider, ThemeContext } from "@/theme/ThemeProvider";
 import { loadAppSettings } from "@/utils/appSettings";
 import { runNotificationChecks } from "@/utils/notifications";
@@ -8,6 +11,7 @@ import {
   DarkTheme as NavigationDarkTheme,
   DefaultTheme as NavigationDefaultTheme,
 } from "@react-navigation/native";
+import * as Linking from "expo-linking";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import React from "react";
@@ -29,6 +33,7 @@ function NavThemeWrapper() {
   const backgroundAt = React.useRef<number | null>(null);
   const lastActivityAt = React.useRef<number>(Date.now());
   const lockedRef = React.useRef(false);
+  const { showPrompt, setShowPrompt, triggerStoreReview } = useReviewPrompt();
 
   const markUserActivity = React.useCallback(() => {
     if (!locked) lastActivityAt.current = Date.now();
@@ -186,20 +191,49 @@ function NavThemeWrapper() {
   return (
     <View style={{ flex: 1 }} onTouchStart={markUserActivity} onTouchMove={markUserActivity}>
       <NavThemeProvider value={navTheme}>
-        <Stack
-          screenOptions={{
-            contentStyle: { backgroundColor: colors.bg },
-            headerStyle: { backgroundColor: colors.surface },
-            headerTintColor: colors.text,
-            headerShadowVisible: false,
-          }}
-        >
-          <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="modal" options={{ presentation: "modal", title: t("modal.title") }} />
-        </Stack>
+        <>
+          <Stack
+            screenOptions={{
+              contentStyle: { backgroundColor: colors.bg },
+              headerStyle: { backgroundColor: colors.surface },
+              headerTintColor: colors.text,
+              headerShadowVisible: false,
+            }}
+          >
+            <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="modal" options={{ presentation: "modal", title: t("modal.title") }} />
+          </Stack>
 
-        <StatusBar style={mode === "DARK" ? "light" : "dark"} />
+          <StatusBar style={mode === "DARK" ? "light" : "dark"} />
+
+          <ReviewPromptModal
+            visible={showPrompt}
+            onLove={async () => {
+              setShowPrompt(false);
+              await triggerStoreReview();
+            }}
+            onOkay={async () => {
+              setShowPrompt(false);
+              await Linking.openURL(
+                "https://hambungle.com/feedback?source=catchledger&type=general"
+              );
+            }}
+            onNotForMe={async () => {
+              setShowPrompt(false);
+              await Linking.openURL(
+                "https://hambungle.com/feedback?source=catchledger&type=improvement"
+              );
+            }}
+            onReportBug={async () => {
+              setShowPrompt(false);
+              await Linking.openURL(
+                "https://hambungle.com/feedback?source=catchledger&type=bug"
+              );
+            }}
+            onClose={() => setShowPrompt(false)}
+          />
+        </>
       </NavThemeProvider>
     </View>
   );
@@ -226,7 +260,9 @@ export default function RootLayout() {
   return (
     <I18nextProvider i18n={i18n}>
       <AppThemeProvider>
-        <NavThemeWrapper />
+        <ReviewPromptProvider>
+          <NavThemeWrapper />
+        </ReviewPromptProvider>
       </AppThemeProvider>
     </I18nextProvider>
   );

@@ -1,6 +1,6 @@
 import { ThemeContext } from "@/theme/ThemeProvider";
+
 import { router, useFocusEffect } from "expo-router";
-import * as Linking from "expo-linking";
 import { useCallback, useContext, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
@@ -17,11 +17,10 @@ import {
   View,
 } from "react-native";
 
-import ReviewPromptModal from "@/components/ReviewPromptModal";
 import { STORAGE_KEYS } from "@/constants/storageKeys";
+import { useReviewPrompt } from "@/hooks/useReviewPrompt";
 import { InventoryItem } from "@/types/inventory";
 import { BuyerType, PaymentMethod, Sale, SaleLine } from "@/types/sales";
-import { useReviewPrompt } from "@/hooks/useReviewPrompt";
 import { DEFAULT_APP_SETTINGS, type AppSettings } from "@/types/settings";
 import { applyDateFormat, loadAppSettings, weightUnitLabel } from "@/utils/appSettings";
 import { initNotifications } from "@/utils/notifications";
@@ -47,12 +46,7 @@ const SALE_LOCATION_TYPES: NonNullable<Sale["saleLocationType"]>[] = ["TRUCK", "
 export default function NewSaleScreen() {
   const { colors } = useContext(ThemeContext);
   const { t } = useTranslation();
-  const {
-    showPrompt,
-    setShowPrompt,
-    incrementSuccess,
-    triggerStoreReview,
-  } = useReviewPrompt();
+  const { incrementSuccess } = useReviewPrompt();
 
   const [inventory, setInventory] = useState<InventoryItem[]>([]);
   const [inspectionMode, setInspectionMode] = useState(false);
@@ -517,34 +511,6 @@ export default function NewSaleScreen() {
           />
         </Pressable>
       </ScrollView>
-      {showPrompt ? (
-        <ReviewPromptModal
-          visible={showPrompt}
-          onLove={async () => {
-            setShowPrompt(false);
-            await triggerStoreReview();
-          }}
-          onOkay={async () => {
-            setShowPrompt(false);
-            await Linking.openURL(
-              "https://hambungle.com/feedback?source=catchledger&type=general"
-            );
-          }}
-          onNotForMe={async () => {
-            setShowPrompt(false);
-            await Linking.openURL(
-              "https://hambungle.com/feedback?source=catchledger&type=improvement"
-            );
-          }}
-          onReportBug={async () => {
-            setShowPrompt(false);
-            await Linking.openURL(
-              "https://hambungle.com/feedback?source=catchledger&type=bug"
-            );
-          }}
-          onClose={() => setShowPrompt(false)}
-        />
-      ) : null}
     </KeyboardAvoidingView>
   );
 }

@@ -1,5 +1,4 @@
 import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
-import * as Linking from "expo-linking";
 
 type ReviewPromptModalProps = {
   visible: boolean;
@@ -18,69 +17,34 @@ export default function ReviewPromptModal({
   onReportBug,
   onClose,
 }: ReviewPromptModalProps) {
-  const handleLove = () => {
-    void Linking.openURL(
-      "https://hambungle.com/feedback?source=catchledger&type=general",
-    );
-    onLove();
-  };
-
-  const handleOkay = () => {
-    void Linking.openURL(
-      "https://hambungle.com/feedback?source=catchledger&type=improvement",
-    );
-    onOkay();
-  };
-
-  const handleNotForMe = () => {
-    void Linking.openURL(
-      "https://hambungle.com/feedback?source=catchledger&type=improvement",
-    );
-    onNotForMe();
-  };
-
-  const handleReportBug = () => {
-    void Linking.openURL(
-      "https://hambungle.com/feedback?source=catchledger&type=bug",
-    );
-    onReportBug();
-  };
-
-  const handleClose = () => {
-    void Linking.openURL(
-      "https://hambungle.com/feedback?source=catchledger&type=general",
-    );
-    onClose();
-  };
-
   return (
     <Modal
       visible={visible}
       transparent
       animationType="fade"
-      onRequestClose={handleClose}
+      onRequestClose={onClose}
     >
       <View style={styles.backdrop}>
         <View style={styles.card}>
           <Text style={styles.title}>How’s CatchLedger working for you?</Text>
 
-          <Pressable style={styles.primaryButton} onPress={handleLove}>
+          <Pressable style={styles.primaryButton} onPress={onLove}>
             <Text style={styles.primaryButtonText}>Loving it</Text>
           </Pressable>
 
-          <Pressable style={styles.secondaryButton} onPress={handleOkay}>
+          <Pressable style={styles.secondaryButton} onPress={onOkay}>
             <Text style={styles.secondaryButtonText}>It’s okay</Text>
           </Pressable>
 
-          <Pressable style={styles.secondaryButton} onPress={handleNotForMe}>
+          <Pressable style={styles.secondaryButton} onPress={onNotForMe}>
             <Text style={styles.secondaryButtonText}>Not for me right now</Text>
           </Pressable>
 
-          <Pressable style={styles.linkButton} onPress={handleReportBug}>
+          <Pressable style={styles.linkButton} onPress={onReportBug}>
             <Text style={styles.linkButtonText}>Report a bug</Text>
           </Pressable>
 
-          <Pressable style={styles.closeButton} onPress={handleClose}>
+          <Pressable style={styles.closeButton} onPress={onClose}>
             <Text style={styles.closeButtonText}>Not now</Text>
           </Pressable>
         </View>
