@@ -25,6 +25,7 @@ import {
   computeExpiresAt,
 } from "@/constants/freshness";
 import { STORAGE_KEYS } from "@/constants/storageKeys";
+import { useReviewPrompt } from "@/hooks/useReviewPrompt";
 import { ThemeContext } from "@/theme/ThemeProvider";
 import { InventoryItem, UnitType } from "@/types/inventory";
 import { applyDateFormat, loadAppSettings } from "@/utils/appSettings";
@@ -39,6 +40,7 @@ function uid() {
 export default function AddInventoryScreen() {
   const { colors } = useContext(ThemeContext);
   const { t } = useTranslation();
+  const { incrementSuccess } = useReviewPrompt();
 
   const [speciesName, setSpeciesName] = useState("");
   const [unit, setUnit] = useState<UnitType>("lb");
@@ -170,6 +172,7 @@ export default function AddInventoryScreen() {
     const existing = await loadJSON<InventoryItem[]>(STORAGE_KEYS.INVENTORY, []);
     await saveJSON(STORAGE_KEYS.INVENTORY, [item, ...existing]);
 
+    await incrementSuccess();
     await initNotifications().catch(() => undefined);
     router.back();
   }

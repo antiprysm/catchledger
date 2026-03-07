@@ -7,6 +7,7 @@ import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
 import { ThemeContext } from "@/theme/ThemeProvider";
 
 import { STORAGE_KEYS } from "@/constants/storageKeys";
+import { useReviewPrompt } from "@/hooks/useReviewPrompt";
 import { Expense } from "@/types/expenses";
 import { Sale } from "@/types/sales";
 import type { AppSettings } from "@/types/settings";
@@ -331,6 +332,7 @@ function buildQuarterlySummaryCSV(sales: Sale[], expenses: Expense[], settings: 
 export default function ReportsScreen() {
   const { colors } = useContext(ThemeContext);
   const { t } = useTranslation();
+  const { incrementSuccess } = useReviewPrompt();
 
   const [busy, setBusy] = useState<null | "sales" | "expenses" | "profit" | "bycat" | "allcat" | "quarter">(null);
 
@@ -355,12 +357,13 @@ export default function ReportsScreen() {
       const csv = buildSalesCSV(sales, settings, t);
       const filename = `catchledger_sales_${stampForName()}.csv`;
       await shareTextFile(filename, "text/csv", csv, t("reports.exportSalesCsv"), t);
+      await incrementSuccess();
     } catch (e: any) {
       Alert.alert(t("reports.exportFailed"), e?.message ?? t("reports.unknownError"));
     } finally {
       setBusy(null);
     }
-  }, [busy, loadAll]);
+  }, [busy, loadAll, incrementSuccess]);
 
   const exportExpenses = useCallback(async () => {
     if (busy) return;
@@ -374,12 +377,13 @@ export default function ReportsScreen() {
       const csv = buildExpensesCSV(expenses, settings, t);
       const filename = `catchledger_expenses_${stampForName()}.csv`;
       await shareTextFile(filename, "text/csv", csv, t("reports.exportExpensesCsv"), t);
+      await incrementSuccess();
     } catch (e: any) {
       Alert.alert(t("reports.exportFailed"), e?.message ?? t("reports.unknownError"));
     } finally {
       setBusy(null);
     }
-  }, [busy, loadAll]);
+  }, [busy, loadAll, incrementSuccess]);
 
   const exportProfitSummary = useCallback(async () => {
     if (busy) return;
@@ -393,12 +397,13 @@ export default function ReportsScreen() {
       const csv = buildProfitSummaryCSV(sales, expenses, settings, t);
       const filename = `catchledger_profit_summary_${stampForName()}.csv`;
       await shareTextFile(filename, "text/csv", csv, t("reports.exportProfitSummaryCsv"), t);
+      await incrementSuccess();
     } catch (e: any) {
       Alert.alert(t("reports.exportFailed"), e?.message ?? t("reports.unknownError"));
     } finally {
       setBusy(null);
     }
-  }, [busy, loadAll]);
+  }, [busy, loadAll, incrementSuccess]);
 
   const exportProfitByCategory = useCallback(async () => {
     if (busy) return;
@@ -417,12 +422,13 @@ export default function ReportsScreen() {
       const csv = buildProfitByCategoryCSV(sales, expenses, settings, t);
       const filename = `catchledger_profit_by_category_${stampForName()}.csv`;
       await shareTextFile(filename, "text/csv", csv, t("reports.exportProfitByCategoryCsv"), t);
+      await incrementSuccess();
     } catch (e: any) {
       Alert.alert(t("reports.exportFailed"), e?.message ?? t("reports.unknownError"));
     } finally {
       setBusy(null);
     }
-  }, [busy, loadAll]);
+  }, [busy, loadAll, incrementSuccess]);
 
   const exportAllTimeByCategory = useCallback(async () => {
     if (busy) return;
@@ -437,12 +443,13 @@ export default function ReportsScreen() {
       const csv = buildAllTimeCategoryCSV(expenses, t);
       const filename = `catchledger_expenses_by_category_${stampForName()}.csv`;
       await shareTextFile(filename, "text/csv", csv, t("reports.exportExpensesByCategoryAllTimeCsv"), t);
+      await incrementSuccess();
     } catch (e: any) {
       Alert.alert(t("reports.exportFailed"), e?.message ?? t("reports.unknownError"));
     } finally {
       setBusy(null);
     }
-  }, [busy, loadAll]);
+  }, [busy, loadAll, incrementSuccess]);
 
   const exportQuarterlySummary = useCallback(async () => {
     if (busy) return;
@@ -457,12 +464,13 @@ export default function ReportsScreen() {
       const csv = buildQuarterlySummaryCSV(sales, expenses, settings, t);
       const filename = `catchledger_quarterly_summary_${stampForName()}.csv`;
       await shareTextFile(filename, "text/csv", csv, t("reports.exportQuarterlySummaryCsv"), t);
+      await incrementSuccess();
     } catch (e: any) {
       Alert.alert(t("reports.exportFailed"), e?.message ?? t("reports.unknownError"));
     } finally {
       setBusy(null);
     }
-  }, [busy, loadAll]);
+  }, [busy, loadAll, incrementSuccess]);
 
   const busyLabel = useMemo(() => {
     if (busy === "sales") return t("reports.exportingSales");

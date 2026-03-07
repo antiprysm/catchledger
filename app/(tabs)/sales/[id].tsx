@@ -15,6 +15,7 @@ import {
 } from "react-native";
 
 import { STORAGE_KEYS } from "@/constants/storageKeys";
+import { useReviewPrompt } from "@/hooks/useReviewPrompt";
 import { BuyerType, PaymentMethod, Sale } from "@/types/sales";
 import { formatDateTime, loadAppSettings } from "@/utils/appSettings";
 import { initNotifications } from "@/utils/notifications";
@@ -37,6 +38,7 @@ export default function SaleDetailScreen() {
 
   const { colors, mode } = useContext(ThemeContext);
   const { t } = useTranslation();
+  const { incrementSuccess } = useReviewPrompt();
 
   const [sale, setSale] = useState<Sale | null>(null);
   const [inspectionMode, setInspectionMode] = useState(false);
@@ -149,6 +151,7 @@ export default function SaleDetailScreen() {
 
       const replaced = sales.map((s) => (s.id === sale.id ? updated : s));
       await saveJSON(STORAGE_KEYS.SALES, replaced);
+      await incrementSuccess();
       await initNotifications().catch(() => undefined);
       setSale(updated);
 
@@ -171,6 +174,7 @@ export default function SaleDetailScreen() {
     paymentMethod,
     paymentNote,
     computedTotal,
+    incrementSuccess,
   ]);
 
   // ✅ empty-state readable in dark mode
