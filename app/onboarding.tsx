@@ -17,6 +17,8 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
+import { useReviewPrompt } from "@/hooks/useReviewPrompt";
+
 const ONBOARDING_KEY = "catchledger_onboarding_done_v1";
 
 type Slide = {
@@ -32,6 +34,7 @@ export default function OnboardingScreen() {
   const insets = useSafeAreaInsets();
   const listRef = useRef<FlatList<Slide>>(null);
   const { t } = useTranslation();
+  const { incrementSuccess } = useReviewPrompt();
 
   const slides = useMemo<Slide[]>(
     () => [
@@ -148,6 +151,7 @@ export default function OnboardingScreen() {
 
   async function finish() {
     await AsyncStorage.setItem(ONBOARDING_KEY, "1");
+    await incrementSuccess();
     router.replace("/(tabs)/dashboard");
   }
 
