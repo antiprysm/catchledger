@@ -520,5 +520,13 @@
     "licenseForState": "ترخيص لولاية {{state}}",
     "nothingToExportTitle": "لا يوجد ما يتم تصديره",
     "sharingNotAvailable": "المشاركة غير متاحة على هذا الجهاز."
+  },
+  "reviewPrompt": {
+    "title": "كيف يعمل CatchLedger معك؟",
+    "love": "أعجبني جدًا",
+    "okay": "لا بأس",
+    "notForMe": "ليس مناسبًا لي الآن",
+    "reportBug": "الإبلاغ عن خلل",
+    "notNow": "ليس الآن"
   }
 }

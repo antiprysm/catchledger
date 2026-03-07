@@ -520,5 +520,13 @@
     "licenseForState": "{{state}}州许可证",
     "nothingToExportTitle": "无可导出内容",
     "sharingNotAvailable": "此设备不支持分享。"
+  },
+  "reviewPrompt": {
+    "title": "CatchLedger 用起来感觉怎么样？",
+    "love": "很喜欢",
+    "okay": "还可以",
+    "notForMe": "现在不太适合我",
+    "reportBug": "报告错误",
+    "notNow": "暂时不要"
   }
 }

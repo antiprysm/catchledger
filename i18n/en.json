@@ -520,5 +520,13 @@
     "licenseForState": "License for {{state}}",
     "nothingToExportTitle": "Nothing to export",
     "sharingNotAvailable": "Sharing is not available on this device."
+  },
+  "reviewPrompt": {
+    "title": "How’s CatchLedger working for you?",
+    "love": "Loving it",
+    "okay": "It’s okay",
+    "notForMe": "Not for me right now",
+    "reportBug": "Report a bug",
+    "notNow": "Not now"
   }
 }
