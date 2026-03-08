@@ -193,7 +193,7 @@ export default function OnboardingScreen() {
             style={[
                 styles.imageStage,
                 {
-                height: isSmallPhone ? height * 0.30 : height * 0.42,
+                height: isSmallPhone ? height * 0.25 : height * 0.42,
                 opacity: imageOpacity,
                 transform: [{ translateY: imageTranslateY }],
                 },
