@@ -21,6 +21,10 @@ function csvEscape(value: unknown) {
   return needsQuotes ? `"${escaped}"` : escaped;
 }
 
+function ensureUtf8Bom(csv: string) {
+  return csv.startsWith("\uFEFF") ? csv : `\uFEFF${csv}`;
+}
+
 function formatISODate(iso: string) {
   const d = new Date(iso);
   return Number.isNaN(d.getTime()) ? iso : d.toISOString();
@@ -53,7 +57,10 @@ async function shareTextFile(
   try {
     file.create();
   } catch {}
-  file.write(content);
+  const isCsv = mimeType.startsWith("text/csv");
+  const finalContent = isCsv ? ensureUtf8Bom(content) : content;
+  const finalMimeType = isCsv ? "text/csv;charset=utf-8;" : mimeType;
+  file.write(finalContent);
 
   const canShare = await Sharing.isAvailableAsync();
   if (!canShare) {
@@ -62,9 +69,9 @@ async function shareTextFile(
   }
 
   await Sharing.shareAsync(file.uri, {
-    mimeType,
+    mimeType: finalMimeType,
     dialogTitle,
-    UTI: mimeType === "text/csv" ? "public.comma-separated-values-text" : undefined,
+    UTI: isCsv ? "public.comma-separated-values-text" : undefined,
   });
 }
 

@@ -27,6 +27,10 @@ function csvEscape(value: unknown) {
   }
   
   
+function ensureUtf8Bom(csv: string) {
+  return csv.startsWith("\uFEFF") ? csv : `\uFEFF${csv}`;
+}
+
 function translateEnumValue(
   t: (key: string, options?: Record<string, unknown>) => string,
   baseKey: string,
@@ -56,14 +60,17 @@ function stampForName() {
   async function shareTextFile(filename: string, mimeType: string, contents: string, dialogTitle: string, sharingUnavailableMessage: string) {
     const file = new File(Paths.cache, filename);
     try { file.create(); } catch {}
-    file.write(contents);
+    const isCsv = mimeType.startsWith("text/csv");
+  const finalContents = isCsv ? ensureUtf8Bom(contents) : contents;
+  const finalMimeType = isCsv ? "text/csv;charset=utf-8;" : mimeType;
+  file.write(finalContents);
   
     const canShare = await Sharing.isAvailableAsync();
     if (!canShare) throw new Error(sharingUnavailableMessage);
     await Sharing.shareAsync(file.uri, {
-      mimeType,
+      mimeType: finalMimeType,
       dialogTitle,
-      UTI: "public.comma-separated-values-text",
+      UTI: isCsv ? "public.comma-separated-values-text" : undefined,
     });
   }
 
