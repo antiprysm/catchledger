@@ -45,6 +45,23 @@ function NavThemeWrapper() {
     setPasscodeInput("");
   }, []);
 
+  const openFeedbackPage = React.useCallback(
+    async (type: "general" | "improvement" | "bug") => {
+      const rawLang = (i18n.language || "en").toLowerCase();
+      const supported = new Set(["en", "ar", "es", "hi", "zh"]);
+      const lang = supported.has(rawLang) ? rawLang : "en";
+  
+      const base =
+        lang === "en"
+          ? "https://hambungle.com/feedback/"
+          : `https://hambungle.com/${lang}/feedback/`;
+  
+      const url = `${base}?source=catchledger&type=${type}`;
+      await Linking.openURL(url);
+    },
+    []
+  );
+
   React.useEffect(() => {
     lockedRef.current = locked;
   }, [locked]);
@@ -215,21 +232,15 @@ function NavThemeWrapper() {
             }}
             onOkay={async () => {
               setShowPrompt(false);
-              await Linking.openURL(
-                "https://hambungle.com/feedback?source=catchledger&type=general"
-              );
+              await openFeedbackPage("general");
             }}
             onNotForMe={async () => {
               setShowPrompt(false);
-              await Linking.openURL(
-                "https://hambungle.com/feedback?source=catchledger&type=improvement"
-              );
+              await openFeedbackPage("improvement");
             }}
             onReportBug={async () => {
               setShowPrompt(false);
-              await Linking.openURL(
-                "https://hambungle.com/feedback?source=catchledger&type=bug"
-              );
+              await openFeedbackPage("bug");
             }}
             onClose={() => setShowPrompt(false)}
           />

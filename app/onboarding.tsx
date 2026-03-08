@@ -76,38 +76,44 @@ export default function OnboardingScreen() {
   const scrollX = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    runEntranceAnimation();
+    runImageEntranceAnimation();
+    runTextEntranceAnimation();
   }, []);
   
   useEffect(() => {
     runProgressAnimation(index);
+    runTextEntranceAnimation();
   }, [index]);
 
-  function runEntranceAnimation() {
+  function runImageEntranceAnimation() {
     imageOpacity.setValue(0);
     imageTranslateY.setValue(24);
-
+  
+    Animated.parallel([
+      Animated.timing(imageOpacity, {
+        toValue: 1,
+        duration: 420,
+        easing: Easing.out(Easing.cubic),
+        useNativeDriver: true,
+      }),
+      Animated.timing(imageTranslateY, {
+        toValue: 0,
+        duration: 420,
+        easing: Easing.out(Easing.cubic),
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }
+  
+  function runTextEntranceAnimation() {
     titleOpacity.setValue(0);
     titleTranslateY.setValue(18);
-
+  
     descOpacity.setValue(0);
     descTranslateY.setValue(18);
-
+  
     Animated.sequence([
-      Animated.parallel([
-        Animated.timing(imageOpacity, {
-          toValue: 1,
-          duration: 420,
-          easing: Easing.out(Easing.cubic),
-          useNativeDriver: true,
-        }),
-        Animated.timing(imageTranslateY, {
-          toValue: 0,
-          duration: 420,
-          easing: Easing.out(Easing.cubic),
-          useNativeDriver: true,
-        }),
-      ]),
+      Animated.delay(80),
       Animated.parallel([
         Animated.timing(titleOpacity, {
           toValue: 1,
@@ -160,8 +166,6 @@ export default function OnboardingScreen() {
       offset: i * width,
       animated: true,
     });
-  
-    setIndex(i);
   }
 
   function onMomentumEnd(e: NativeSyntheticEvent<NativeScrollEvent>) {
@@ -170,6 +174,7 @@ export default function OnboardingScreen() {
   }
 
   function renderSlide(item: Slide, slideIndex: number) {
+    const isActiveSlide = slideIndex === index;
     const inputRange = [
       (slideIndex - 1) * width,
       slideIndex * width,
@@ -208,25 +213,30 @@ export default function OnboardingScreen() {
           />
         </Animated.View>
   
-        <View style={styles.textSection}>
+        <View
+          style={[
+            styles.textSection,
+            !isActiveSlide && styles.hiddenTextSection,
+          ]}
+        >
           <Animated.Text
             style={[
               styles.title,
               {
-                opacity: titleOpacity,
-                transform: [{ translateY: titleTranslateY }],
+                opacity: isActiveSlide ? titleOpacity : 0,
+                transform: [{ translateY: isActiveSlide ? titleTranslateY : 18 }],
               },
             ]}
           >
             {item.title}
           </Animated.Text>
-  
+
           <Animated.Text
             style={[
               styles.desc,
               {
-                opacity: descOpacity,
-                transform: [{ translateY: descTranslateY }],
+                opacity: isActiveSlide ? descOpacity : 0,
+                transform: [{ translateY: isActiveSlide ? descTranslateY : 18 }],
               },
             ]}
           >
@@ -487,5 +497,9 @@ const styles = StyleSheet.create({
   
   image: {
     alignSelf: "center",
+  },
+
+  hiddenTextSection: {
+    opacity: 0,
   },
 });

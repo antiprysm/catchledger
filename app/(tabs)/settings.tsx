@@ -9,6 +9,7 @@ import Constants from "expo-constants";
 import * as DocumentPicker from "expo-document-picker";
 import { Image } from "expo-image";
 import * as Linking from "expo-linking";
+import * as Updates from "expo-updates";
 import { useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { Alert, Pressable, ScrollView, StyleSheet, Switch, Text, TextInput, View } from "react-native";
@@ -58,6 +59,24 @@ export default function SettingsScreen() {
   }, []);
 
   const appVersion = useMemo(() => Constants.expoConfig?.version ?? "dev", []);
+
+  const hambungleLang = useMemo<SupportedLanguage>(() => {
+    const candidate =
+      (settings.language as SupportedLanguage) ||
+      (i18n.language.split("-")[0] as SupportedLanguage) ||
+      "en";
+  
+    return ["en", "zh", "es", "hi", "ar"].includes(candidate) ? candidate : "en";
+  }, [settings.language]);
+  
+  const hambungleUrl = useCallback(
+    (path: string) => {
+      const normalizedPath = path.startsWith("/") ? path : `/${path}`;
+      const prefix = hambungleLang === "en" ? "" : `/${hambungleLang}`;
+      return `https://hambungle.com${prefix}${normalizedPath}`;
+    },
+    [hambungleLang]
+  );
 
   const weightUnits = useMemo<Choice<AppSettings["weightUnit"]>[]>(() => [
     { label: t("settings.values.pounds"), value: "lb" },
@@ -171,7 +190,18 @@ export default function SettingsScreen() {
     const { shouldShowRtlRestartPrompt } = await applyLanguage(language);
   
     if (shouldShowRtlRestartPrompt) {
-      Alert.alert(t("settings.language"), t("settings.languageChangedRestart"));
+      Alert.alert(
+        t("settings.language"),
+        t("settings.languageChangedRestart"),
+        [
+          {
+            text: "OK",
+            onPress: async () => {
+              await Updates.reloadAsync();
+            },
+          },
+        ]
+      );
     }
   }, [t]);
 
@@ -363,8 +393,23 @@ export default function SettingsScreen() {
     
           <Card colors={colors} title={t("settings.aboutLegal")}>
             <Text style={[styles.metaText, { color: colors.text }]}>{t("settings.appVersion", { version: appVersion })}</Text>
-            <Pressable onPress={() => Linking.openURL("https://hambungle.com/privacy/?app=catchledger#catchledger")}><Text style={[styles.link, { color: colors.primary }]}>{t("settings.privacyPolicy")}</Text></Pressable>
-            <Pressable onPress={() => Linking.openURL("https://hambungle.com/terms/")}><Text style={[styles.link, { color: colors.primary }]}>{t("settings.terms")}</Text></Pressable>
+            <Pressable
+              onPress={() =>
+                Linking.openURL(
+                  `${hambungleUrl("/privacy/")}?app=catchledger#catchledger`
+                )
+              }
+            >
+              <Text style={[styles.link, { color: colors.primary }]}>
+                {t("settings.privacyPolicy")}
+              </Text>
+            </Pressable>
+
+            <Pressable onPress={() => Linking.openURL(hambungleUrl("/terms/"))}>
+              <Text style={[styles.link, { color: colors.primary }]}>
+                {t("settings.terms")}
+              </Text>
+            </Pressable>
             <Pressable onPress={() => Linking.openURL("mailto:hello@hambungle.com")}><Text style={[styles.link, { color: colors.primary }]}>{t("settings.contactSupport")}</Text></Pressable>
             {!!settings.lastSyncedAt && <Text style={[styles.metaText, { color: colors.muted }]}>{t("settings.lastSynced", { time: new Date(settings.lastSyncedAt).toLocaleString() })}</Text>}
           </Card>

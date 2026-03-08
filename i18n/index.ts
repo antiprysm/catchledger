@@ -1,7 +1,6 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { I18nManager } from "react-native";
 import { createInstance } from "i18next";
 import { initReactI18next } from "react-i18next";
+import { I18nManager } from "react-native";
 
 import ar from "@/i18n/ar.json";
 import en from "@/i18n/en.json";
@@ -66,14 +65,7 @@ export async function applyLanguage(language: SupportedLanguage) {
     I18nManager.forceRTL(wantsRTL);
   }
 
-  const hasShownNotice = (await AsyncStorage.getItem(RTL_NOTICE_KEY)) === "1";
-  const shouldShowRtlRestartPrompt = rtlChanged && !hasShownNotice;
-
-  if (shouldShowRtlRestartPrompt) {
-    await AsyncStorage.setItem(RTL_NOTICE_KEY, "1");
-  }
-
-  return { shouldShowRtlRestartPrompt, rtlChanged };
+  return { shouldShowRtlRestartPrompt: rtlChanged, rtlChanged };
 }
 
 export default i18n;
