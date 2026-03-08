@@ -7,6 +7,7 @@ type ReviewPromptContextValue = {
   setShowPrompt: React.Dispatch<React.SetStateAction<boolean>>;
   incrementSuccess: () => Promise<void>;
   triggerStoreReview: () => Promise<void>;
+  dismissPrompt: () => Promise<void>;
 };
 
 const ReviewPromptContext = createContext<ReviewPromptContextValue | undefined>(undefined);
@@ -34,15 +35,24 @@ export function ReviewPromptProvider({ children }: { children: React.ReactNode }
     }
   };
 
+  const dismissPrompt = async () => {
+    setShowPrompt(false);
+    await setNumber(REVIEW_KEYS.LAST_PROMPT, Date.now());
+  };
+
   const triggerStoreReview = async () => {
     try {
+      setShowPrompt(false);
+
       if (InAppReview.isAvailable()) {
         await InAppReview.RequestInAppReview();
-        await setNumber(REVIEW_KEYS.HAS_REVIEWED, 1);
-        await setNumber(REVIEW_KEYS.LAST_PROMPT, Date.now());
       }
+
+      await setNumber(REVIEW_KEYS.HAS_REVIEWED, 1);
+      await setNumber(REVIEW_KEYS.LAST_PROMPT, Date.now());
     } catch (error) {
       console.log("[review] triggerStoreReview error", error);
+      await setNumber(REVIEW_KEYS.LAST_PROMPT, Date.now());
     }
   };
 
@@ -52,6 +62,7 @@ export function ReviewPromptProvider({ children }: { children: React.ReactNode }
       setShowPrompt,
       incrementSuccess,
       triggerStoreReview,
+      dismissPrompt,
     }),
     [showPrompt]
   );

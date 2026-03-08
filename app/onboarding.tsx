@@ -30,11 +30,18 @@ type Slide = {
 
 export default function OnboardingScreen() {
   const { width, height } = useWindowDimensions();
-  const isSmallPhone = height < 760;
+  const shortestSide = Math.min(width, height);
+
+  const isTablet = shortestSide >= 768;
+  const isSmallPhone = shortestSide < 375;
+  const isPhone = !isTablet;
+  const isLandscape = width > height;
+  const isTabletLandscape = isTablet && isLandscape;
   const insets = useSafeAreaInsets();
   const listRef = useRef<FlatList<Slide>>(null);
   const { t } = useTranslation();
   const { incrementSuccess } = useReviewPrompt();
+  const orientationKey = `${width}-${height}`;
 
   const slides = useMemo<Slide[]>(
     () => [
@@ -61,10 +68,21 @@ export default function OnboardingScreen() {
   );
 
   const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    const id = setTimeout(() => {
+      listRef.current?.scrollToOffset({
+        offset: index * width,
+        animated: false,
+      });
+    }, 0);
+  
+    return () => clearTimeout(id);
+  }, [width, height, index]);
+
   const isLast = index === slides.length - 1;
 
   const imageOpacity = useRef(new Animated.Value(0)).current;
-  const imageTranslateY = useRef(new Animated.Value(24)).current;
 
   const titleOpacity = useRef(new Animated.Value(0)).current;
   const titleTranslateY = useRef(new Animated.Value(18)).current;
@@ -74,6 +92,8 @@ export default function OnboardingScreen() {
 
   const progressAnim = useRef(new Animated.Value(1 / slides.length)).current;
   const scrollX = useRef(new Animated.Value(0)).current;
+
+  const textBlockMinHeight = isTablet ? 200 : 160;
 
   useEffect(() => {
     runImageEntranceAnimation();
@@ -87,22 +107,13 @@ export default function OnboardingScreen() {
 
   function runImageEntranceAnimation() {
     imageOpacity.setValue(0);
-    imageTranslateY.setValue(24);
   
-    Animated.parallel([
-      Animated.timing(imageOpacity, {
-        toValue: 1,
-        duration: 420,
-        easing: Easing.out(Easing.cubic),
-        useNativeDriver: true,
-      }),
-      Animated.timing(imageTranslateY, {
-        toValue: 0,
-        duration: 420,
-        easing: Easing.out(Easing.cubic),
-        useNativeDriver: true,
-      }),
-    ]).start();
+    Animated.timing(imageOpacity, {
+      toValue: 1,
+      duration: 320,
+      easing: Easing.out(Easing.cubic),
+      useNativeDriver: true,
+    }).start();
   }
   
   function runTextEntranceAnimation() {
@@ -113,7 +124,7 @@ export default function OnboardingScreen() {
     descTranslateY.setValue(18);
   
     Animated.sequence([
-      Animated.delay(80),
+      Animated.delay(140),
       Animated.parallel([
         Animated.timing(titleOpacity, {
           toValue: 1,
@@ -187,26 +198,47 @@ export default function OnboardingScreen() {
       extrapolate: "clamp",
     });
   
+    if (isTabletLandscape) {
+      return renderTabletLandscapeSlide(item, slideIndex, isActiveSlide, imageParallax);
+    }
+  
+    return renderStackedSlide(item, slideIndex, isActiveSlide, imageParallax);
+  }
+
+  function renderStackedSlide(
+    item: Slide,
+    slideIndex: number,
+    isActiveSlide: boolean,
+    imageParallax: Animated.AnimatedInterpolation<string | number>
+  ) {
     return (
-      <View style={[styles.slide, { width }]}>
+      <View
+        style={[
+          styles.slide,
+          {
+            width,
+            paddingTop: isTablet ? 24 : isSmallPhone ? 8 : 16,
+          },
+        ]}
+      >
         <Animated.View
-            style={[
-                styles.imageStage,
-                {
-                height: isSmallPhone ? height * 0.25 : height * 0.42,
-                opacity: imageOpacity,
-                transform: [{ translateY: imageTranslateY }],
-                },
-            ]}
-            >
+          style={[
+            styles.imageStage,
+            {
+              height: isTablet ? height * 0.52 : isSmallPhone ? height * 0.22 : height * 0.40,
+              opacity: imageOpacity,
+              marginBottom: isTablet ? 20 : 10,
+            },
+          ]}
+        >
           <Animated.Image
             source={item.image}
             resizeMode="contain"
             style={[
               styles.image,
               {
-                width: width * 0.9,
-                height: isSmallPhone ? height * 0.38 : height * 0.5,
+                width: isTablet ? width * 0.72 : isSmallPhone ? width * 0.82 : width * 0.9,
+                height: isTablet ? height * 0.50 : isSmallPhone ? height * 0.30 : height * 0.46,
                 transform: [{ translateX: imageParallax }],
               },
             ]}
@@ -216,32 +248,108 @@ export default function OnboardingScreen() {
         <View
           style={[
             styles.textSection,
-            !isActiveSlide && styles.hiddenTextSection,
+            isTablet && styles.textSectionTablet,
+            { minHeight: textBlockMinHeight },
           ]}
         >
-          <Animated.Text
-            style={[
-              styles.title,
-              {
-                opacity: isActiveSlide ? titleOpacity : 0,
-                transform: [{ translateY: isActiveSlide ? titleTranslateY : 18 }],
-              },
-            ]}
-          >
-            {item.title}
-          </Animated.Text>
+          {isActiveSlide ? (
+            <Animated.View key={`text-${item.key}-${index}`} style={styles.textInner}>
+              <Animated.Text
+                style={[
+                  styles.title,
+                  isTablet && styles.titleTablet,
+                  {
+                    opacity: titleOpacity,
+                    transform: [{ translateY: titleTranslateY }],
+                  },
+                ]}
+              >
+                {item.title}
+              </Animated.Text>
+  
+              <Animated.Text
+                style={[
+                  styles.desc,
+                  isTablet && styles.descTablet,
+                  {
+                    opacity: descOpacity,
+                    transform: [{ translateY: descTranslateY }],
+                  },
+                ]}
+              >
+                {item.description}
+              </Animated.Text>
+            </Animated.View>
+          ) : (
+            <View style={styles.textPlaceholder} />
+          )}
+        </View>
+      </View>
+    );
+  }
 
-          <Animated.Text
-            style={[
-              styles.desc,
-              {
-                opacity: isActiveSlide ? descOpacity : 0,
-                transform: [{ translateY: isActiveSlide ? descTranslateY : 18 }],
-              },
-            ]}
-          >
-            {item.description}
-          </Animated.Text>
+  function renderTabletLandscapeSlide(
+    item: Slide,
+    slideIndex: number,
+    isActiveSlide: boolean,
+    imageParallax: Animated.AnimatedInterpolation<string | number>
+  ) {
+    return (
+      <View style={[styles.slideLandscape, { width }]}>
+        <View style={styles.landscapeInner}>
+          <View style={styles.landscapeImageColumn}>
+            <Animated.Image
+              source={item.image}
+              resizeMode="contain"
+              style={[
+                styles.image,
+                styles.landscapeImage,
+                {
+                  opacity: imageOpacity,
+                  transform: [{ translateX: imageParallax }],
+                },
+              ]}
+            />
+          </View>
+
+          <View style={styles.landscapeTextColumn}>
+            {isActiveSlide ? (
+              <Animated.View
+                key={`text-landscape-${item.key}-${index}`}
+                style={styles.landscapeTextInner}
+              >
+                <Animated.Text
+                  style={[
+                    styles.title,
+                    styles.titleTablet,
+                    styles.landscapeTitle,
+                    {
+                      opacity: titleOpacity,
+                      transform: [{ translateY: titleTranslateY }],
+                    },
+                  ]}
+                >
+                  {item.title}
+                </Animated.Text>
+
+                <Animated.Text
+                  style={[
+                    styles.desc,
+                    styles.descTablet,
+                    styles.landscapeDesc,
+                    {
+                      opacity: descOpacity,
+                      transform: [{ translateY: descTranslateY }],
+                    },
+                  ]}
+                >
+                  {item.description}
+                </Animated.Text>
+              </Animated.View>
+            ) : (
+              <View style={styles.textPlaceholder} />
+            )}
+          </View>
         </View>
       </View>
     );
@@ -283,8 +391,15 @@ export default function OnboardingScreen() {
       </View>
 
       <Animated.FlatList
+        key={orientationKey}
         ref={listRef}
         data={slides}
+        initialScrollIndex={index}
+        getItemLayout={(_, i) => ({
+          length: width,
+          offset: width * i,
+          index: i,
+        })}
         keyExtractor={(s) => s.key}
         horizontal
         pagingEnabled
@@ -321,9 +436,7 @@ export default function OnboardingScreen() {
             onPress={() => scrollTo(Math.max(index - 1, 0))}
             disabled={index === 0}
           >
-            <Text style={styles.btnSecondaryText}>
-                {t("common.back")}
-            </Text>
+            <Text style={styles.btnSecondaryText}>{t("common.back")}</Text>
           </Pressable>
 
           <Pressable
@@ -331,7 +444,7 @@ export default function OnboardingScreen() {
             onPress={() => (isLast ? finish() : scrollTo(index + 1))}
           >
             <Text style={styles.btnPrimaryText}>
-                {isLast ? t("onboarding.getStarted") : t("common.next")}
+              {isLast ? t("onboarding.getStarted") : t("common.next")}
             </Text>
           </Pressable>
         </View>
@@ -414,30 +527,117 @@ const styles = StyleSheet.create({
   slide: {
     flex: 1,
     alignItems: "center",
+    justifyContent: "flex-start",
+  },
+
+  image: {
+    alignSelf: "center",
+  },
+
+  imageStage: {
+    width: "100%",
+    alignItems: "center",
+    justifyContent: "center",
+    overflow: "visible",
+    flexShrink: 0,
+  },
+
+  slideContent: {
+    width: "100%",
+    flex: 1,
+  },
+
+  slideContentTabletLandscape: {
+    width: "100%",
+    maxWidth: 1180,
+    alignSelf: "center",
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 20,
+    paddingBottom: 12,
+  },
+
+  landscapeColumn: {
+    width: "50%",
+    alignItems: "center",
     justifyContent: "center",
   },
 
-  textSection: {
-    paddingHorizontal: 28,
-    paddingTop: 10,
+  textSectionTabletLandscape: {
+    flex: 1,
     alignItems: "center",
+    justifyContent: "center",
+    paddingTop: 0,
+    paddingHorizontal: 20,
+  },
+
+  imageStageTabletLandscape: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingRight: 20,
+  },
+
+  textSection: {
+    width: "100%",
+    paddingHorizontal: 28,
+    paddingTop: 15,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  textSectionTablet: {
+    paddingTop: 34,
+  },
+
+  textInner: {
+    width: "100%",
+    maxWidth: 400,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  textInnerLandscape: {
+    width: "100%",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  textPlaceholder: {
+    width: "100%",
+    flex: 1,
   },
 
   title: {
+    width: "100%",
     fontSize: 28,
     lineHeight: 34,
     fontWeight: "800",
     color: "#0F172A",
     textAlign: "center",
-    marginBottom: 12,
+    marginTop: 10,
+    marginBottom: 10,
+  },
+
+  titleTablet: {
+    fontSize: 32,
+    lineHeight: 38,
   },
 
   desc: {
+    width: "100%",
     fontSize: 16,
     lineHeight: 24,
     color: "#52616B",
     textAlign: "center",
     maxWidth: 360,
+  },
+
+  descTablet: {
+    fontSize: 18,
+    lineHeight: 28,
   },
 
   footer: {
@@ -449,6 +649,7 @@ const styles = StyleSheet.create({
   bottomRow: {
     flexDirection: "row",
     alignItems: "center",
+    gap: 16,
   },
 
   btn: {
@@ -461,7 +662,6 @@ const styles = StyleSheet.create({
 
   btnPrimary: {
     backgroundColor: "#184B5A",
-    marginLeft: 8,
   },
 
   btnPrimaryText: {
@@ -472,7 +672,6 @@ const styles = StyleSheet.create({
 
   btnSecondary: {
     backgroundColor: "#EAF1F4",
-    marginRight: 8,
   },
 
   btnSecondaryText: {
@@ -488,18 +687,56 @@ const styles = StyleSheet.create({
   btnDisabledText: {
     color: "#6F7F88",
   },
-  imageStage: {
+
+  slideLandscape: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "stretch",
+    paddingTop: 12,
+    paddingBottom: 12,
+  },
+  
+  landscapeInner: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 20, // same as footer
+  },
+  
+  landscapeImageColumn: {
+    width: "50%",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  
+  landscapeTextColumn: {
+    width: "50%",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  
+  landscapeTextInner: {
     width: "100%",
     alignItems: "center",
     justifyContent: "center",
-    overflow: "hidden",
   },
   
-  image: {
-    alignSelf: "center",
+  landscapeImage: {
+    width: 400,
+    height: 400,
   },
-
-  hiddenTextSection: {
-    opacity: 0,
+  
+  landscapeTitle: {
+    width: "100%",
+    textAlign: "center",
+  },
+  
+  landscapeDesc: {
+    width: "100%",
+    textAlign: "center",
+    maxWidth: 420,
+  },
+  landscapeGap: {
+    width: 16,
   },
 });

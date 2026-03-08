@@ -33,7 +33,7 @@ function NavThemeWrapper() {
   const backgroundAt = React.useRef<number | null>(null);
   const lastActivityAt = React.useRef<number>(Date.now());
   const lockedRef = React.useRef(false);
-  const { showPrompt, setShowPrompt, triggerStoreReview } = useReviewPrompt();
+  const { showPrompt, setShowPrompt, triggerStoreReview, dismissPrompt } = useReviewPrompt();
 
   const markUserActivity = React.useCallback(() => {
     if (!locked) lastActivityAt.current = Date.now();
@@ -231,18 +231,20 @@ function NavThemeWrapper() {
               await triggerStoreReview();
             }}
             onOkay={async () => {
-              setShowPrompt(false);
+              await dismissPrompt();
               await openFeedbackPage("general");
             }}
             onNotForMe={async () => {
-              setShowPrompt(false);
+              await dismissPrompt();
               await openFeedbackPage("improvement");
             }}
             onReportBug={async () => {
-              setShowPrompt(false);
+              await dismissPrompt();
               await openFeedbackPage("bug");
             }}
-            onClose={() => setShowPrompt(false)}
+            onClose={async () => {
+              await dismissPrompt();
+            }}
           />
         </>
       </NavThemeProvider>
