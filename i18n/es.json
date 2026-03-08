@@ -384,6 +384,106 @@
       "profitByCategory": "• Ganancia por Categoría divide los gastos mensuales en columnas por categoría.",
       "allTimeCategories": "• Categorías de Todo el Tiempo muestra totales y porcentaje por categoría de gasto.",
       "quarterlySummary": "• Resumen Trimestral agrupa en AAAA-T1..T4 (útil para impuestos estimados)."
+    },
+    "csv": {
+      "common": {
+        "meta": "META",
+        "businessName": "Nombre del negocio",
+        "licenseNumber": "Número de licencia",
+        "email": "Correo electrónico"
+      },
+      "sales": {
+        "saleId": "ID de venta",
+        "occurredAtIso": "Fecha/hora (ISO)",
+        "paymentMethod": "Método de pago",
+        "paymentNote": "Nota de pago",
+        "requireSignature": "Requiere firma",
+        "requirePhoto": "Requiere foto",
+        "invoiceNumber": "Número de factura",
+        "saleTotal": "Total de venta",
+        "lineItemId": "ID de línea",
+        "speciesName": "Especie",
+        "unit": "Unidad",
+        "unitPrice": "Precio unitario",
+        "quantity": "Cantidad",
+        "lineSubtotal": "Subtotal de línea"
+      },
+      "expenses": {
+        "expenseId": "ID de gasto",
+        "occurredAtIso": "Fecha/hora (ISO)",
+        "category": "Categoría",
+        "amount": "Monto",
+        "note": "Nota"
+      },
+      "profit": {
+        "month": "Mes",
+        "revenue": "Ingresos",
+        "expenses": "Gastos",
+        "net": "Neto",
+        "salesCount": "Cantidad de ventas",
+        "expensesCount": "Cantidad de gastos",
+        "expByCategory": "Gasto: {{category}}",
+        "totalExpenses": "Gastos totales"
+      },
+      "categories": {
+        "category": "Categoría",
+        "totalAmount": "Monto total",
+        "percentOfTotal": "Porcentaje del total",
+        "total": "TOTAL"
+      },
+      "quarterly": {
+        "quarter": "Trimestre"
+      }
+    },
+    "columns": {
+      "date": "Fecha",
+      "fishType": "Tipo de pescado",
+      "weight": "Peso",
+      "price": "Precio",
+      "customer": "Cliente",
+      "notes": "Notas",
+      "total": "Total"
+    },
+    "status": {
+      "paid": "Pagado",
+      "pending": "Pendiente",
+      "cancelled": "Cancelado"
+    },
+    "saleType": {
+      "restaurant": "Restaurante",
+      "chef": "Chef",
+      "market": "Mercado",
+      "person": "Persona",
+      "other": "Otro"
+    },
+    "paymentType": {
+      "cash": "Efectivo",
+      "card": "Tarjeta",
+      "bank_transfer": "Transferencia bancaria",
+      "check": "Cheque",
+      "venmo": "Venmo",
+      "cashapp": "Cash App",
+      "paypal": "PayPal",
+      "other": "Otro"
+    },
+    "inventoryCategory": {
+      "fuel": "Combustible",
+      "ice": "Hielo",
+      "bait": "Carnada",
+      "gear": "Equipo",
+      "maintenance": "Mantenimiento",
+      "fees": "Tarifas",
+      "packaging": "Empaque",
+      "other": "Otro"
+    },
+    "complianceStatus": {
+      "compliant": "Cumple",
+      "non_compliant": "No cumple",
+      "pending": "Pendiente",
+      "cancelled": "Cancelado",
+      "paid": "Pagado",
+      "inspection_mode_on": "Modo de inspección activado",
+      "inspection_mode_off": "Modo de inspección desactivado"
     }
   },
   "compliance": {
@@ -519,7 +619,56 @@
     "end": "Fin",
     "licenseForState": "Licencia para {{state}}",
     "nothingToExportTitle": "Nada para exportar",
-    "sharingNotAvailable": "Compartir no está disponible en este dispositivo."
+    "sharingNotAvailable": "Compartir no está disponible en este dispositivo.",
+    "csv": {
+      "section": "Sección",
+      "field": "Campo",
+      "value": "Valor",
+      "profileSection": "Perfil",
+      "harvestSection": "Captura",
+      "saleSection": "Venta",
+      "profile": {
+        "state": "Estado",
+        "licenseNumber": "Número de licencia",
+        "legalName": "Nombre legal",
+        "dbaName": "Nombre comercial",
+        "phone": "Teléfono",
+        "email": "Correo electrónico",
+        "vehiclePlate": "Matrícula",
+        "homeBaseCity": "Ciudad base",
+        "updatedAt": "Actualizado el"
+      },
+      "harvest": {
+        "inventoryId": "ID de inventario",
+        "batchId": "ID de lote",
+        "species": "Especie",
+        "quantity": "Cantidad",
+        "unit": "Unidad",
+        "catchLocation": "Lugar de captura",
+        "caughtAtIso": "Capturado en (ISO)",
+        "catchMethod": "Método de captura"
+      },
+      "sales": {
+        "saleId": "ID de venta",
+        "occurredAtIso": "Fecha/hora (ISO)",
+        "buyerName": "Nombre del comprador",
+        "buyerType": "Tipo de comprador",
+        "buyerContact": "Contacto del comprador",
+        "paymentMethod": "Método de pago",
+        "paymentNote": "Nota de pago",
+        "saleTotal": "Total de venta",
+        "lineItemId": "ID de línea",
+        "species": "Especie",
+        "quantity": "Cantidad",
+        "unit": "Unidad",
+        "unitPrice": "Precio unitario",
+        "lineSubtotal": "Subtotal de línea",
+        "originBatchId": "ID de lote de origen",
+        "originLocation": "Ubicación de origen",
+        "originCaughtAtIso": "Captura de origen (ISO)",
+        "originMethod": "Método de origen"
+      }
+    }
   },
   "reviewPrompt": {
     "title": "¿Cómo está funcionando CatchLedger para ti?",

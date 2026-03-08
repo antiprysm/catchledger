@@ -26,7 +26,23 @@ function csvEscape(value: unknown) {
     return needsQuotes ? `"${escaped}"` : escaped;
   }
   
-  function stampForName() {
+  
+function ensureUtf8Bom(csv: string) {
+  return csv.startsWith("\uFEFF") ? csv : `\uFEFF${csv}`;
+}
+
+function translateEnumValue(
+  t: (key: string, options?: Record<string, unknown>) => string,
+  baseKey: string,
+  value: string | null | undefined
+) {
+  if (!value) return "";
+  const key = `${baseKey}.${String(value).toLowerCase()}`;
+  const translated = t(key);
+  return translated === key ? value : translated;
+}
+
+function stampForName() {
     const d = new Date();
     const pad = (n: number) => String(n).padStart(2, "0");
     return (
@@ -44,14 +60,17 @@ function csvEscape(value: unknown) {
   async function shareTextFile(filename: string, mimeType: string, contents: string, dialogTitle: string, sharingUnavailableMessage: string) {
     const file = new File(Paths.cache, filename);
     try { file.create(); } catch {}
-    file.write(contents);
+    const isCsv = mimeType.startsWith("text/csv");
+  const finalContents = isCsv ? ensureUtf8Bom(contents) : contents;
+  const finalMimeType = isCsv ? "text/csv;charset=utf-8;" : mimeType;
+  file.write(finalContents);
   
     const canShare = await Sharing.isAvailableAsync();
     if (!canShare) throw new Error(sharingUnavailableMessage);
     await Sharing.shareAsync(file.uri, {
-      mimeType,
+      mimeType: finalMimeType,
       dialogTitle,
-      UTI: "public.comma-separated-values-text",
+      UTI: isCsv ? "public.comma-separated-values-text" : undefined,
     });
   }
 
@@ -59,27 +78,38 @@ function csvEscape(value: unknown) {
     profile: LicenseProfile | null,
     harvest: InventoryItem[],
     sales: Sale[],
+    t: (key: string, options?: Record<string, unknown>) => string,
   ) {
     const lines: string[] = [];
   
-    lines.push("SECTION,FIELD,VALUE");
-    lines.push(["PROFILE", "state", profile?.state ?? ""].map(csvEscape).join(","));
-    lines.push(["PROFILE", "license_number", profile?.licenseNumber ?? ""].map(csvEscape).join(","));
-    lines.push(["PROFILE", "legal_name", profile?.legalName ?? ""].map(csvEscape).join(","));
-    lines.push(["PROFILE", "dba_name", profile?.dbaName ?? ""].map(csvEscape).join(","));
-    lines.push(["PROFILE", "phone", profile?.phone ?? ""].map(csvEscape).join(","));
-    lines.push(["PROFILE", "email", profile?.email ?? ""].map(csvEscape).join(","));
-    lines.push(["PROFILE", "vehicle_plate", profile?.vehiclePlate ?? ""].map(csvEscape).join(","));
-    lines.push(["PROFILE", "home_base_city", profile?.homeBaseCity ?? ""].map(csvEscape).join(","));
-    lines.push(["PROFILE", "updated_at", profile?.updatedAt ?? ""].map(csvEscape).join(","));
+    lines.push([t("compliance.csv.section"), t("compliance.csv.field"), t("compliance.csv.value")].map(csvEscape).join(","));
+    lines.push([t("compliance.csv.profileSection"), t("compliance.csv.profile.state"), profile?.state ?? ""].map(csvEscape).join(","));
+    lines.push([t("compliance.csv.profileSection"), t("compliance.csv.profile.licenseNumber"), profile?.licenseNumber ?? ""].map(csvEscape).join(","));
+    lines.push([t("compliance.csv.profileSection"), t("compliance.csv.profile.legalName"), profile?.legalName ?? ""].map(csvEscape).join(","));
+    lines.push([t("compliance.csv.profileSection"), t("compliance.csv.profile.dbaName"), profile?.dbaName ?? ""].map(csvEscape).join(","));
+    lines.push([t("compliance.csv.profileSection"), t("compliance.csv.profile.phone"), profile?.phone ?? ""].map(csvEscape).join(","));
+    lines.push([t("compliance.csv.profileSection"), t("compliance.csv.profile.email"), profile?.email ?? ""].map(csvEscape).join(","));
+    lines.push([t("compliance.csv.profileSection"), t("compliance.csv.profile.vehiclePlate"), profile?.vehiclePlate ?? ""].map(csvEscape).join(","));
+    lines.push([t("compliance.csv.profileSection"), t("compliance.csv.profile.homeBaseCity"), profile?.homeBaseCity ?? ""].map(csvEscape).join(","));
+    lines.push([t("compliance.csv.profileSection"), t("compliance.csv.profile.updatedAt"), profile?.updatedAt ?? ""].map(csvEscape).join(","));
 
     lines.push("");
   
-    lines.push("SECTION,inventory_id,batch_id,species,quantity,unit,catch_location,caught_at_iso,catch_method");
+    lines.push([
+      t("compliance.csv.section"),
+      t("compliance.csv.harvest.inventoryId"),
+      t("compliance.csv.harvest.batchId"),
+      t("compliance.csv.harvest.species"),
+      t("compliance.csv.harvest.quantity"),
+      t("compliance.csv.harvest.unit"),
+      t("compliance.csv.harvest.catchLocation"),
+      t("compliance.csv.harvest.caughtAtIso"),
+      t("compliance.csv.harvest.catchMethod"),
+    ].map(csvEscape).join(","));
     for (const i of harvest) {
       lines.push(
         [
-          "HARVEST",
+          t("compliance.csv.harvestSection"),
           i.id,
           i.batchId ?? "",
           i.speciesName,
@@ -94,21 +124,39 @@ function csvEscape(value: unknown) {
   
     lines.push("");
   
-    lines.push(
-      "SECTION,sale_id,occurred_at_iso,buyer_name,buyer_type,buyer_contact,payment_method,payment_note,sale_total,line_item_id,species,quantity,unit,unit_price,line_subtotal,origin_batch_id,origin_location,origin_caught_at_iso,origin_method"
-    );        
+    lines.push([
+      t("compliance.csv.section"),
+      t("compliance.csv.sales.saleId"),
+      t("compliance.csv.sales.occurredAtIso"),
+      t("compliance.csv.sales.buyerName"),
+      t("compliance.csv.sales.buyerType"),
+      t("compliance.csv.sales.buyerContact"),
+      t("compliance.csv.sales.paymentMethod"),
+      t("compliance.csv.sales.paymentNote"),
+      t("compliance.csv.sales.saleTotal"),
+      t("compliance.csv.sales.lineItemId"),
+      t("compliance.csv.sales.species"),
+      t("compliance.csv.sales.quantity"),
+      t("compliance.csv.sales.unit"),
+      t("compliance.csv.sales.unitPrice"),
+      t("compliance.csv.sales.lineSubtotal"),
+      t("compliance.csv.sales.originBatchId"),
+      t("compliance.csv.sales.originLocation"),
+      t("compliance.csv.sales.originCaughtAtIso"),
+      t("compliance.csv.sales.originMethod"),
+    ].map(csvEscape).join(","));        
   
       for (const s of sales) {
         for (const ln of s.lines) {
           lines.push(
             [
-              "SALE",
+              t("compliance.csv.saleSection"),
               s.id,
               s.occurredAt,
               s.buyerName ?? "",
-              s.buyerType ?? "",
+              translateEnumValue(t, "reports.saleType", s.buyerType),
               s.buyerContact ?? "",
-              s.paymentMethod,
+              translateEnumValue(t, "reports.paymentType", s.paymentMethod),
               s.paymentNote ?? "",
               Number(s.total || 0).toFixed(2),
       
@@ -248,14 +296,14 @@ export default function ComplianceRange() {
       }
   
       const filename = `catchledger_inspection_range_${stampForName()}.csv`;
-      const csv = buildInspectionCSV(profile, rangeHarvest, rangeSales);
+      const csv = buildInspectionCSV(profile, rangeHarvest, rangeSales, t);
       await shareTextFile(filename, "text/csv", csv, t("compliance.exportInspectionCsvRange"), t("compliance.sharingNotAvailable"));
     } catch (e: any) {
       Alert.alert(t("reports.exportFailed"), e?.message ?? t("reports.unknownError"));
     } finally {
       setBusy(false);
     }
-  }, [busy, profile, rangeHarvest, rangeSales]);  
+  }, [busy, profile, rangeHarvest, rangeSales, t]);  
 
   const applyPreset = useCallback((preset: PresetType) => {
     const now = new Date();
