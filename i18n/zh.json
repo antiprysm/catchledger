@@ -384,6 +384,106 @@
       "profitByCategory": "• 按类别利润将每月支出按类别拆分为列。",
       "allTimeCategories": "• 全部时间类别显示各类别总额及占比。",
       "quarterlySummary": "• 季度汇总按季度分组（适用于预估税务）。"
+    },
+    "csv": {
+      "common": {
+        "meta": "元数据",
+        "businessName": "商家名称",
+        "licenseNumber": "许可证号",
+        "email": "电子邮箱"
+      },
+      "sales": {
+        "saleId": "销售 ID",
+        "occurredAtIso": "发生时间 (ISO)",
+        "paymentMethod": "支付方式",
+        "paymentNote": "支付备注",
+        "requireSignature": "需要签名",
+        "requirePhoto": "需要照片",
+        "invoiceNumber": "发票号",
+        "saleTotal": "销售总额",
+        "lineItemId": "行项目 ID",
+        "speciesName": "物种",
+        "unit": "单位",
+        "unitPrice": "单价",
+        "quantity": "数量",
+        "lineSubtotal": "行小计"
+      },
+      "expenses": {
+        "expenseId": "支出 ID",
+        "occurredAtIso": "发生时间 (ISO)",
+        "category": "类别",
+        "amount": "金额",
+        "note": "备注"
+      },
+      "profit": {
+        "month": "月份",
+        "revenue": "收入",
+        "expenses": "支出",
+        "net": "净利润",
+        "salesCount": "销售笔数",
+        "expensesCount": "支出笔数",
+        "expByCategory": "支出：{{category}}",
+        "totalExpenses": "总支出"
+      },
+      "categories": {
+        "category": "类别",
+        "totalAmount": "总金额",
+        "percentOfTotal": "占比",
+        "total": "合计"
+      },
+      "quarterly": {
+        "quarter": "季度"
+      }
+    },
+    "columns": {
+      "date": "日期",
+      "fishType": "鱼类",
+      "weight": "重量",
+      "price": "价格",
+      "customer": "客户",
+      "notes": "备注",
+      "total": "总计"
+    },
+    "status": {
+      "paid": "已支付",
+      "pending": "待处理",
+      "cancelled": "已取消"
+    },
+    "saleType": {
+      "restaurant": "餐厅",
+      "chef": "厨师",
+      "market": "市场",
+      "person": "个人",
+      "other": "其他"
+    },
+    "paymentType": {
+      "cash": "现金",
+      "card": "刷卡",
+      "bank_transfer": "银行转账",
+      "check": "支票",
+      "venmo": "Venmo",
+      "cashapp": "Cash App",
+      "paypal": "PayPal",
+      "other": "其他"
+    },
+    "inventoryCategory": {
+      "fuel": "燃料",
+      "ice": "冰",
+      "bait": "鱼饵",
+      "gear": "装备",
+      "maintenance": "维护",
+      "fees": "费用",
+      "packaging": "包装",
+      "other": "其他"
+    },
+    "complianceStatus": {
+      "compliant": "合规",
+      "non_compliant": "不合规",
+      "pending": "待处理",
+      "cancelled": "已取消",
+      "paid": "已支付",
+      "inspection_mode_on": "检查模式已开启",
+      "inspection_mode_off": "检查模式已关闭"
     }
   },
   "compliance": {
@@ -519,7 +619,56 @@
     "end": "结束",
     "licenseForState": "{{state}}州许可证",
     "nothingToExportTitle": "无可导出内容",
-    "sharingNotAvailable": "此设备不支持分享。"
+    "sharingNotAvailable": "此设备不支持分享。",
+    "csv": {
+      "section": "分区",
+      "field": "字段",
+      "value": "值",
+      "profileSection": "档案",
+      "harvestSection": "捕捞",
+      "saleSection": "销售",
+      "profile": {
+        "state": "州/省",
+        "licenseNumber": "许可证号",
+        "legalName": "法定名称",
+        "dbaName": "营业名称",
+        "phone": "电话",
+        "email": "电子邮箱",
+        "vehiclePlate": "车牌号",
+        "homeBaseCity": "基地城市",
+        "updatedAt": "更新时间"
+      },
+      "harvest": {
+        "inventoryId": "库存 ID",
+        "batchId": "批次 ID",
+        "species": "物种",
+        "quantity": "数量",
+        "unit": "单位",
+        "catchLocation": "捕捞地点",
+        "caughtAtIso": "捕捞时间 (ISO)",
+        "catchMethod": "捕捞方式"
+      },
+      "sales": {
+        "saleId": "销售 ID",
+        "occurredAtIso": "发生时间 (ISO)",
+        "buyerName": "买家名称",
+        "buyerType": "买家类型",
+        "buyerContact": "买家联系方式",
+        "paymentMethod": "支付方式",
+        "paymentNote": "支付备注",
+        "saleTotal": "销售总额",
+        "lineItemId": "行项目 ID",
+        "species": "物种",
+        "quantity": "数量",
+        "unit": "单位",
+        "unitPrice": "单价",
+        "lineSubtotal": "行小计",
+        "originBatchId": "来源批次 ID",
+        "originLocation": "来源地点",
+        "originCaughtAtIso": "来源捕捞时间 (ISO)",
+        "originMethod": "来源方式"
+      }
+    }
   },
   "reviewPrompt": {
     "title": "CatchLedger 用起来感觉怎么样？",

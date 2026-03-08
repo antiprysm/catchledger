@@ -30,6 +30,18 @@ function stampForName() {
   return new Date().toISOString().replace(/[:.]/g, "-").slice(0, 19);
 }
 
+
+function translateEnumValue(
+  t: (key: string, options?: Record<string, unknown>) => string,
+  baseKey: string,
+  value: string | null | undefined
+) {
+  if (!value) return "";
+  const key = `${baseKey}.${String(value).toLowerCase()}`;
+  const translated = t(key);
+  return translated === key ? value : translated;
+}
+
 async function shareTextFile(
   filename: string,
   mimeType: string,
@@ -59,26 +71,26 @@ async function shareTextFile(
 /** SALES CSV: line-level */
 function buildSalesCSV(sales: Sale[], settings: AppSettings, t: (key: string, options?: Record<string, unknown>) => string) {
   const headers = [
-    "sale_id",
-    "occurred_at_iso",
-    "payment_method",
-    "payment_note",
-    "require_signature",
-    "require_photo",
-    "invoice_number",
-    "sale_total",
-    "line_item_id",
-    "species_name",
-    "unit",
-    "unit_price",
-    "quantity",
-    "line_subtotal",
+    t("reports.csv.sales.saleId"),
+    t("reports.csv.sales.occurredAtIso"),
+    t("reports.csv.sales.paymentMethod"),
+    t("reports.csv.sales.paymentNote"),
+    t("reports.csv.sales.requireSignature"),
+    t("reports.csv.sales.requirePhoto"),
+    t("reports.csv.sales.invoiceNumber"),
+    t("reports.csv.sales.saleTotal"),
+    t("reports.csv.sales.lineItemId"),
+    t("reports.csv.sales.speciesName"),
+    t("reports.csv.sales.unit"),
+    t("reports.csv.sales.unitPrice"),
+    t("reports.csv.sales.quantity"),
+    t("reports.csv.sales.lineSubtotal"),
   ];
 
   const rows: string[] = [];
-  rows.push(["META", "business_name", settings.companyProfile.businessName ?? ""].map(csvEscape).join(","));
-  rows.push(["META", "license_number", settings.companyProfile.licenseNumber ?? ""].map(csvEscape).join(","));
-  rows.push(["META", "email", settings.companyProfile.email ?? ""].map(csvEscape).join(","));
+  rows.push([t("reports.csv.common.meta"), t("reports.csv.common.businessName"), settings.companyProfile.businessName ?? ""].map(csvEscape).join(","));
+  rows.push([t("reports.csv.common.meta"), t("reports.csv.common.licenseNumber"), settings.companyProfile.licenseNumber ?? ""].map(csvEscape).join(","));
+  rows.push([t("reports.csv.common.meta"), t("reports.csv.common.email"), settings.companyProfile.email ?? ""].map(csvEscape).join(","));
   rows.push("");
   rows.push(headers.map(csvEscape).join(","));
 
@@ -87,7 +99,7 @@ function buildSalesCSV(sales: Sale[], settings: AppSettings, t: (key: string, op
       const row = [
         s.id,
         formatISODate(s.occurredAt),
-        s.paymentMethod,
+        translateEnumValue(t, "reports.paymentType", s.paymentMethod),
         s.paymentNote ?? "",
         s.requireSignature ? t("common.yes") : t("common.no"),
         s.requirePhoto ? t("common.yes") : t("common.no"),
@@ -109,12 +121,18 @@ function buildSalesCSV(sales: Sale[], settings: AppSettings, t: (key: string, op
 
 /** EXPENSES CSV: one row per expense */
 function buildExpensesCSV(expenses: Expense[], settings: AppSettings, t: (key: string, options?: Record<string, unknown>) => string) {
-  const headers = ["expense_id", "occurred_at_iso", "category", "amount", "note"];
+  const headers = [
+    t("reports.csv.expenses.expenseId"),
+    t("reports.csv.expenses.occurredAtIso"),
+    t("reports.csv.expenses.category"),
+    t("reports.csv.expenses.amount"),
+    t("reports.csv.expenses.note"),
+  ];
 
   const rows: string[] = [];
-  rows.push(["META", "business_name", settings.companyProfile.businessName ?? ""].map(csvEscape).join(","));
-  rows.push(["META", "license_number", settings.companyProfile.licenseNumber ?? ""].map(csvEscape).join(","));
-  rows.push(["META", "email", settings.companyProfile.email ?? ""].map(csvEscape).join(","));
+  rows.push([t("reports.csv.common.meta"), t("reports.csv.common.businessName"), settings.companyProfile.businessName ?? ""].map(csvEscape).join(","));
+  rows.push([t("reports.csv.common.meta"), t("reports.csv.common.licenseNumber"), settings.companyProfile.licenseNumber ?? ""].map(csvEscape).join(","));
+  rows.push([t("reports.csv.common.meta"), t("reports.csv.common.email"), settings.companyProfile.email ?? ""].map(csvEscape).join(","));
   rows.push("");
   rows.push(headers.map(csvEscape).join(","));
 
@@ -122,7 +140,7 @@ function buildExpensesCSV(expenses: Expense[], settings: AppSettings, t: (key: s
     const row = [
       e.id,
       formatISODate(e.occurredAt),
-      e.category,
+      translateEnumValue(t, "reports.inventoryCategory", e.category),
       Number(e.amount).toFixed(2),
       e.note ?? "",
     ];
@@ -174,11 +192,18 @@ function buildProfitSummaryCSV(sales: Sale[], expenses: Expense[], settings: App
     .map((r) => ({ ...r, net: r.revenue - r.expenses }))
     .sort((a, b) => (a.month < b.month ? 1 : -1));
 
-  const headers = ["month", "revenue", "expenses", "net", "sales_count", "expenses_count"];
+  const headers = [
+    t("reports.csv.profit.month"),
+    t("reports.csv.profit.revenue"),
+    t("reports.csv.profit.expenses"),
+    t("reports.csv.profit.net"),
+    t("reports.csv.profit.salesCount"),
+    t("reports.csv.profit.expensesCount"),
+  ];
   const rows: string[] = [];
-  rows.push(["META", "business_name", settings.companyProfile.businessName ?? ""].map(csvEscape).join(","));
-  rows.push(["META", "license_number", settings.companyProfile.licenseNumber ?? ""].map(csvEscape).join(","));
-  rows.push(["META", "email", settings.companyProfile.email ?? ""].map(csvEscape).join(","));
+  rows.push([t("reports.csv.common.meta"), t("reports.csv.common.businessName"), settings.companyProfile.businessName ?? ""].map(csvEscape).join(","));
+  rows.push([t("reports.csv.common.meta"), t("reports.csv.common.licenseNumber"), settings.companyProfile.licenseNumber ?? ""].map(csvEscape).join(","));
+  rows.push([t("reports.csv.common.meta"), t("reports.csv.common.email"), settings.companyProfile.email ?? ""].map(csvEscape).join(","));
   rows.push("");
   rows.push(headers.map(csvEscape).join(","));
 
@@ -221,12 +246,18 @@ function buildProfitByCategoryCSV(sales: Sale[], expenses: Expense[], settings: 
 
   const months = Array.from(new Set([...revenueByMonth.keys(), ...expByMonthCat.keys()])).sort((a, b) => (a < b ? 1 : -1));
 
-  const headers = ["month", "revenue", ...categories.map((c) => `exp_${c.toLowerCase()}`), "total_expenses", "net"];
+  const headers = [
+    t("reports.csv.profit.month"),
+    t("reports.csv.profit.revenue"),
+    ...categories.map((c) => t("reports.csv.profit.expByCategory", { category: translateEnumValue(t, "reports.inventoryCategory", c) })),
+    t("reports.csv.profit.totalExpenses"),
+    t("reports.csv.profit.net"),
+  ];
 
   const rows: string[] = [];
-  rows.push(["META", "business_name", settings.companyProfile.businessName ?? ""].map(csvEscape).join(","));
-  rows.push(["META", "license_number", settings.companyProfile.licenseNumber ?? ""].map(csvEscape).join(","));
-  rows.push(["META", "email", settings.companyProfile.email ?? ""].map(csvEscape).join(","));
+  rows.push([t("reports.csv.common.meta"), t("reports.csv.common.businessName"), settings.companyProfile.businessName ?? ""].map(csvEscape).join(","));
+  rows.push([t("reports.csv.common.meta"), t("reports.csv.common.licenseNumber"), settings.companyProfile.licenseNumber ?? ""].map(csvEscape).join(","));
+  rows.push([t("reports.csv.common.meta"), t("reports.csv.common.email"), settings.companyProfile.email ?? ""].map(csvEscape).join(","));
   rows.push("");
   rows.push(headers.map(csvEscape).join(","));
 
@@ -256,16 +287,20 @@ function buildAllTimeCategoryCSV(expenses: Expense[], t: (key: string, options?:
   const total = Array.from(byCat.values()).reduce((s, v) => s + v, 0);
 
   const rows: string[] = [];
-  rows.push(["category", "total_amount", "percent_of_total"].map(csvEscape).join(","));
+  rows.push([
+    t("reports.csv.categories.category"),
+    t("reports.csv.categories.totalAmount"),
+    t("reports.csv.categories.percentOfTotal"),
+  ].map(csvEscape).join(","));
 
   const sorted = Array.from(byCat.entries()).sort((a, b) => b[1] - a[1]);
 
   for (const [cat, amt] of sorted) {
     const pct = total > 0 ? (amt / total) * 100 : 0;
-    rows.push([cat, amt.toFixed(2), pct.toFixed(2)].map(csvEscape).join(","));
+    rows.push([translateEnumValue(t, "reports.inventoryCategory", cat), amt.toFixed(2), pct.toFixed(2)].map(csvEscape).join(","));
   }
 
-  rows.push(["TOTAL", total.toFixed(2), "100.00"].map(csvEscape).join(","));
+  rows.push([t("reports.csv.categories.total"), total.toFixed(2), "100.00"].map(csvEscape).join(","));
 
   return rows.join("\n");
 }
@@ -310,11 +345,18 @@ function buildQuarterlySummaryCSV(sales: Sale[], expenses: Expense[], settings: 
     .map((r) => ({ ...r, net: r.revenue - r.expenses }))
     .sort((a, b) => (a.period < b.period ? 1 : -1));
 
-  const headers = ["quarter", "revenue", "expenses", "net", "sales_count", "expenses_count"];
+  const headers = [
+    t("reports.csv.quarterly.quarter"),
+    t("reports.csv.profit.revenue"),
+    t("reports.csv.profit.expenses"),
+    t("reports.csv.profit.net"),
+    t("reports.csv.profit.salesCount"),
+    t("reports.csv.profit.expensesCount"),
+  ];
   const rows: string[] = [];
-  rows.push(["META", "business_name", settings.companyProfile.businessName ?? ""].map(csvEscape).join(","));
-  rows.push(["META", "license_number", settings.companyProfile.licenseNumber ?? ""].map(csvEscape).join(","));
-  rows.push(["META", "email", settings.companyProfile.email ?? ""].map(csvEscape).join(","));
+  rows.push([t("reports.csv.common.meta"), t("reports.csv.common.businessName"), settings.companyProfile.businessName ?? ""].map(csvEscape).join(","));
+  rows.push([t("reports.csv.common.meta"), t("reports.csv.common.licenseNumber"), settings.companyProfile.licenseNumber ?? ""].map(csvEscape).join(","));
+  rows.push([t("reports.csv.common.meta"), t("reports.csv.common.email"), settings.companyProfile.email ?? ""].map(csvEscape).join(","));
   rows.push("");
   rows.push(headers.map(csvEscape).join(","));
 

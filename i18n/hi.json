@@ -384,6 +384,106 @@
       "profitByCategory": "• श्रेणी अनुसार लाभ मासिक खर्चों को श्रेणी अनुसार कॉलम में बाँटता है।",
       "allTimeCategories": "• ऑल-टाइम श्रेणियाँ कुल और खर्च श्रेणी का प्रतिशत दिखाती हैं।",
       "quarterlySummary": "• त्रैमासिक सारांश YYYY-Q1..Q4 में समूहित करता है (अनुमानित कर के लिए उपयोगी)।"
+    },
+    "csv": {
+      "common": {
+        "meta": "मेटा",
+        "businessName": "व्यवसाय का नाम",
+        "licenseNumber": "लाइसेंस नंबर",
+        "email": "ईमेल"
+      },
+      "sales": {
+        "saleId": "बिक्री आईडी",
+        "occurredAtIso": "घटना समय (ISO)",
+        "paymentMethod": "भुगतान विधि",
+        "paymentNote": "भुगतान नोट",
+        "requireSignature": "हस्ताक्षर आवश्यक",
+        "requirePhoto": "फोटो आवश्यक",
+        "invoiceNumber": "चालान नंबर",
+        "saleTotal": "कुल बिक्री",
+        "lineItemId": "लाइन आइटम आईडी",
+        "speciesName": "प्रजाति",
+        "unit": "इकाई",
+        "unitPrice": "इकाई मूल्य",
+        "quantity": "मात्रा",
+        "lineSubtotal": "लाइन उप-योग"
+      },
+      "expenses": {
+        "expenseId": "खर्च आईडी",
+        "occurredAtIso": "घटना समय (ISO)",
+        "category": "श्रेणी",
+        "amount": "राशि",
+        "note": "नोट"
+      },
+      "profit": {
+        "month": "माह",
+        "revenue": "राजस्व",
+        "expenses": "खर्च",
+        "net": "शुद्ध",
+        "salesCount": "बिक्री संख्या",
+        "expensesCount": "खर्च संख्या",
+        "expByCategory": "खर्च: {{category}}",
+        "totalExpenses": "कुल खर्च"
+      },
+      "categories": {
+        "category": "श्रेणी",
+        "totalAmount": "कुल राशि",
+        "percentOfTotal": "कुल का प्रतिशत",
+        "total": "कुल"
+      },
+      "quarterly": {
+        "quarter": "तिमाही"
+      }
+    },
+    "columns": {
+      "date": "तारीख",
+      "fishType": "मछली का प्रकार",
+      "weight": "वजन",
+      "price": "कीमत",
+      "customer": "ग्राहक",
+      "notes": "टिप्पणियाँ",
+      "total": "कुल"
+    },
+    "status": {
+      "paid": "भुगतान किया गया",
+      "pending": "लंबित",
+      "cancelled": "रद्द"
+    },
+    "saleType": {
+      "restaurant": "रेस्टोरेंट",
+      "chef": "शेफ",
+      "market": "मार्केट",
+      "person": "व्यक्ति",
+      "other": "अन्य"
+    },
+    "paymentType": {
+      "cash": "नकद",
+      "card": "कार्ड",
+      "bank_transfer": "बैंक ट्रांसफर",
+      "check": "चेक",
+      "venmo": "Venmo",
+      "cashapp": "Cash App",
+      "paypal": "PayPal",
+      "other": "अन्य"
+    },
+    "inventoryCategory": {
+      "fuel": "ईंधन",
+      "ice": "बर्फ",
+      "bait": "चारा",
+      "gear": "उपकरण",
+      "maintenance": "रखरखाव",
+      "fees": "शुल्क",
+      "packaging": "पैकेजिंग",
+      "other": "अन्य"
+    },
+    "complianceStatus": {
+      "compliant": "अनुपालक",
+      "non_compliant": "अनुपालक नहीं",
+      "pending": "लंबित",
+      "cancelled": "रद्द",
+      "paid": "भुगतान किया गया",
+      "inspection_mode_on": "निरीक्षण मोड चालू",
+      "inspection_mode_off": "निरीक्षण मोड बंद"
     }
   },
   "compliance": {
@@ -519,7 +619,56 @@
     "end": "अंत",
     "licenseForState": "{{state}} के लिए लाइसेंस",
     "nothingToExportTitle": "निर्यात हेतु कुछ नहीं",
-    "sharingNotAvailable": "इस डिवाइस पर शेयरिंग उपलब्ध नहीं है।"
+    "sharingNotAvailable": "इस डिवाइस पर शेयरिंग उपलब्ध नहीं है।",
+    "csv": {
+      "section": "सेक्शन",
+      "field": "फ़ील्ड",
+      "value": "मान",
+      "profileSection": "प्रोफ़ाइल",
+      "harvestSection": "कैच",
+      "saleSection": "बिक्री",
+      "profile": {
+        "state": "राज्य",
+        "licenseNumber": "लाइसेंस नंबर",
+        "legalName": "कानूनी नाम",
+        "dbaName": "व्यापार नाम",
+        "phone": "फ़ोन",
+        "email": "ईमेल",
+        "vehiclePlate": "वाहन प्लेट",
+        "homeBaseCity": "होम बेस शहर",
+        "updatedAt": "अपडेट समय"
+      },
+      "harvest": {
+        "inventoryId": "इन्वेंटरी आईडी",
+        "batchId": "बैच आईडी",
+        "species": "प्रजाति",
+        "quantity": "मात्रा",
+        "unit": "इकाई",
+        "catchLocation": "पकड़ स्थान",
+        "caughtAtIso": "पकड़ समय (ISO)",
+        "catchMethod": "पकड़ विधि"
+      },
+      "sales": {
+        "saleId": "बिक्री आईडी",
+        "occurredAtIso": "घटना समय (ISO)",
+        "buyerName": "खरीदार नाम",
+        "buyerType": "खरीदार प्रकार",
+        "buyerContact": "खरीदार संपर्क",
+        "paymentMethod": "भुगतान विधि",
+        "paymentNote": "भुगतान नोट",
+        "saleTotal": "कुल बिक्री",
+        "lineItemId": "लाइन आइटम आईडी",
+        "species": "प्रजाति",
+        "quantity": "मात्रा",
+        "unit": "इकाई",
+        "unitPrice": "इकाई मूल्य",
+        "lineSubtotal": "लाइन उप-योग",
+        "originBatchId": "मूल बैच आईडी",
+        "originLocation": "मूल स्थान",
+        "originCaughtAtIso": "मूल पकड़ समय (ISO)",
+        "originMethod": "मूल विधि"
+      }
+    }
   },
   "reviewPrompt": {
     "title": "CatchLedger आपके लिए कैसा काम कर रहा है?",

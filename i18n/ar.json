@@ -384,6 +384,106 @@
       "profitByCategory": "• الربح حسب الفئة يقسم المصروفات الشهرية إلى أعمدة حسب الفئة.",
       "allTimeCategories": "• فئات كل الوقت تعرض الإجماليات ونسبة كل فئة من إجمالي المصروفات.",
       "quarterlySummary": "• الملخص الربع سنوي يجمع إلى YYYY-Q1..Q4 (مفيد لتقديرات الضرائب)."
+    },
+    "csv": {
+      "common": {
+        "meta": "بيانات",
+        "businessName": "اسم النشاط",
+        "licenseNumber": "رقم الترخيص",
+        "email": "البريد الإلكتروني"
+      },
+      "sales": {
+        "saleId": "معرّف البيع",
+        "occurredAtIso": "وقت العملية (ISO)",
+        "paymentMethod": "طريقة الدفع",
+        "paymentNote": "ملاحظة الدفع",
+        "requireSignature": "يتطلب توقيع",
+        "requirePhoto": "يتطلب صورة",
+        "invoiceNumber": "رقم الفاتورة",
+        "saleTotal": "إجمالي البيع",
+        "lineItemId": "معرّف السطر",
+        "speciesName": "النوع",
+        "unit": "الوحدة",
+        "unitPrice": "سعر الوحدة",
+        "quantity": "الكمية",
+        "lineSubtotal": "الإجمالي الفرعي"
+      },
+      "expenses": {
+        "expenseId": "معرّف المصروف",
+        "occurredAtIso": "وقت العملية (ISO)",
+        "category": "الفئة",
+        "amount": "المبلغ",
+        "note": "ملاحظة"
+      },
+      "profit": {
+        "month": "الشهر",
+        "revenue": "الإيرادات",
+        "expenses": "المصروفات",
+        "net": "الصافي",
+        "salesCount": "عدد المبيعات",
+        "expensesCount": "عدد المصروفات",
+        "expByCategory": "مصروف: {{category}}",
+        "totalExpenses": "إجمالي المصروفات"
+      },
+      "categories": {
+        "category": "الفئة",
+        "totalAmount": "الإجمالي",
+        "percentOfTotal": "النسبة من الإجمالي",
+        "total": "الإجمالي"
+      },
+      "quarterly": {
+        "quarter": "الربع"
+      }
+    },
+    "columns": {
+      "date": "التاريخ",
+      "fishType": "نوع السمك",
+      "weight": "الوزن",
+      "price": "السعر",
+      "customer": "العميل",
+      "notes": "ملاحظات",
+      "total": "الإجمالي"
+    },
+    "status": {
+      "paid": "مدفوع",
+      "pending": "قيد الانتظار",
+      "cancelled": "ملغى"
+    },
+    "saleType": {
+      "restaurant": "مطعم",
+      "chef": "طاهٍ",
+      "market": "سوق",
+      "person": "فرد",
+      "other": "أخرى"
+    },
+    "paymentType": {
+      "cash": "نقدًا",
+      "card": "بطاقة",
+      "bank_transfer": "تحويل بنكي",
+      "check": "شيك",
+      "venmo": "Venmo",
+      "cashapp": "Cash App",
+      "paypal": "PayPal",
+      "other": "أخرى"
+    },
+    "inventoryCategory": {
+      "fuel": "وقود",
+      "ice": "ثلج",
+      "bait": "طُعم",
+      "gear": "معدات",
+      "maintenance": "صيانة",
+      "fees": "رسوم",
+      "packaging": "تغليف",
+      "other": "أخرى"
+    },
+    "complianceStatus": {
+      "compliant": "متوافق",
+      "non_compliant": "غير متوافق",
+      "pending": "قيد الانتظار",
+      "cancelled": "ملغى",
+      "paid": "مدفوع",
+      "inspection_mode_on": "وضع التفتيش قيد التشغيل",
+      "inspection_mode_off": "وضع التفتيش متوقف"
     }
   },
   "compliance": {
@@ -519,7 +619,56 @@
     "end": "النهاية",
     "licenseForState": "ترخيص لولاية {{state}}",
     "nothingToExportTitle": "لا يوجد ما يتم تصديره",
-    "sharingNotAvailable": "المشاركة غير متاحة على هذا الجهاز."
+    "sharingNotAvailable": "المشاركة غير متاحة على هذا الجهاز.",
+    "csv": {
+      "section": "القسم",
+      "field": "الحقل",
+      "value": "القيمة",
+      "profileSection": "الملف",
+      "harvestSection": "الصيد",
+      "saleSection": "البيع",
+      "profile": {
+        "state": "الولاية",
+        "licenseNumber": "رقم الترخيص",
+        "legalName": "الاسم القانوني",
+        "dbaName": "الاسم التجاري",
+        "phone": "الهاتف",
+        "email": "البريد الإلكتروني",
+        "vehiclePlate": "لوحة المركبة",
+        "homeBaseCity": "مدينة الانطلاق",
+        "updatedAt": "آخر تحديث"
+      },
+      "harvest": {
+        "inventoryId": "معرّف المخزون",
+        "batchId": "معرّف الدفعة",
+        "species": "النوع",
+        "quantity": "الكمية",
+        "unit": "الوحدة",
+        "catchLocation": "موقع الصيد",
+        "caughtAtIso": "وقت الصيد (ISO)",
+        "catchMethod": "طريقة الصيد"
+      },
+      "sales": {
+        "saleId": "معرّف البيع",
+        "occurredAtIso": "وقت العملية (ISO)",
+        "buyerName": "اسم المشتري",
+        "buyerType": "نوع المشتري",
+        "buyerContact": "بيانات المشتري",
+        "paymentMethod": "طريقة الدفع",
+        "paymentNote": "ملاحظة الدفع",
+        "saleTotal": "إجمالي البيع",
+        "lineItemId": "معرّف السطر",
+        "species": "النوع",
+        "quantity": "الكمية",
+        "unit": "الوحدة",
+        "unitPrice": "سعر الوحدة",
+        "lineSubtotal": "الإجمالي الفرعي",
+        "originBatchId": "دفعة المصدر",
+        "originLocation": "موقع المصدر",
+        "originCaughtAtIso": "وقت الصيد الأصلي (ISO)",
+        "originMethod": "طريقة المصدر"
+      }
+    }
   },
   "reviewPrompt": {
     "title": "كيف يعمل CatchLedger معك؟",
