@@ -384,6 +384,106 @@
       "profitByCategory": "• Profit by Category breaks monthly expenses into columns by category.",
       "allTimeCategories": "• All-time Categories shows totals + percent share by expense category.",
       "quarterlySummary": "• Quarterly Summary groups into YYYY-Q1..Q4 (useful for estimated taxes)."
+    },
+    "csv": {
+      "common": {
+        "meta": "META",
+        "businessName": "Business Name",
+        "licenseNumber": "License Number",
+        "email": "Email"
+      },
+      "sales": {
+        "saleId": "Sale ID",
+        "occurredAtIso": "Occurred At (ISO)",
+        "paymentMethod": "Payment Method",
+        "paymentNote": "Payment Note",
+        "requireSignature": "Require Signature",
+        "requirePhoto": "Require Photo",
+        "invoiceNumber": "Invoice Number",
+        "saleTotal": "Sale Total",
+        "lineItemId": "Line Item ID",
+        "speciesName": "Species",
+        "unit": "Unit",
+        "unitPrice": "Unit Price",
+        "quantity": "Quantity",
+        "lineSubtotal": "Line Subtotal"
+      },
+      "expenses": {
+        "expenseId": "Expense ID",
+        "occurredAtIso": "Occurred At (ISO)",
+        "category": "Category",
+        "amount": "Amount",
+        "note": "Note"
+      },
+      "profit": {
+        "month": "Month",
+        "revenue": "Revenue",
+        "expenses": "Expenses",
+        "net": "Net",
+        "salesCount": "Sales Count",
+        "expensesCount": "Expenses Count",
+        "expByCategory": "Expense: {{category}}",
+        "totalExpenses": "Total Expenses"
+      },
+      "categories": {
+        "category": "Category",
+        "totalAmount": "Total Amount",
+        "percentOfTotal": "Percent of Total",
+        "total": "TOTAL"
+      },
+      "quarterly": {
+        "quarter": "Quarter"
+      }
+    },
+    "columns": {
+      "date": "Date",
+      "fishType": "Fish Type",
+      "weight": "Weight",
+      "price": "Price",
+      "customer": "Customer",
+      "notes": "Notes",
+      "total": "Total"
+    },
+    "status": {
+      "paid": "Paid",
+      "pending": "Pending",
+      "cancelled": "Cancelled"
+    },
+    "saleType": {
+      "restaurant": "Restaurant",
+      "chef": "Chef",
+      "market": "Market",
+      "person": "Person",
+      "other": "Other"
+    },
+    "paymentType": {
+      "cash": "Cash",
+      "card": "Card",
+      "bank_transfer": "Bank Transfer",
+      "check": "Check",
+      "venmo": "Venmo",
+      "cashapp": "Cash App",
+      "paypal": "PayPal",
+      "other": "Other"
+    },
+    "inventoryCategory": {
+      "fuel": "Fuel",
+      "ice": "Ice",
+      "bait": "Bait",
+      "gear": "Gear",
+      "maintenance": "Maintenance",
+      "fees": "Fees",
+      "packaging": "Packaging",
+      "other": "Other"
+    },
+    "complianceStatus": {
+      "compliant": "Compliant",
+      "non_compliant": "Non-compliant",
+      "pending": "Pending",
+      "cancelled": "Cancelled",
+      "paid": "Paid",
+      "inspection_mode_on": "Inspection mode on",
+      "inspection_mode_off": "Inspection mode off"
     }
   },
   "compliance": {
@@ -519,7 +619,56 @@
     "end": "End",
     "licenseForState": "License for {{state}}",
     "nothingToExportTitle": "Nothing to export",
-    "sharingNotAvailable": "Sharing is not available on this device."
+    "sharingNotAvailable": "Sharing is not available on this device.",
+    "csv": {
+      "section": "Section",
+      "field": "Field",
+      "value": "Value",
+      "profileSection": "Profile",
+      "harvestSection": "Harvest",
+      "saleSection": "Sale",
+      "profile": {
+        "state": "State",
+        "licenseNumber": "License Number",
+        "legalName": "Legal Name",
+        "dbaName": "DBA Name",
+        "phone": "Phone",
+        "email": "Email",
+        "vehiclePlate": "Vehicle Plate",
+        "homeBaseCity": "Home Base City",
+        "updatedAt": "Updated At"
+      },
+      "harvest": {
+        "inventoryId": "Inventory ID",
+        "batchId": "Batch ID",
+        "species": "Species",
+        "quantity": "Quantity",
+        "unit": "Unit",
+        "catchLocation": "Catch Location",
+        "caughtAtIso": "Caught At (ISO)",
+        "catchMethod": "Catch Method"
+      },
+      "sales": {
+        "saleId": "Sale ID",
+        "occurredAtIso": "Occurred At (ISO)",
+        "buyerName": "Buyer Name",
+        "buyerType": "Buyer Type",
+        "buyerContact": "Buyer Contact",
+        "paymentMethod": "Payment Method",
+        "paymentNote": "Payment Note",
+        "saleTotal": "Sale Total",
+        "lineItemId": "Line Item ID",
+        "species": "Species",
+        "quantity": "Quantity",
+        "unit": "Unit",
+        "unitPrice": "Unit Price",
+        "lineSubtotal": "Line Subtotal",
+        "originBatchId": "Origin Batch ID",
+        "originLocation": "Origin Location",
+        "originCaughtAtIso": "Origin Caught At (ISO)",
+        "originMethod": "Origin Method"
+      }
+    }
   },
   "reviewPrompt": {
     "title": "How’s CatchLedger working for you?",
