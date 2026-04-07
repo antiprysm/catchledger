@@ -97,7 +97,6 @@ export default function OnboardingScreen() {
 
   useEffect(() => {
     runImageEntranceAnimation();
-    runTextEntranceAnimation();
   }, []);
   
   useEffect(() => {
@@ -156,6 +155,18 @@ export default function OnboardingScreen() {
     ]).start();
   }
 
+  function resetTextAnimationValues() {
+    titleOpacity.stopAnimation();
+    titleTranslateY.stopAnimation();
+    descOpacity.stopAnimation();
+    descTranslateY.stopAnimation();
+  
+    titleOpacity.setValue(0);
+    titleTranslateY.setValue(18);
+    descOpacity.setValue(0);
+    descTranslateY.setValue(18);
+  }
+
   function runProgressAnimation(currentIndex: number) {
     const progress = (currentIndex + 1) / slides.length;
     Animated.timing(progressAnim, {
@@ -173,6 +184,10 @@ export default function OnboardingScreen() {
   }
 
   function scrollTo(i: number) {
+    if (i !== index) {
+      resetTextAnimationValues();
+    }
+  
     listRef.current?.scrollToOffset({
       offset: i * width,
       animated: true,
@@ -181,7 +196,11 @@ export default function OnboardingScreen() {
 
   function onMomentumEnd(e: NativeSyntheticEvent<NativeScrollEvent>) {
     const newIndex = Math.round(e.nativeEvent.contentOffset.x / width);
-    setIndex(newIndex);
+  
+    if (newIndex !== index) {
+      resetTextAnimationValues();
+      setIndex(newIndex);
+    }
   }
 
   function renderSlide(item: Slide, slideIndex: number) {
